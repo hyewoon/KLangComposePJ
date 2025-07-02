@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+
+    <!-- design Theme 적용-->
+    <!--Blue-->
+    <color name="blue_50">#E6EEF5</color>
+    <color name="blue_100">#B0C9DF</color>
+    <color name="blue_200">#8AAFD0</color>
+    <color name="blue_300">#548ABA</color>
+    <color name="blue_400">#3373AD</color>
+    <color name="blue_500">#005098</color>
+    <color name="blue_600">#00498A</color>
+    <color name="blue_700">#00396C</color>
+    <color name="blue_800">#002C54</color>
+    <color name="blue_900">#002240</color>
+    <!--Dark-->
+
+    <color name="dark_50">#F0F0F1</color>
+    <color name="dark_100">#CFCFD2</color>
+    <color name="dark_200">#B8B8BC</color>
+    <color name="dark_300">#97979E</color>
+    <color name="dark_400">#83838B</color>
+    <color name="dark_500">#64646E</color>
+    <color name="dark_600">#5B5B64</color>
+    <color name="dark_700">#47474E</color>
+    <color name="dark_800">#37373D</color>
+    <color name="dark_900">#2A2A2E</color>
+
+    <!--Point-->
+    <color name="point_ivory">#FFFAF5</color>
+    <color name="point_yellow">#FFCD58</color>
+    <color name="point_orange">#FF9F26</color>
+    <color name="point_white">#FFFFFF</color>
+
+    <!--bottomBar-->
+
+    <color name="selected_color">#64646E</color> <!-- 선택 시 색상 -->
+    <color name="unselected_color">#CFCFD2</color>
+
+
+</resources>
