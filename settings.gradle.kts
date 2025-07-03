@@ -21,5 +21,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "KLangComposePJ"
 include(":app")
+//include(":data")
 include(":data")
 include(":domain")

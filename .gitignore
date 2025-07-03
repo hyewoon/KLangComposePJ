@@ -1,15 +1,39 @@
+# === Android ===
 *.iml
 .gradle
 /local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
+/.idea/
 .DS_Store
 /build
 /captures
 .externalNativeBuild
 .cxx
-local.properties
+*.log
+
+# === Firebase ===
+# Android 앱용 Firebase 설정 파일
+app/google-services.json
+# 서비스 계정 키 파일들 (중요!)
+**/firebase-adminsdk-*.json
+**/service-account-key.json
+**/serviceAccountKey.json
+# Firebase 캐시 및 로그
+.firebase/
+firebase-debug.log
+firestore-debug.log
+
+# === 환경 변수 ===
+.env
+.env.local
+.env.*.local
+
+# === 기타 ===
+# 임시 파일들
+*.tmp
+*.temp
+*~
+
+# 키스토어 파일들 (배포용)
+*.keystore
+*.jks
+release/

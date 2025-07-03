@@ -35,14 +35,8 @@ import com.hye.klangcomposepj.ui.theme.KLangComposePJTheme
 
 @Composable
 fun TodayStudyScreen(navController: NavController) {
-    KLangComposePJTheme {
-        Surface(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 0.dp, start = 16.dp, end = 16.dp, bottom = 16.dp),
-            color = MaterialTheme.colorScheme.background
-        ) {
             Column(
+                modifier = Modifier.padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -80,10 +74,6 @@ fun TodayStudyScreen(navController: NavController) {
 
             }
         }
-    }
-
-}
-
 
 @Composable
 fun LinearProgressIndicatorBox(current: Int, max: Int, modifier: Modifier = Modifier) {

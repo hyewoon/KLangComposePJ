@@ -1,4 +1,4 @@
-package com.hye.domain
+package com.hye.data
 
 import org.junit.Test
 

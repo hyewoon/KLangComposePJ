@@ -1,15 +1,86 @@
 plugins {
-    id("java-library")
-    alias(libs.plugins.jetbrains.kotlin.jvm)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.kotlin.ksp)
+
+
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-}
+android {
+    namespace = "com.hye.data"
+    compileSdk = 35
 
-kotlin {
-    compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
+    defaultConfig {
+        minSdk = 23
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
     }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+        //var jvmTarget = "17"
+    }
+ /*   kotlinOptions {
+        jvmTarget = "17"
+    }*/
+
+    kotlin {
+        jvmToolchain(17)
+    }
+}
+
+dependencies {
+
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    //firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.firestore.ktx)
+
+    //mlkit digital ink recognition
+    implementation(libs.digital.ink.recognition)
+
+    //okhttp3
+    implementation(libs.logging.interceptor)
+    implementation(libs.okhttp)
+
+    //dataStore preferences
+    implementation(libs.androidx.datastore.preferences)
+
+    //retrofit
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.bom)
+
+    //tikxml
+    implementation(libs.core)
+    implementation(libs.annotation)
+    implementation(libs.retrofit.converter)
+
+
+    implementation(libs.annotations)
+
+    kapt(libs.core)
+
+    //room
+    implementation(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.runtime)
+
+
+
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 }
