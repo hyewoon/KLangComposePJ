@@ -51,16 +51,17 @@ val Typography = Typography(
     bodyMedium = TextStyle(
         fontFamily = PretendardFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
+        fontSize = 12.sp,
+        lineHeight = 16.sp,
         letterSpacing = 0.5.sp
     ),
     bodySmall = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Medium,
-        fontSize = 12.sp,
-        lineHeight = 16.sp,
+        fontSize = 8.sp,
+        lineHeight = 10.sp,
         letterSpacing = 0.5.sp
     )
+
 
 )

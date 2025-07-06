@@ -1,6 +1,6 @@
 [versions]
 agp = "8.7.3"
-kotlin = "2.2.0"
+kotlin = "2.0.0"
 coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -24,12 +24,16 @@ retrofitBom = "3.0.0"
 core = "0.8.15"
 annotation = "0.8.13"
 retrofitConverter = "0.8.15"
+processor = "0.8.15"
 kotlinKapt = "2.0.0"
-roomCompiler = "2.2.0"
-roomRuntime = "2.2.0"
+roomRuntime = "2.7.2"
+roomCompiler = "2.7.2"
 kotlinKsp = "2.2.0-2.0.2"
 annotations = "26.0.2"
 tedpermissionNormal = "3.4.2"
+
+
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -59,11 +63,13 @@ retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = 
 retrofit-bom = { group = "com.squareup.retrofit2", name = "retrofit-bom", version.ref = "retrofitBom" }
 core = { group = "com.tickaroo.tikxml", name = "core", version.ref = "core" }
 annotation = { group = "com.tickaroo.tikxml", name = "annotation", version.ref = "annotation" }
+processor = { group = "com.tickaroo.tikxml", name = "processor", version.ref = "processor" }
 retrofit-converter = { group = "com.tickaroo.tikxml", name = "retrofit-converter", version.ref = "retrofitConverter" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version = "roomCompiler" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomRuntime" }
 annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
 tedpermission-normal = { group = "io.github.ParkSangGwon", name = "tedpermission-normal", version.ref = "tedpermissionNormal" }
+
 
 
 [plugins]

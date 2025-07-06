@@ -8,25 +8,29 @@ import com.hye.klangcomposepj.R
 
 data class BottomNavigationItem(
     val tabName: String = "",
-    val icon: Int = R.drawable.home_selected,
+    val selectedIcon: Int = R.drawable.home_selected,
+    val unSelectedIcon: Int = R.drawable.home_unselected,
     val route: String = "",
 ) {
     fun renderBottomNavigationItems(): List<BottomNavigationItem> {
         return listOf(
             BottomNavigationItem(
                 tabName = ScreenRoutDef.TopLevel.HomeTab.routeName,
-                icon = R.drawable.home_selected,
+                selectedIcon = R.drawable.home_selected,
+                unSelectedIcon = R.drawable.home_unselected,
                 route = ScreenRoutDef.TopLevel.HomeTab.routeName
             ),
             BottomNavigationItem(
                 tabName = ScreenRoutDef.TopLevel.GameTab.routeName,
-                icon = R.drawable.game_selected,
+                selectedIcon = R.drawable.game_selected,
+                unSelectedIcon = R.drawable.game_unselected,
                 route = ScreenRoutDef.TopLevel.GameTab.routeName
 
             ),
             BottomNavigationItem(
                 tabName = ScreenRoutDef.TopLevel.MyPageTab.routeName,
-                icon = R.drawable.my_selected,
+                selectedIcon = R.drawable.my_selected,
+                unSelectedIcon = R.drawable.my_unselected,
                 route = ScreenRoutDef.TopLevel.MyPageTab.routeName
             )
         )

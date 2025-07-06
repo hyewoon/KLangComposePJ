@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,8 +34,7 @@ fun SpeechScreenPreview() {
 fun SpeechScreen(navController: NavController? = null){
     Column(
         Modifier.padding(16.dp)
-            .fillMaxWidth()
-            .height(300.dp),
+            .fillMaxSize(),
         Arrangement.Center,
         Alignment.CenterHorizontally
 
@@ -42,11 +42,13 @@ fun SpeechScreen(navController: NavController? = null){
         Text(text="가방",
             modifier = Modifier.fillMaxWidth()
                 .padding(16.dp),
-            fontSize = MaterialTheme.typography.headlineSmall.fontSize,
+            fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+            fontWeight = Bold,
             textAlign = TextAlign.Center)
 
         Text(text="bag",
             modifier = Modifier.fillMaxWidth(),
+            fontSize = MaterialTheme.typography.bodyMedium.fontSize,
             textAlign = TextAlign.Center)
 
         Button(

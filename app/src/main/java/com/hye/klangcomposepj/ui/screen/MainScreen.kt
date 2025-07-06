@@ -1,6 +1,7 @@
 package com.hye.klangcomposepj.ui.screen
 
 import android.annotation.SuppressLint
+import android.provider.CalendarContract
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,12 +20,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -69,19 +72,24 @@ fun MainScreen() {
                 BottomNavigationItem().renderBottomNavigationItems()
 
                     .forEachIndexed { _, navigationItem ->
+                        val isSelected = navigationItem.route == currentDestination?.route
                         NavigationBarItem(
-                            selected = navigationItem.route == currentDestination?.route,
+                            selected = isSelected,
                             label = {
                                 Text(
                                     text = navigationItem.tabName,
-                                    color = MaterialTheme.colorScheme.primary
+                                    color = if (isSelected) MaterialTheme.colorScheme.onTertiary
+                                    else MaterialTheme.colorScheme.tertiary
                                 )
                             },
                             icon = {
                                 Icon(
-                                    painter = painterResource(id = navigationItem.icon),
+                                    painter = painterResource(
+                                        id = if (isSelected) navigationItem.selectedIcon
+                                        else navigationItem.unSelectedIcon
+                                    ),
                                     contentDescription = navigationItem.tabName,
-                                    tint = MaterialTheme.colorScheme.primary
+                                    tint = Color.Unspecified
                                 )
                             },
                             onClick = {
@@ -93,6 +101,9 @@ fun MainScreen() {
                                     restoreState = true
                                 }
                             },
+                            colors = NavigationBarItemDefaults.colors(
+                                indicatorColor = Color.Transparent
+                            )
 
                             )
                     }
@@ -143,17 +154,17 @@ fun MainTopAppBar(currentRoute: String?, onBackClick: () -> Unit) {
             AppBarItems()
         },
         navigationIcon = {
-               if(!(ShowBackButton(currentRoute))){
-                   IconButton(onClick = onBackClick) {
-                       Icon(Icons.AutoMirrored.Filled.ArrowBack, "backIcon")
-                   }
-               }
+            if (!(ShowBackButton(currentRoute))) {
+                IconButton(onClick = onBackClick) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, "backIcon")
+                }
+            }
         }
     )
 }
 
 @Composable
-fun ShowBackButton(currentRoute: String?):Boolean {
+fun ShowBackButton(currentRoute: String?): Boolean {
     val topLevelRoutes = listOf(
         ScreenRoutDef.TopLevel.HomeTab.routeName,
         ScreenRoutDef.TopLevel.GameTab.routeName,
@@ -198,7 +209,7 @@ fun PointItem(
         Text(
             text = point.toString(),
             modifier = modifier,
-            fontSize = MaterialTheme.typography.bodySmall.fontSize
+            fontSize = MaterialTheme.typography.bodyMedium.fontSize
         )
     }
 

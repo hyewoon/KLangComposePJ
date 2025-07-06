@@ -3,8 +3,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.kotlin.ksp)
-
-
 }
 
 android {
@@ -32,20 +30,22 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         //var jvmTarget = "17"
     }
- /*   kotlinOptions {
-        jvmTarget = "17"
-    }*/
+    /*   kotlinOptions {
+           jvmTarget = "17"
+       }*/
 
     kotlin {
         jvmToolchain(17)
     }
 }
 
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+
     //firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.firestore.ktx)
@@ -68,16 +68,16 @@ dependencies {
     implementation(libs.core)
     implementation(libs.annotation)
     implementation(libs.retrofit.converter)
-
-
-    implementation(libs.annotations)
-
+    implementation(libs.processor)
     kapt(libs.core)
 
     //room
     implementation(libs.androidx.room.compiler)
     implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
 
+    //jetBrain annotations for(kapt & ksp)
+    implementation(libs.annotations)
 
 
     testImplementation(libs.junit)

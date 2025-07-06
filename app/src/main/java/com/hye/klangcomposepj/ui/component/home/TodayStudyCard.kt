@@ -67,12 +67,12 @@ fun TodayStudyCard(navController: NavController) {
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(
                         text = "어휘 학습",
-                        style = MaterialTheme.typography.bodySmall,
+                        style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = "하루 목표 10개",
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
                 Column(
@@ -105,7 +105,7 @@ fun TodayStudyCard(navController: NavController) {
             {
                 Text(
                     text = "오늘의 학습",
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
 
@@ -140,12 +140,12 @@ fun CircularProgressIndicatorBox(progress: Int, max: Int) {
             )
             Text(
                 text = "/",
-                fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                 modifier = Modifier.alignByBaseline()
             )
             Text(
                 text = max.toString(),
-                fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                 modifier = Modifier.alignByBaseline()
             )
         }
