@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.hilt.plugin)
 }
 
 android {
@@ -69,6 +70,9 @@ dependencies {
     implementation(libs.annotation)
     implementation(libs.retrofit.converter)
     implementation(libs.processor)
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.android.compiler)
+    implementation(project(":domain"))
     kapt(libs.core)
 
     //room

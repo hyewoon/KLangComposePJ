@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.hilt.plugin)
 }
 
 android {
@@ -64,6 +65,15 @@ dependencies {
     //Compose Navigation
     implementation(libs.androidx.navigation.compose)
     implementation(libs.tedpermission.normal)
+
+    //hilt setting
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.android.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+    //for Compose collectAsStateWithLifecycle
+    implementation(libs.androidx.lifecycle.runtime.compose)
+
+    //Compose collectAsStateWithLifecycle
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
