@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.KLangComposePJ" parent="android:Theme.Material.Light.NoActionBar">
+
+        <!-- Background colors -->
+
+        <item name="android:windowBackground">@color/blue_50</item> <!-- 전체 배경색 -->
+        <item name="android:colorBackground">@color/blue_50</item>
+
+        <!-- Status bar -->
+        <item name="android:statusBarColor">@color/point_ivory</item>
+        <item name="android:windowLightStatusBar">true</item> <!-- 상태바 아이콘 어둡게 -->
+
+        <!-- Text colors -->
+        <item name="android:textColorPrimary">@color/dark_900</item> <!-- 주요 텍스트 -->
+        <item name="android:textColorSecondary">@color/dark_500</item> <!-- 부가 텍스트 -->
+
+
+    </style>
+
+
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="zero_margin">0dp</dimen>
+    <dimen name="main_margin">16dp</dimen>
+    <dimen name="second_margin">8dp</dimen>
+    <dimen name="third_margin">4dp</dimen>
+    <dimen name="big_margin_top">32dp</dimen>
+    <dimen name="big_margin">24dp</dimen>"
+    <dimen name="app_bar">20dp</dimen>
+    <dimen name="big_top_bar">52dp</dimen>
+    <dimen name="bottom_nav">72dp</dimen>
+    <dimen name="card_corner_radius">24dp</dimen>
+    <dimen name="card_view_margin">16dp</dimen>
+
+</resources>

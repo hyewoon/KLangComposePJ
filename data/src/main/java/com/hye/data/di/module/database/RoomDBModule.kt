@@ -15,8 +15,9 @@ import javax.inject.Singleton
 object RoomDBModule {
     @Singleton
     @Provides
-    fun provideDatabase(@ApplicationContext context: Context): TargetWordRoomDatabase {
-        return TargetWordRoomDatabase.getInstance(context)
+    fun provideDatabase(@ApplicationContext context: Context)= TargetWordRoomDatabase.getInstance(context)
 
-    }
+
+    @Provides
+    fun provideDao(database: TargetWordRoomDatabase) = database.targetWordDao()
 }

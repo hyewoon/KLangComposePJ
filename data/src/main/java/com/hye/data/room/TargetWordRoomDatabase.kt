@@ -6,8 +6,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [TargetWordEntity::class, TargetWordEntity.TargetWordExampleInfo::class, TargetWordEntity.TargetWordPronunciationInfo::class],
-    version = 1,
+    entities = [TargetWord::class, TargetWordExampleInfo::class, TargetWordPronunciationInfo::class],
+    version = 2,
 )
 abstract class TargetWordRoomDatabase : RoomDatabase() {
 

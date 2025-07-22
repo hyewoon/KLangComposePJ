@@ -10,8 +10,6 @@ import androidx.room.Transaction
  * 개별 테이블별로 데이터 insert하고 , 그걸 바탕으로 AllInfo entity에 데이터를 넣고,
  * 전체 데이터 불러올때는 AllInfo entity를 가져오기
  */
-@Dao
-interface TargetWordDao {
 
     @Dao
     interface TargetWordDao {
@@ -80,4 +78,3 @@ interface TargetWordDao {
         suspend fun getAllTargetWords(): List<TargetWordWithAllInfo>
 
     }
-}
