@@ -22,12 +22,13 @@ class LoadStudyWordUseCase @Inject constructor(
         val result = studyRepository.getAllStudyWords()
         if (result !is RoomResult.Success) return result  // 접근 실패시 바로 반환
 
+        //데이터가 아예 존재하지 않거나, 데이터가 존재하지만 오늘 날짜에 해당하는 데이터가 없는 경우
         val roomData = result.data.isEmpty() || result.data.none { it.todayString == today }
 
         return if (roomData) {
-            fetchAndInsertData(count)
+            fetchAndInsertData(count) // firestore에서 받아오기
             studyRepository.getStudyWords(today)
-        } else studyRepository.getStudyWords(today)
+        } else studyRepository.getStudyWords(today) //room에 있는 데이터 가져오기
     }
 
     private suspend fun fetchAndInsertData(count: Long) {
