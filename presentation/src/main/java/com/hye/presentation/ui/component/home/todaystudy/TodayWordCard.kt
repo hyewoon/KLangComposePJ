@@ -19,16 +19,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 import com.hye.presentation.R
 import com.hye.presentation.nav_graph.ScreenRoutDef
+import com.hye.presentation.ui.screen.model.HomeViewModel
 
 
 @Composable
-fun TodayWordCard( navController: NavController) {
+fun TodayWordCard(
+    navController: NavController,
+    wordList: List<TargetWordWithAllInfoEntity>,
+    currentIndex: Int,
+    currentWord: TargetWordWithAllInfoEntity,
+    hasNext: Boolean,
+    hasPrevious: Boolean,
+    onNextClick: ()-> Unit,
+    onPreviousClick:() -> Unit,
+    onBookmarkClick: () -> Unit= {},
+    ) {
     val isMarked = true
     Card(
         colors = CardDefaults.cardColors(

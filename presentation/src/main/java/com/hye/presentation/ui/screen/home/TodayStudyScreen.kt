@@ -16,16 +16,23 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
+import com.hye.domain.model.roomdb.WordExampleInfoEntity
 import com.hye.presentation.R
+import com.hye.presentation.model.TodayWordUiState
 import com.hye.presentation.ui.component.home.todaystudy.TodayWordCard
 import com.hye.presentation.ui.screen.model.HomeViewModel
 import com.hye.presentation.ui.screen.model.SharedViewModel
@@ -33,17 +40,67 @@ import com.hye.presentation.ui.screen.model.SharedViewModel
 
 @Composable
 fun TodayStudyScreen(
-    navController: NavController, homeViewModel: HomeViewModel, sharedViewModel: SharedViewModel,
+    navController: NavController,
+    homeViewModel: HomeViewModel = hiltViewModel(),
+    sharedViewModel: SharedViewModel = hiltViewModel(),
 ) {
+    val todayWordUiState by homeViewModel.todayWordUiState.collectAsStateWithLifecycle()
+
+
+    when {
+        todayWordUiState.isLoading -> {}
+        todayWordUiState.error.isNotEmpty() -> {}
+        else -> {
+            TodayStudyContent(
+                navController = navController,
+                wordList = todayWordUiState.wordList,
+                currentIndex = todayWordUiState.currentIndex,
+                currentWord = todayWordUiState.currentWord,
+                currentWordExample = todayWordUiState.currentWordExample,
+                hasNext = todayWordUiState.hasNext,
+                hasPrevious = todayWordUiState.hasPrevious,
+                onNextClick = { homeViewModel.moveToNext() },
+                onPreviousClick = { homeViewModel.moveToPrevious() },
+
+                )
+        }
+    }
+
+
+}
+
+@Composable
+fun TodayStudyContent(
+    navController: NavController,
+    wordList: List<TargetWordWithAllInfoEntity>,
+    currentIndex: Int,
+    currentWord: TargetWordWithAllInfoEntity,
+    currentWordExample: WordExampleInfoEntity,
+    hasNext: Boolean,
+    hasPrevious: Boolean,
+    onPreviousClick: () -> Unit = {},
+    onNextClick: () -> Unit = {},
+    onBookmarkClick: () -> Unit = {},
+
+    ) {
     Column(
         modifier = Modifier.padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LinearProgressIndicatorBox(4, 10)
-        TodayWordCard(navController)
-        ExampleCard()
-
+        TodayWordCard(
+            navController = navController,
+            wordList = wordList,
+            currentIndex = currentIndex,
+            currentWord = currentWord,
+            hasNext = hasNext,
+            hasPrevious = hasPrevious,
+            onNextClick = onNextClick,
+            onPreviousClick = onPreviousClick,
+            onBookmarkClick = onBookmarkClick
+        )
+        ExampleCard(currentWordExample)
     }
 }
 
@@ -60,7 +117,7 @@ fun LinearProgressIndicatorBox(current: Int, max: Int) {
             progress = { current.toFloat() / max.toFloat() },
             color = MaterialTheme.colorScheme.primary,
             trackColor = MaterialTheme.colorScheme.secondary,
-            strokeCap = androidx.compose.ui.graphics.StrokeCap.Round,
+            strokeCap = StrokeCap.Round,
             modifier = Modifier
                 .wrapContentWidth()
                 .height(20.dp)
@@ -87,7 +144,7 @@ fun LinearProgressIndicatorBox(current: Int, max: Int) {
 }
 
 @Composable
-fun ExampleCard() {
+fun ExampleCard(currentWordExample: WordExampleInfoEntity) {
     Card(
         modifier = Modifier
             .wrapContentWidth(),
@@ -101,7 +158,7 @@ fun ExampleCard() {
                 .fillMaxWidth()
         ) {
             Text(
-                text = "모자를 벗어서 가방 속에 넣었다.",
+                text = currentWordExample.example,
                 textAlign = TextAlign.Center,
                 fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                 modifier = Modifier.padding(16.dp)
