@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,9 +25,11 @@ import com.hye.presentation.ui.screen.model.SharedViewModel
 
 
 @Composable
-fun ListenScreen(navController: NavController,
-                 homeViewModel: HomeViewModel,
-                 sharedViewModel: SharedViewModel
+fun ListenScreen(
+    navController: NavController,
+    homeViewModel: HomeViewModel,
+    sharedViewModel: SharedViewModel,
+    snackBarHostState: SnackbarHostState
 ){
     Column(
         modifier = Modifier.padding(16.dp)

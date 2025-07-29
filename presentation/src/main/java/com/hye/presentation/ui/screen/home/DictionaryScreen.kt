@@ -11,6 +11,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,9 +25,11 @@ import com.hye.presentation.ui.screen.model.SharedViewModel
 
 
 @Composable
-fun DictionaryScreen(navController: NavController,
-                     homeViewModel: HomeViewModel,
-                     sharedViewModel: SharedViewModel
+fun DictionaryScreen(
+    navController: NavController,
+    homeViewModel: HomeViewModel,
+    sharedViewModel: SharedViewModel,
+    snackBarHostState: SnackbarHostState
 ) {
             Card(
                 modifier = Modifier.fillMaxSize().padding(16.dp),

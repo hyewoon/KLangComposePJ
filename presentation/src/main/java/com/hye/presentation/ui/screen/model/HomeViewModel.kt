@@ -1,5 +1,6 @@
 package com.hye.presentation.ui.screen.model
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hye.domain.result.RoomResult
@@ -23,6 +24,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         loadStudyWord(10)
+        Log.d("HomeViewModel", "HomeViewModel initialized")
     }
 
     private fun loadStudyWord(count: Int) {
@@ -66,7 +68,7 @@ class HomeViewModel @Inject constructor(
             if (it.hasNext) {
                 it.copy(currentIndex = it.currentIndex + 1)
             } else {
-                it.copy(showLastWordMessage = true)
+                it.copy(snackBarMessage = "마지막 단어 입니다.")
             }
         }
     }
@@ -76,18 +78,14 @@ class HomeViewModel @Inject constructor(
             if (it.hasPrevious) {
                 it.copy(currentIndex = it.currentIndex - 1)
             } else {
-                it.copy(showFirstWordMessage = true)
+                it.copy(snackBarMessage = "첫번째 단어 입니다.")
             }
         }
     }
 
-    fun clearLastWordMessage() {
-        _todayWordUiState.update { it.copy(showLastWordMessage = false) }
+    fun clearSnackBarMessage() {
+        _todayWordUiState.update { it.copy(snackBarMessage = "") }
 
     }
-    fun clearFirstWordMessage() {
-        _todayWordUiState.update { it.copy(showFirstWordMessage = false) }
-    }
-
 
 }

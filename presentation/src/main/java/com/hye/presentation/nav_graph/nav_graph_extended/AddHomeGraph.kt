@@ -1,5 +1,6 @@
 package com.hye.presentation.nav_graph.nav_graph_extended
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -18,6 +19,7 @@ import com.hye.presentation.ui.screen.model.SharedViewModel
 fun NavGraphBuilder.addHomeGraph(
     navController: NavController,
     sharedViewModel: SharedViewModel,
+    snackBarHostState: SnackbarHostState
 ) {
 
 
@@ -33,7 +35,8 @@ fun NavGraphBuilder.addHomeGraph(
             TodayStudyScreen(
                 navController = navController,
                 homeViewModel = homeViewModel,
-                sharedViewModel = sharedViewModel
+                sharedViewModel = sharedViewModel,
+                snackBarHostState = snackBarHostState
             )
 
         }
@@ -46,7 +49,8 @@ fun NavGraphBuilder.addHomeGraph(
             ListenScreen(
                 navController = navController,
                 homeViewModel = homeViewModel,
-                sharedViewModel = sharedViewModel
+                sharedViewModel = sharedViewModel,
+                snackBarHostState = snackBarHostState
             )
         }
         composable(ScreenRoutDef.TodayStudyFlow.DictionaryScreen.routeName) {
@@ -57,7 +61,9 @@ fun NavGraphBuilder.addHomeGraph(
             DictionaryScreen(
                 navController = navController,
                 homeViewModel = homeViewModel,
-                sharedViewModel = sharedViewModel)
+                sharedViewModel = sharedViewModel,
+                snackBarHostState = snackBarHostState
+            )
 
         }
         composable(ScreenRoutDef.TodayStudyFlow.SpeechScreen.routeName) {
@@ -65,9 +71,11 @@ fun NavGraphBuilder.addHomeGraph(
                 navController.getBackStackEntry(ScreenRoutDef.TopLevel.HomeTab.routeName)
             }
             val homeViewModel: HomeViewModel = hiltViewModel(homeTabEntry)
-            SpeechScreen( navController = navController,
+            SpeechScreen(
+                navController = navController,
                 homeViewModel = homeViewModel,
-                sharedViewModel = sharedViewModel)
+                sharedViewModel = sharedViewModel,
+                snackBarHostState = snackBarHostState)
         }
         composable(ScreenRoutDef.TodayStudyFlow.WriteScreen.routeName) {
             val homeTabEntry = remember(it) {
@@ -76,7 +84,8 @@ fun NavGraphBuilder.addHomeGraph(
             val homeViewModel: HomeViewModel = hiltViewModel(homeTabEntry)
             WriteScreen( navController = navController,
                 homeViewModel = homeViewModel,
-                sharedViewModel = sharedViewModel)
+                sharedViewModel = sharedViewModel,
+                snackBarHostState = snackBarHostState)
 
         }
     }

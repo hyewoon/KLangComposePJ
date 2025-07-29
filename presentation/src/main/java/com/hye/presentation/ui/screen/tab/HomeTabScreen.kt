@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,7 +25,8 @@ import com.hye.presentation.ui.theme.KLangComposePJTheme
 @Composable
 fun HomeTabScreen(navController: NavController,
                   homeViewModel : HomeViewModel,
-                  sharedViewModel: SharedViewModel
+                  sharedViewModel: SharedViewModel,
+                  snackBarHostState: SnackbarHostState
                   ) {
     KLangComposePJTheme {
         Surface(

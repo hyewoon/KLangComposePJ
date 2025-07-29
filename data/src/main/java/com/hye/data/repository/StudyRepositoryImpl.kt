@@ -22,7 +22,9 @@ class StudyRepositoryImpl @Inject constructor(
 
     override suspend fun insertStudyWords(words: List<TargetWordWithAllInfoEntity>)= runCatching {
         insertRoomDB(words)
+        println("insert성공")
         RoomResult.Success(Unit)
+
     }.getOrElse {
         RoomResult.RoomDBError(it)
     }
@@ -31,6 +33,7 @@ class StudyRepositoryImpl @Inject constructor(
         val room = dao.searchTargetWordByDate(date).map{
             roomToDomainMapper.mapToDomain(it)
         }
+        println("getRoon성공")
         RoomResult.Success(room)
     }.getOrElse {
         RoomResult.RoomDBError(it)

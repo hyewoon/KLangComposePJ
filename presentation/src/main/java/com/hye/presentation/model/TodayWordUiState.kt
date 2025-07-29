@@ -8,8 +8,8 @@ data class TodayWordUiState(
     val currentIndex: Int = 0,
     val isLoading: Boolean = false,
     val error: String = "",
-    val showLastWordMessage: Boolean = false,
-    val showFirstWordMessage: Boolean = false
+    val snackBarMessage: String = "",
+    val bookMarkedIndices: Set<Int> =emptySet()
     ) {
     //계산 속성
     val currentWord: TargetWordWithAllInfoEntity
@@ -17,7 +17,9 @@ data class TodayWordUiState(
     val currentWordExample: WordExampleInfoEntity
         get() = currentWord.exampleInfo[0]
     val hasNext: Boolean
-        get() = currentIndex <= wordList.size - 1
+        get() = wordList.isNotEmpty() && currentIndex < wordList.size - 1
     val hasPrevious: Boolean
-        get() = currentIndex >= 0
+        get() = currentIndex > 0
+    val isMarked: Boolean
+        get() = bookMarkedIndices.contains(currentIndex)
 }

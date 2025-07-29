@@ -1,8 +1,10 @@
 package com.hye.presentation.ui.screen.home
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -14,8 +16,10 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,7 +36,6 @@ import androidx.navigation.NavController
 import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 import com.hye.domain.model.roomdb.WordExampleInfoEntity
 import com.hye.presentation.R
-import com.hye.presentation.model.TodayWordUiState
 import com.hye.presentation.ui.component.home.todaystudy.TodayWordCard
 import com.hye.presentation.ui.screen.model.HomeViewModel
 import com.hye.presentation.ui.screen.model.SharedViewModel
@@ -43,10 +46,16 @@ fun TodayStudyScreen(
     navController: NavController,
     homeViewModel: HomeViewModel = hiltViewModel(),
     sharedViewModel: SharedViewModel = hiltViewModel(),
+    snackBarHostState: SnackbarHostState,
 ) {
     val todayWordUiState by homeViewModel.todayWordUiState.collectAsStateWithLifecycle()
 
-
+    LaunchedEffect(todayWordUiState.snackBarMessage) {
+        if (todayWordUiState.snackBarMessage.isNotEmpty()) {
+            snackBarHostState.showSnackbar(todayWordUiState.snackBarMessage)
+            homeViewModel.clearSnackBarMessage()
+        }
+    }
     when {
         todayWordUiState.isLoading -> {}
         todayWordUiState.error.isNotEmpty() -> {}
@@ -61,13 +70,12 @@ fun TodayStudyScreen(
                 hasPrevious = todayWordUiState.hasPrevious,
                 onNextClick = { homeViewModel.moveToNext() },
                 onPreviousClick = { homeViewModel.moveToPrevious() },
-
                 )
         }
     }
 
-
 }
+
 
 @Composable
 fun TodayStudyContent(
@@ -84,23 +92,30 @@ fun TodayStudyContent(
 
     ) {
     Column(
-        modifier = Modifier.padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(20.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LinearProgressIndicatorBox(4, 10)
-        TodayWordCard(
-            navController = navController,
-            wordList = wordList,
-            currentIndex = currentIndex,
-            currentWord = currentWord,
-            hasNext = hasNext,
-            hasPrevious = hasPrevious,
-            onNextClick = onNextClick,
-            onPreviousClick = onPreviousClick,
-            onBookmarkClick = onBookmarkClick
-        )
+        LinearProgressIndicatorBox(currentIndex + 1, wordList.size)
+        Box(modifier = Modifier.weight(1f)) {
+            TodayWordCard(
+                navController = navController,
+                wordList = wordList,
+                currentIndex = currentIndex,
+                currentWord = currentWord,
+                hasNext = hasNext,
+                hasPrevious = hasPrevious,
+                onNextClick = onNextClick,
+                onPreviousClick = onPreviousClick,
+                onBookmarkClick = onBookmarkClick
+            )
+        }
+
         ExampleCard(currentWordExample)
+
+
     }
 }
 
@@ -144,33 +159,50 @@ fun LinearProgressIndicatorBox(current: Int, max: Int) {
 }
 
 @Composable
-fun ExampleCard(currentWordExample: WordExampleInfoEntity) {
+fun ExampleCard(
+    currentWordExample: WordExampleInfoEntity,
+) {
     Card(
         modifier = Modifier
-            .wrapContentWidth(),
+            .fillMaxWidth()
+            .height(120.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         )
     ) {
-        Column(
+        Box(
             modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
+                .padding(8.dp)
+                .fillMaxSize()
         ) {
-            Text(
-                text = currentWordExample.example,
-                textAlign = TextAlign.Center,
-                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                modifier = Modifier.padding(16.dp)
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        top = 10.dp,
+                        bottom = 32.dp
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = currentWordExample.example,
+                    textAlign = TextAlign.Center,
+                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
             Text(
                 text = "예문 출처: 표준한국어대사전",
-                fontSize = 8.sp,
+                fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.surfaceTint,
                 textAlign = TextAlign.End,
-                modifier = Modifier.padding(end = 16.dp, bottom = 16.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 16.dp)
+                    .align(Alignment.BottomEnd)
             )
         }
+
     }
 
 }

@@ -20,11 +20,14 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -55,12 +58,17 @@ import com.hye.presentation.ui.screen.tab.MyPageTabScreen
 @Preview(showBackground = true)
 @Composable
 fun MainScreen(sharedViewModel: SharedViewModel = hiltViewModel()) {
+    //네비게이션 설정
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-
+    //snackbar 설정
+    val snackBarHostState = remember { SnackbarHostState() }
 
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackBarHostState)
+        },
         topBar = {
             MainTopAppBar(currentRoute = currentDestination?.route,
                 onBackClick = { navController.popBackStack() })
@@ -127,7 +135,8 @@ fun MainScreen(sharedViewModel: SharedViewModel = hiltViewModel()) {
                     HomeTabScreen(
                         navController = navController,
                         homeViewModel = homeViewModel,
-                        sharedViewModel = sharedViewModel
+                        sharedViewModel = sharedViewModel,
+                        snackBarHostState = snackBarHostState
                         )
                 }
                 composable(ScreenRoutDef.TopLevel.GameTab.routeName) {
@@ -150,6 +159,7 @@ fun MainScreen(sharedViewModel: SharedViewModel = hiltViewModel()) {
                 addHomeGraph(
                     navController = navController,
                     sharedViewModel =sharedViewModel ,
+                    snackBarHostState = snackBarHostState
                 )
                 addGameGraph(
                     navController = navController,

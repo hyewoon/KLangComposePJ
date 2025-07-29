@@ -13,22 +13,21 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 import com.hye.presentation.R
 import com.hye.presentation.nav_graph.ScreenRoutDef
-import com.hye.presentation.ui.screen.model.HomeViewModel
 
 
 @Composable
@@ -39,10 +38,10 @@ fun TodayWordCard(
     currentWord: TargetWordWithAllInfoEntity,
     hasNext: Boolean,
     hasPrevious: Boolean,
-    onNextClick: ()-> Unit,
-    onPreviousClick:() -> Unit,
-    onBookmarkClick: () -> Unit= {},
-    ) {
+    onNextClick: () -> Unit,
+    onPreviousClick: () -> Unit,
+    onBookmarkClick: () -> Unit = {},
+) {
     val isMarked = true
     Card(
         colors = CardDefaults.cardColors(
@@ -59,7 +58,7 @@ fun TodayWordCard(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 10.dp),
+                    .padding(top = 10.dp, start = 16.dp, end = 16.dp, bottom = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -85,13 +84,14 @@ fun TodayWordCard(
                 )
 
             }
-            ShowCurrentWord()
-            Text(
-                text = "go",
-                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
+            ShowCurrentWord(
+                currentWord,
+                hasPrevious,
+                hasNext,
+                onPreviousClick,
+                onNextClick
             )
+
             //순서
             Row(
                 modifier = Modifier
@@ -100,17 +100,8 @@ fun TodayWordCard(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "1",
-                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                )
-                Text(
-                    text = "/",
-                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                )
-                Text(
-                    text = "10",
-                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                )
+                    text = "${currentIndex+1}/${wordList.size}" ,
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize)
             }
         }
         //디바이더
@@ -129,7 +120,13 @@ fun TodayWordCard(
 }
 
 @Composable
-fun ShowCurrentWord() {
+fun ShowCurrentWord(
+    currentWord: TargetWordWithAllInfoEntity,
+    hasPrevious: Boolean,
+    hasNext: Boolean,
+    onPreviousClick: () -> Unit,
+    onNextClick: () -> Unit,
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -137,7 +134,7 @@ fun ShowCurrentWord() {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        IconButton(onClick = {}) {
+        IconButton(onClick = onPreviousClick) {
             Icon(
                 painter = painterResource(id = R.drawable.prev),
                 contentDescription = "prev",
@@ -146,11 +143,11 @@ fun ShowCurrentWord() {
         }
 
         Text(
-            text = "가다",
+            text = currentWord.korean,
             fontSize = MaterialTheme.typography.headlineSmall.fontSize
         )
 
-        IconButton(onClick = {}) {
+        IconButton(onClick = onNextClick) {
             Icon(
                 painter = painterResource(id = R.drawable.next),
                 contentDescription = "next",
@@ -159,6 +156,15 @@ fun ShowCurrentWord() {
 
         }
     }
+    Column() {
+        Text(
+            text = currentWord.english,
+            fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center
+        )
+    }
+
 
 }
 
