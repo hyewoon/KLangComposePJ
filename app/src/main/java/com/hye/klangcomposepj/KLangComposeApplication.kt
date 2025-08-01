@@ -3,6 +3,8 @@ package com.hye.klangcomposepj.common
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 
+/*
+* */
 @HiltAndroidApp
 class KLangComposeApplication: Application(){
     override fun onCreate() {

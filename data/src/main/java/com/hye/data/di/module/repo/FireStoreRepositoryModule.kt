@@ -1,9 +1,7 @@
-package com.hye.data.di.module
+package com.hye.data.di.module.impl
 
 import com.hye.data.repository.FireStoreRepositoryImpl
-import com.hye.data.repository.StudyRepositoryImpl
 import com.hye.domain.repository.firestore.FireStoreRepository
-import com.hye.domain.repository.roomdb.StudyRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -13,16 +11,11 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class AllRepositoryModule {
+abstract class FireStoreRepositoryImpl {
 
-    @Binds
     @Singleton
+    @Binds
     abstract fun bindFireStoreRepository(
         fireStoreRepositoryImpl: FireStoreRepositoryImpl
     ): FireStoreRepository
-
-
-    @Binds
-    @Singleton
-    abstract fun bindStudyRepository(studyRepositoryImpl: StudyRepositoryImpl): StudyRepository
 }
