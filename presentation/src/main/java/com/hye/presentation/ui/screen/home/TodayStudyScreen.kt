@@ -35,6 +35,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 import com.hye.domain.model.roomdb.WordExampleInfoEntity
 import com.hye.presentation.R
+import com.hye.presentation.model.TodayWord
+import com.hye.presentation.model.UIState
 import com.hye.presentation.ui.component.home.todaystudy.TodayWordCard
 import com.hye.presentation.ui.screen.model.HomeViewModel
 import com.hye.presentation.ui.screen.model.SharedViewModel
@@ -53,27 +55,30 @@ fun TodayStudyScreen(
 ) {
     val todayWordUiState by homeViewModel.todayWordUiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(todayWordUiState.snackBarMessage) {
-        if (todayWordUiState.snackBarMessage.isNotEmpty()) {
-            snackBarHostState.showSnackbar(todayWordUiState.snackBarMessage)
-            homeViewModel.clearSnackBarMessage()
-        }
-    }
-    when {
-        todayWordUiState.isLoading -> {}
-        todayWordUiState.error.isNotEmpty() -> {}
-        else -> {
+    when (todayWordUiState) {
+        is UIState.Loading -> {}
+        is UIState.Error -> {}
+        is UIState.Success -> {
+            val todayWord = (todayWordUiState as UIState.Success<TodayWord>).data
+
+            // 안전한 LaunchedEffect: 성공시에만
+            LaunchedEffect(todayWord.snackBarMessage) {
+                if (todayWord.snackBarMessage.isNotEmpty()) {
+                    snackBarHostState.showSnackbar(todayWord.snackBarMessage)
+                    homeViewModel.clearSnackBarMessage()
+                }
+            }
             TodayStudyContent(
                 onNavigateToListenScreen = onNavigateToListenScreen,
                 onNavigateToDictionaryScreen = onNavigateToDictionaryScreen,
                 onNavigateToSpeechScreen = onNavigateToSpeechScreen,
                 onNavigateToWriteScreen = onNavigateToWriteScreen,
-                wordList = todayWordUiState.wordList,
-                currentIndex = todayWordUiState.currentIndex,
-                currentWord = todayWordUiState.currentWord,
-                currentWordExample = todayWordUiState.currentWordExample,
-                hasNext = todayWordUiState.hasNext,
-                hasPrevious = todayWordUiState.hasPrevious,
+                wordList = todayWord.wordList,
+                currentIndex = todayWord.currentIndex,
+                currentWord = todayWord.currentWord,
+                currentWordExample = todayWord.currentWordExample,
+                hasNext = todayWord.hasNext,
+                hasPrevious = todayWord.hasPrevious,
                 onNextClick = { homeViewModel.moveToNext() },
                 onPreviousClick = { homeViewModel.moveToPrevious() },
             )
@@ -85,10 +90,10 @@ fun TodayStudyScreen(
 
 @Composable
 fun TodayStudyContent(
-    onNavigateToListenScreen: () -> Unit ,
+    onNavigateToListenScreen: () -> Unit,
     onNavigateToDictionaryScreen: () -> Unit,
-    onNavigateToSpeechScreen: () -> Unit ,
-    onNavigateToWriteScreen: () -> Unit ,
+    onNavigateToSpeechScreen: () -> Unit,
+    onNavigateToWriteScreen: () -> Unit,
     wordList: List<TargetWordWithAllInfoEntity>,
     currentIndex: Int,
     currentWord: TargetWordWithAllInfoEntity,
@@ -112,7 +117,7 @@ fun TodayStudyContent(
             TodayWordCard(
                 onNavigateToListenScreen = onNavigateToListenScreen,
                 onNavigateToDictionaryScreen = onNavigateToDictionaryScreen,
-                onNavigateToSpeechScreen =onNavigateToSpeechScreen,
+                onNavigateToSpeechScreen = onNavigateToSpeechScreen,
                 onNavigateToWriteScreen = onNavigateToWriteScreen,
                 wordList = wordList,
                 currentIndex = currentIndex,

@@ -5,21 +5,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hye.domain.result.RoomResult
 import com.hye.domain.usecase.LoadStudyWordUseCase
+import com.hye.presentation.model.TodayWord
 import com.hye.presentation.model.TodayWordUiState
+import com.hye.presentation.model.UIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val loadStudyWordUseCase: LoadStudyWordUseCase
+    private val loadStudyWordUseCase: LoadStudyWordUseCase,
 ) : ViewModel() {
 
-    private val _todayWordUiState = MutableStateFlow(TodayWordUiState())
+    private val _todayWordUiState = MutableStateFlow<TodayWordUiState>(UIState.Loading)
     val todayWordUiState: StateFlow<TodayWordUiState> = _todayWordUiState.asStateFlow()
 
     init {
@@ -29,63 +30,104 @@ class HomeViewModel @Inject constructor(
 
     private fun loadStudyWord(count: Int) {
         viewModelScope.launch {
-            //stateflow의 초기값 지정
-            _todayWordUiState.value = _todayWordUiState.value.copy(isLoading = true)
 
             when (val roomResult = loadStudyWordUseCase(count)) {
                 is RoomResult.Success -> {
-                    _todayWordUiState.update {
-                        it.copy(
+                    _todayWordUiState.value = UIState.Success(
+                        TodayWord(
                             wordList = roomResult.data,
-                            isLoading = false,
-                            error = ""
+                            currentIndex = 0,
+                            snackBarMessage = "",
+                            bookMarkedIndices = emptySet()
                         )
-                    }
+                    )
                 }
 
                 is RoomResult.RoomDBError -> {
-                    _todayWordUiState.update {
-                        it.copy(
-                            isLoading = false,
-                            error = roomResult.exception.message ?: "Unknown error"
-                        )
-                    }
+                    _todayWordUiState.value = UIState.Error(roomResult.exception)
                 }
 
                 is RoomResult.Loading -> {
-                    _todayWordUiState.update { it.copy(isLoading = true) }
+                    _todayWordUiState.value = UIState.Loading
                 }
 
-                else -> {}
-
+                RoomResult.NoConstructor -> {}
             }
-
         }
+
+        /*   when (val roomResult = loadStudyWordUseCase(count)) {
+               is RoomResult.Success -> {
+                   _todayWordUiState.update {
+                       it.copy(
+                           wordList = roomResult.data,
+                           isLoading = false,
+                           error = ""
+                       )
+                   }
+               }
+
+               is RoomResult.RoomDBError -> {
+                   _todayWordUiState.update {
+                       it.copy(
+                           isLoading = false,
+                           error = roomResult.exception.message ?: "Unknown error"
+                       )
+                   }
+               }
+
+               is RoomResult.Loading -> {
+                   _todayWordUiState.update { it.copy(isLoading = true) }
+               }
+
+               else -> {}
+
+           }*/
+
     }
 
+
     fun moveToNext() {
-        _todayWordUiState.update {
-            if (it.hasNext) {
-                it.copy(currentIndex = it.currentIndex + 1)
+        val currentState = _todayWordUiState.value
+
+        if (currentState is UIState.Success) {
+            //실제 데이터 currentData: TodayWord
+            val currentData = currentState.data
+            if (currentData.hasNext) {
+                _todayWordUiState.value = UIState.Success(
+                    currentData.copy(currentIndex = currentData.currentIndex + 1)
+                )
             } else {
-                it.copy(snackBarMessage = "마지막 단어 입니다.")
+                _todayWordUiState.value = UIState.Success(
+                    currentData.copy(snackBarMessage = "마지막 단어 입니다.")
+                )
             }
+
         }
     }
 
     fun moveToPrevious() {
-        _todayWordUiState.update {
-            if (it.hasPrevious) {
-                it.copy(currentIndex = it.currentIndex - 1)
+        val currentState = _todayWordUiState.value
+
+        if (currentState is UIState.Success) {
+            val currentData = currentState.data
+            if (currentData.hasPrevious) {
+                _todayWordUiState.value = UIState.Success(
+                    currentData.copy(currentIndex = currentData.currentIndex - 1)
+                )
             } else {
-                it.copy(snackBarMessage = "첫번째 단어 입니다.")
+                _todayWordUiState.value = UIState.Success(
+                    currentData.copy(snackBarMessage = "첫번째 단어 입니다.")
+                )
             }
         }
     }
 
     fun clearSnackBarMessage() {
-        _todayWordUiState.update { it.copy(snackBarMessage = "") }
-
+        val currentState = _todayWordUiState.value
+        if (currentState is UIState.Success) {
+            _todayWordUiState.value = UIState.Success(
+                currentState.data.copy(snackBarMessage = "")
+            )
+        }
     }
-
 }

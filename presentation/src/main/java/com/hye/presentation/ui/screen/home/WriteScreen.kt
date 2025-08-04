@@ -26,16 +26,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.hye.presentation.R
 import com.hye.presentation.model.DrawingPath
+import com.hye.presentation.model.TodayWord
+import com.hye.presentation.model.UIState
 import com.hye.presentation.ui.component.common.HandWritingCanvasComponent
 import com.hye.presentation.ui.screen.model.HomeViewModel
 import com.hye.presentation.ui.screen.model.SharedViewModel
@@ -66,18 +66,28 @@ fun WriteScreen(
     }
 
 
-    val todayWordUiState = homeViewModel.todayWordUiState.collectAsStateWithLifecycle()
-    val currentWord = todayWordUiState.value.currentWord
+    val todayWordUiState by homeViewModel.todayWordUiState.collectAsStateWithLifecycle()
 
-    DrawingCard(
-        korean = currentWord.korean,
-        english = currentWord.english,
-        completedPaths = completedPaths,
-        currentPath = currentPath,
-        onPathsChanged = { newPaths -> completedPaths = newPaths },
-        onCurrentPathChanged = { newPath -> currentPath = newPath }
-    )
+    when(todayWordUiState){
+        is UIState.Loading -> {}
+        is UIState.Error -> {}
+        is UIState.Success -> {
+            val todayWord = (todayWordUiState as UIState.Success<TodayWord>).data
+            val currentWord = todayWord.currentWord
 
+            DrawingCard(
+                korean = currentWord.korean,
+                english = currentWord.english,
+                completedPaths = completedPaths,
+                currentPath = currentPath,
+                onPathsChanged = { newPaths -> completedPaths = newPaths },
+                onCurrentPathChanged = { newPath -> currentPath = newPath }
+            )
+
+
+        }
+
+    }
 }
 
 @Composable
