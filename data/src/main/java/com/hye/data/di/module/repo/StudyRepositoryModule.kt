@@ -1,5 +1,6 @@
-package com.hye.data.di.module.impl
+package com.hye.data.di.module.repo
 
+import com.hye.data.repository.StudyRepositoryImpl
 import com.hye.domain.repository.roomdb.StudyRepository
 import dagger.Binds
 import dagger.Module
@@ -10,7 +11,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class StudyRepositoryImpl {
+abstract class StudyRepositoryModule {
 
     @Binds
     @Singleton

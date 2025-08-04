@@ -1,38 +1,55 @@
 package com.hye.presentation.nav_graph
 
-sealed class ScreenRoutDef(val routeName: String) {
+import kotlinx.serialization.Serializable
 
-    //top-level
-    sealed class TopLevel(routeName: String) : ScreenRoutDef(routeName){
-        data object HomeTab : TopLevel("home")
-        data object GameTab : TopLevel("game")
-        data object MyPageTab : TopLevel("mypage")
+/*
+* 직렬화해서 router 수정
+* */
+@Serializable
+sealed interface ScreenRoutDef{
+    //top_level
+    @Serializable
+    sealed interface TopLevel : ScreenRoutDef {
+        @Serializable
+        data object HomeTab : TopLevel
+        @Serializable
+        data object GameTab : TopLevel
+        @Serializable
+        data object MyPageTab : TopLevel
     }
-
 
     //HomeTab Flow(second-level)
-    sealed class HomeFlow(routName: String): ScreenRoutDef(routName){
-        data object TodayStudyScreen : HomeFlow("today_study")
+    @Serializable
+    sealed interface HomeFlow : ScreenRoutDef {
+        @Serializable
+        data object TodayStudyScreen : HomeFlow
 
     }
-    //GameTab Flow(second-level)
-    sealed class GameFlow(routName: String): ScreenRoutDef(routName){
-        data object DrawScreen : GameFlow("draw")
-        data object SearchScreen : GameFlow("search")
-        data object VocabularyScreen : GameFlow("vocabulary")
-        data object TextToSpeechScreen : GameFlow("tts")
-        data object SpeechToTextScreen : GameFlow("stt")
+    @Serializable
+    sealed interface GameFlow: ScreenRoutDef {
+        @Serializable
+        data object DrawScreen : GameFlow
+        @Serializable
+        data object SearchScreen : GameFlow
+        @Serializable
+        data object VocabularyScreen : GameFlow
+        @Serializable
+        data object TextToSpeechScreen : GameFlow
+        @Serializable
+        data object SpeechToTextScreen : GameFlow
+
     }
-
-    //TodayStudyFlow(third-level)
-    sealed class TodayStudyFlow(routName: String): ScreenRoutDef(routName){
-        data object ListenScreen : TodayStudyFlow("listen")
-        data object DictionaryScreen : TodayStudyFlow("dictionary")
-        data object SpeechScreen : TodayStudyFlow("speech")
-        data object WriteScreen : TodayStudyFlow("write")
+    @Serializable
+    sealed interface TodayStudyFlow : ScreenRoutDef {
+        @Serializable
+        data object ListenScreen : TodayStudyFlow
+        @Serializable
+        data object DictionaryScreen : TodayStudyFlow
+        @Serializable
+        data object SpeechScreen : TodayStudyFlow
+        @Serializable
+        data object WriteScreen : TodayStudyFlow
     }
-
-
 
 
 }

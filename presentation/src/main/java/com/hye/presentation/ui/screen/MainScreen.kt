@@ -127,26 +127,26 @@ fun MainScreen(sharedViewModel: SharedViewModel = hiltViewModel()) {
         ) {
             NavHost(
                 navController = navController,
-                startDestination = ScreenRoutDef.TopLevel.HomeTab.routeName
+                startDestination = ScreenRoutDef.TopLevel.HomeTab
             ) {
 
-                composable(ScreenRoutDef.TopLevel.HomeTab.routeName) {
+                composable<ScreenRoutDef.TopLevel.HomeTab>{
                     val homeViewModel: HomeViewModel = hiltViewModel()
                     HomeTabScreen(
-                        navController = navController,
+                        onNavigateToTodayStudy = {navController.navigate(ScreenRoutDef.HomeFlow.TodayStudyScreen)},
                         homeViewModel = homeViewModel,
                         sharedViewModel = sharedViewModel,
                         snackBarHostState = snackBarHostState
                         )
                 }
-                composable(ScreenRoutDef.TopLevel.GameTab.routeName) {
+                composable<ScreenRoutDef.TopLevel.GameTab> {
                      val gameViewModel: GameViewModel = hiltViewModel()
                     GameTabScreen(navController = navController,
                         gameViewModel = gameViewModel,
                         sharedViewModel = sharedViewModel)
 
                 }
-                composable(ScreenRoutDef.TopLevel.MyPageTab.routeName) {
+                composable<ScreenRoutDef.TopLevel.MyPageTab> {
                     MyPageTabScreen(
                         navController = navController,
                         sharedViewModel = sharedViewModel

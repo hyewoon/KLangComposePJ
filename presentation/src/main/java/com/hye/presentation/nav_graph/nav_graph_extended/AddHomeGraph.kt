@@ -3,7 +3,7 @@ package com.hye.presentation.nav_graph.nav_graph_extended
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
@@ -17,72 +17,71 @@ import com.hye.presentation.ui.screen.model.HomeViewModel
 import com.hye.presentation.ui.screen.model.SharedViewModel
 
 fun NavGraphBuilder.addHomeGraph(
-    navController: NavController,
+    getHomeTabEntry: () -> NavBackStackEntry,
+    onNavigateToTodayStudyScreen: () -> Unit,
+    onNavigateToListenScreen: () -> Unit,
+    onNavigateToDictionaryScreen: () -> Unit,
+    onNavigateToSpeechScreen: () -> Unit,
+    onNavigateToWriteScreen: () -> Unit,
     sharedViewModel: SharedViewModel,
     snackBarHostState: SnackbarHostState
 ) {
 
 
-    navigation(
-        startDestination = ScreenRoutDef.HomeFlow.TodayStudyScreen.routeName,
-        route = "home_flow_graph"
+    navigation<ScreenRoutDef.HomeFlow>(
+        startDestination = ScreenRoutDef.HomeFlow.TodayStudyScreen
     ) {
-        composable(ScreenRoutDef.HomeFlow.TodayStudyScreen.routeName) {
-            val homeTabEntry = remember(it) {
-                navController.getBackStackEntry(ScreenRoutDef.TopLevel.HomeTab.routeName)
-            }
+        composable<ScreenRoutDef.HomeFlow.TodayStudyScreen> {
+            val homeTabEntry = remember(it) { getHomeTabEntry() }
             val homeViewModel: HomeViewModel = hiltViewModel(homeTabEntry)
+
             TodayStudyScreen(
-                navController = navController,
+                onNavigateToListenScreen = onNavigateToListenScreen,
+                onNavigateToDictionaryScreen = onNavigateToDictionaryScreen,
+                onNavigateToSpeechScreen = onNavigateToSpeechScreen,
+                onNavigateToWriteScreen = onNavigateToWriteScreen,
                 homeViewModel = homeViewModel,
                 sharedViewModel = sharedViewModel,
-                snackBarHostState = snackBarHostState
+                snackBarHostState =snackBarHostState
             )
 
         }
 
-        composable(ScreenRoutDef.TodayStudyFlow.ListenScreen.routeName) {
-            val homeTabEntry = remember(it) {
-                navController.getBackStackEntry(ScreenRoutDef.TopLevel.HomeTab.routeName)
-            }
+        composable<ScreenRoutDef.TodayStudyFlow.ListenScreen> {
+            val homeTabEntry = remember(it) { getHomeTabEntry() }
             val homeViewModel: HomeViewModel = hiltViewModel(homeTabEntry)
             ListenScreen(
-                navController = navController,
+                onNavigateToListenScreen =onNavigateToListenScreen ,
                 homeViewModel = homeViewModel,
                 sharedViewModel = sharedViewModel,
                 snackBarHostState = snackBarHostState
             )
         }
-        composable(ScreenRoutDef.TodayStudyFlow.DictionaryScreen.routeName) {
-            val homeTabEntry = remember(it) {
-                navController.getBackStackEntry(ScreenRoutDef.TopLevel.HomeTab.routeName)
-            }
+        composable<ScreenRoutDef.TodayStudyFlow.DictionaryScreen> {
+            val homeTabEntry = remember(it) { getHomeTabEntry() }
             val homeViewModel: HomeViewModel = hiltViewModel(homeTabEntry)
             DictionaryScreen(
-                navController = navController,
+                onNavigateToDictionaryScreen= onNavigateToDictionaryScreen,
                 homeViewModel = homeViewModel,
                 sharedViewModel = sharedViewModel,
                 snackBarHostState = snackBarHostState
             )
 
         }
-        composable(ScreenRoutDef.TodayStudyFlow.SpeechScreen.routeName) {
-            val homeTabEntry = remember(it) {
-                navController.getBackStackEntry(ScreenRoutDef.TopLevel.HomeTab.routeName)
-            }
+        composable<ScreenRoutDef.TodayStudyFlow.SpeechScreen> {
+            val homeTabEntry = remember(it) { getHomeTabEntry() }
             val homeViewModel: HomeViewModel = hiltViewModel(homeTabEntry)
             SpeechScreen(
-                navController = navController,
+                onNavigateToSpeechScreen = onNavigateToSpeechScreen,
                 homeViewModel = homeViewModel,
                 sharedViewModel = sharedViewModel,
                 snackBarHostState = snackBarHostState)
         }
-        composable(ScreenRoutDef.TodayStudyFlow.WriteScreen.routeName) {
-            val homeTabEntry = remember(it) {
-                navController.getBackStackEntry(ScreenRoutDef.TopLevel.HomeTab.routeName)
-            }
+        composable<ScreenRoutDef.TodayStudyFlow.WriteScreen> {
+            val homeTabEntry = remember(it) { getHomeTabEntry() }
             val homeViewModel: HomeViewModel = hiltViewModel(homeTabEntry)
-            WriteScreen( navController = navController,
+            WriteScreen(
+                onNavigateToWriteScreen = onNavigateToWriteScreen,
                 homeViewModel = homeViewModel,
                 sharedViewModel = sharedViewModel,
                 snackBarHostState = snackBarHostState)

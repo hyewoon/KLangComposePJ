@@ -5,15 +5,18 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
+/*
+* dap
+* */
 @Database(
     entities = [TargetWord::class, TargetWordExampleInfo::class, TargetWordPronunciationInfo::class],
     version = 2,
 )
 abstract class TargetWordRoomDatabase : RoomDatabase() {
 
-    abstract fun targetWordDao(): TargetWordDao
+   abstract fun targetWordDao(): TargetWordDao
 
-    companion object {
+/*    companion object {
         private var INSTANCE: TargetWordRoomDatabase? = null
         fun getInstance(context: Context): TargetWordRoomDatabase {
             synchronized(this) {
@@ -25,7 +28,7 @@ abstract class TargetWordRoomDatabase : RoomDatabase() {
                         context,
                         TargetWordRoomDatabase::class.java,
                         "target_word_database"
-                    ).fallbackToDestructiveMigration(false)
+                    ).fallbackToDestructiveMigration(false)// 버전업그레이드 할때
                         .build()
 
                     INSTANCE = instance
@@ -33,5 +36,5 @@ abstract class TargetWordRoomDatabase : RoomDatabase() {
                 return instance
             }
         }
-    }
+    }*/
 }

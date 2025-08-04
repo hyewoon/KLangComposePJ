@@ -16,7 +16,6 @@ kotlin {
 
 dependencies{
 
-    implementation(libs.javax.inject)
     implementation(libs.androidx.annotation.jvm)
     implementation(libs.kotlinx.coroutines.core)
 }

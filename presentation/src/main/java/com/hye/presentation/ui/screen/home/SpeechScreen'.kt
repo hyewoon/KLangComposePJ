@@ -18,14 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.hye.presentation.ui.screen.model.HomeViewModel
 import com.hye.presentation.ui.screen.model.SharedViewModel
 
-
 @Composable
 fun SpeechScreen(
-    navController: NavController,
+    onNavigateToSpeechScreen :()->Unit,
     homeViewModel: HomeViewModel,
     sharedViewModel: SharedViewModel,
     snackBarHostState: SnackbarHostState

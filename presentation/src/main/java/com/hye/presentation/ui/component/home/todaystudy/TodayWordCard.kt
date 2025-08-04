@@ -16,7 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,15 +24,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 import com.hye.presentation.R
-import com.hye.presentation.nav_graph.ScreenRoutDef
+
 
 
 @Composable
 fun TodayWordCard(
-    navController: NavController,
+    onNavigateToListenScreen: () -> Unit,
+    onNavigateToDictionaryScreen: () -> Unit,
+    onNavigateToSpeechScreen: () -> Unit ,
+    onNavigateToWriteScreen: () -> Unit,
     wordList: List<TargetWordWithAllInfoEntity>,
     currentIndex: Int,
     currentWord: TargetWordWithAllInfoEntity,
@@ -100,8 +102,9 @@ fun TodayWordCard(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "${currentIndex+1}/${wordList.size}" ,
-                    fontSize = MaterialTheme.typography.bodySmall.fontSize)
+                    text = "${currentIndex + 1}/${wordList.size}",
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize
+                )
             }
         }
         //디바이더
@@ -112,7 +115,12 @@ fun TodayWordCard(
                 .clip(RoundedCornerShape(10.dp)),
             color = MaterialTheme.colorScheme.background
         )
-        SelectButtons(navController)
+        SelectButtons(
+            onNavigateToListenScreen,
+            onNavigateToDictionaryScreen,
+            onNavigateToSpeechScreen,
+            onNavigateToWriteScreen,
+        )
 
 
     }
@@ -169,7 +177,12 @@ fun ShowCurrentWord(
 }
 
 @Composable
-fun SelectButtons(navController: NavController) {
+fun SelectButtons(
+    onNavigateToListenScreen: () -> Unit,
+    onNavigateToDictionaryScreen: () -> Unit,
+    onNavigateToSpeechScreen: () -> Unit,
+    onNavigateToWriteScreen: () -> Unit,
+) {
     val isMarked = false
     Row(
         modifier = Modifier
@@ -180,9 +193,7 @@ fun SelectButtons(navController: NavController) {
 
     ) {
         IconButton(
-            onClick = {
-                navController.navigate(ScreenRoutDef.TodayStudyFlow.WriteScreen.routeName)
-            },
+            onClick = { onNavigateToWriteScreen },
             modifier = Modifier.size(70.dp)
         ) {
             Icon(
@@ -193,7 +204,7 @@ fun SelectButtons(navController: NavController) {
             )
         }
         IconButton(
-            onClick = { navController.navigate(ScreenRoutDef.TodayStudyFlow.ListenScreen.routeName) },
+            onClick = { onNavigateToListenScreen },
             modifier = Modifier.size(70.dp)
         ) {
             Icon(
@@ -205,7 +216,7 @@ fun SelectButtons(navController: NavController) {
 
         }
         IconButton(
-            onClick = { navController.navigate(ScreenRoutDef.TodayStudyFlow.SpeechScreen.routeName) },
+            onClick = { onNavigateToSpeechScreen },
             modifier = Modifier.size(70.dp)
         ) {
             Icon(
@@ -218,7 +229,7 @@ fun SelectButtons(navController: NavController) {
         }
         IconButton(
             onClick = {
-                navController.navigate(ScreenRoutDef.TodayStudyFlow.DictionaryScreen.routeName)
+                onNavigateToDictionaryScreen
             },
             modifier = Modifier.size(70.dp)
         ) {

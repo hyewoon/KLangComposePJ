@@ -33,12 +33,12 @@ import com.hye.presentation.nav_graph.ScreenRoutDef
 @Preview(showBackground = true)
 @Composable
 fun TodayStudyCardPreview() {
-    TodayStudyCard(navController = NavController(context = LocalContext.current))
+    //TodayStudyCard()
 }
 
 
 @Composable
-fun TodayStudyCard(navController: NavController) {
+fun TodayStudyCard(onNavigateToTodayStudy:()-> Unit) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 10.dp
@@ -104,7 +104,7 @@ fun TodayStudyCard(navController: NavController) {
             }
             Button(
                 onClick = {
-                 navController.navigate(ScreenRoutDef.HomeFlow.TodayStudyScreen.routeName)
+                 onNavigateToTodayStudy()
                 },
                 modifier = Modifier
                     .fillMaxWidth()

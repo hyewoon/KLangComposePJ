@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val loadStudyWordUseCase: LoadStudyWordUseCase,
+    private val loadStudyWordUseCase: LoadStudyWordUseCase
 ) : ViewModel() {
 
     private val _todayWordUiState = MutableStateFlow(TodayWordUiState())
@@ -32,7 +32,7 @@ class HomeViewModel @Inject constructor(
             //stateflow의 초기값 지정
             _todayWordUiState.value = _todayWordUiState.value.copy(isLoading = true)
 
-            when (val roomResult = loadStudyWordUseCase.invoke(count)) {
+            when (val roomResult = loadStudyWordUseCase(count)) {
                 is RoomResult.Success -> {
                     _todayWordUiState.update {
                         it.copy(

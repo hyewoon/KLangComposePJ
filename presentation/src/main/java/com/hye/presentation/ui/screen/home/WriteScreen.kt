@@ -43,12 +43,12 @@ import com.hye.presentation.ui.screen.model.SharedViewModel
 @Preview(showBackground = true)
 @Composable
 fun WriteScreenPreview() {
-    WriteScreen()
+     WriteScreen()
 }
 
 @Composable
 fun WriteScreen(
-    navController: NavController = NavController(LocalContext.current),
+    onNavigateToWriteScreen : ()-> Unit={},
     homeViewModel: HomeViewModel = hiltViewModel(),
     sharedViewModel: SharedViewModel = hiltViewModel(),
     snackBarHostState: SnackbarHostState = SnackbarHostState(),

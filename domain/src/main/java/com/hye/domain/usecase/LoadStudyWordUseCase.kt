@@ -7,10 +7,27 @@ import com.hye.domain.result.RoomResult
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-import javax.inject.Inject
 
 
-class LoadStudyWordUseCase @Inject constructor(
+/*
+* usecase 하나 더 만들기 : fetchAndInsertData 하나더 만들기
+* usecase는 함수 하나만
+* hilt _ usecase 테스트코드하기 쉽다는 목적있음
+* 도메인에는 ineject코드들어가면 안된다.
+* test 코드 추가 하기
+* */
+
+/*
+* usecase 비즈니스 로직 : 단어가져오기
+* buttom클릭 후
+* 1. 오늘 날짜에 해당하는 room데이터 존재하는지 확인
+* 2. 데이터 존재 x(room이 비어있음) : firstore에서 다운 후 room저장해서 가져오기
+* 3. 데이터 존재 0 & 오늘 날짜 x : 기존 데이터 삭제 후, firestore에서 다운 후 room에 저장해서 가져오기
+* 4. 데이터 존재 0 & 오늘 날짜 0 : room에서 가져오기
+*
+* */
+
+class LoadStudyWordUseCase(
     private val studyRepository: StudyRepository,
     private val firestoreRepository: FireStoreRepository,
 ) {
@@ -26,15 +43,15 @@ class LoadStudyWordUseCase @Inject constructor(
         val roomData = result.data.isEmpty() || result.data.none { it.todayString == today }
 
         return if (roomData) {
-            fetchAndInsertData(count) // firestore에서 받아오기
+            //firestore에서 받아오기 + room저장
+            if(result.data.isNotEmpty()) studyRepository.deleteAllStudyWords()
+
+            val firestoreResult =  firestoreRepository.getStudyWordFromFireStore(count)
+            studyRepository.insertStudyWords(firestoreResult)
             studyRepository.getStudyWords(today)
-        } else studyRepository.getStudyWords(today) //room에 있는 데이터 가져오기
+
+        } else {
+            studyRepository.getStudyWords(today) //room에 있는 데이터 가져오기
+        }
     }
-
-    private suspend fun fetchAndInsertData(count: Long) {
-        val result = firestoreRepository.getStudyWordFromFireStore(count)
-        studyRepository.insertStudyWords(result)
-    }
-
-
 }

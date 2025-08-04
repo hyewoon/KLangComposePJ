@@ -26,7 +26,7 @@ import com.hye.presentation.ui.screen.model.SharedViewModel
 
 @Composable
 fun DictionaryScreen(
-    navController: NavController,
+    onNavigateToDictionaryScreen: ()-> Unit,
     homeViewModel: HomeViewModel,
     sharedViewModel: SharedViewModel,
     snackBarHostState: SnackbarHostState

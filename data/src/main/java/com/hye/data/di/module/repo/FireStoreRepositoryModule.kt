@@ -1,4 +1,4 @@
-package com.hye.data.di.module.impl
+package com.hye.data.di.module.repo
 
 import com.hye.data.repository.FireStoreRepositoryImpl
 import com.hye.domain.repository.firestore.FireStoreRepository
@@ -11,7 +11,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class FireStoreRepositoryImpl {
+abstract class FireStoreRepositoryModule {
 
     @Singleton
     @Binds

@@ -43,7 +43,10 @@ import com.hye.presentation.ui.screen.model.SharedViewModel
 
 @Composable
 fun TodayStudyScreen(
-    navController: NavController,
+    onNavigateToListenScreen: () -> Unit,
+    onNavigateToDictionaryScreen: () -> Unit,
+    onNavigateToSpeechScreen: () -> Unit,
+    onNavigateToWriteScreen: () -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel(),
     sharedViewModel: SharedViewModel = hiltViewModel(),
     snackBarHostState: SnackbarHostState,
@@ -61,7 +64,10 @@ fun TodayStudyScreen(
         todayWordUiState.error.isNotEmpty() -> {}
         else -> {
             TodayStudyContent(
-                navController = navController,
+                onNavigateToListenScreen,
+                onNavigateToDictionaryScreen,
+                onNavigateToSpeechScreen,
+                onNavigateToWriteScreen,
                 wordList = todayWordUiState.wordList,
                 currentIndex = todayWordUiState.currentIndex,
                 currentWord = todayWordUiState.currentWord,
@@ -70,7 +76,7 @@ fun TodayStudyScreen(
                 hasPrevious = todayWordUiState.hasPrevious,
                 onNextClick = { homeViewModel.moveToNext() },
                 onPreviousClick = { homeViewModel.moveToPrevious() },
-                )
+            )
         }
     }
 
@@ -79,7 +85,10 @@ fun TodayStudyScreen(
 
 @Composable
 fun TodayStudyContent(
-    navController: NavController,
+    onNavigateToListenScreen: () -> Unit ,
+    onNavigateToDictionaryScreen: () -> Unit,
+    onNavigateToSpeechScreen: () -> Unit ,
+    onNavigateToWriteScreen: () -> Unit ,
     wordList: List<TargetWordWithAllInfoEntity>,
     currentIndex: Int,
     currentWord: TargetWordWithAllInfoEntity,
@@ -101,7 +110,10 @@ fun TodayStudyContent(
         LinearProgressIndicatorBox(currentIndex + 1, wordList.size)
         Box(modifier = Modifier.weight(1f)) {
             TodayWordCard(
-                navController = navController,
+                onNavigateToListenScreen,
+                onNavigateToDictionaryScreen,
+                onNavigateToSpeechScreen,
+                onNavigateToWriteScreen,
                 wordList = wordList,
                 currentIndex = currentIndex,
                 currentWord = currentWord,
@@ -109,7 +121,7 @@ fun TodayStudyContent(
                 hasPrevious = hasPrevious,
                 onNextClick = onNextClick,
                 onPreviousClick = onPreviousClick,
-                onBookmarkClick = onBookmarkClick
+                onBookmarkClick = onBookmarkClick,
             )
         }
 

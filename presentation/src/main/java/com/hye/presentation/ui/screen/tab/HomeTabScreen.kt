@@ -23,7 +23,7 @@ import com.hye.presentation.ui.theme.KLangComposePJTheme
 
 
 @Composable
-fun HomeTabScreen(navController: NavController,
+fun HomeTabScreen(onNavigateToTodayStudy: () -> Unit,
                   homeViewModel : HomeViewModel,
                   sharedViewModel: SharedViewModel,
                   snackBarHostState: SnackbarHostState
@@ -39,7 +39,7 @@ fun HomeTabScreen(navController: NavController,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                TodayStudyCard(navController)
+                TodayStudyCard(onNavigateToTodayStudy)
                 AttendanceCard()
                 DailyQuestCard()
 
