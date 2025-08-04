@@ -26,7 +26,6 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.hye.presentation.R
 import com.hye.presentation.model.DrawingPath
 import com.hye.presentation.ui.component.common.HandWritingCanvasComponent
@@ -35,7 +34,7 @@ import com.hye.presentation.ui.screen.model.SharedViewModel
 
 @Composable
 fun DrawScreen(
-    navController: NavController,
+    onNavigateToDrawScreen: ()-> Unit,
     gameViewModel: GameViewModel,
     sharedViewModel: SharedViewModel,
 ) {

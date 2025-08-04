@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 import com.hye.domain.model.roomdb.WordExampleInfoEntity
 import com.hye.presentation.R
@@ -43,6 +42,7 @@ import com.hye.presentation.ui.screen.model.SharedViewModel
 
 @Composable
 fun TodayStudyScreen(
+    onNavigateToTodayStudyScreen: () -> Unit,
     onNavigateToListenScreen: () -> Unit,
     onNavigateToDictionaryScreen: () -> Unit,
     onNavigateToSpeechScreen: () -> Unit,
@@ -64,10 +64,10 @@ fun TodayStudyScreen(
         todayWordUiState.error.isNotEmpty() -> {}
         else -> {
             TodayStudyContent(
-                onNavigateToListenScreen,
-                onNavigateToDictionaryScreen,
-                onNavigateToSpeechScreen,
-                onNavigateToWriteScreen,
+                onNavigateToListenScreen = onNavigateToListenScreen,
+                onNavigateToDictionaryScreen = onNavigateToDictionaryScreen,
+                onNavigateToSpeechScreen = onNavigateToSpeechScreen,
+                onNavigateToWriteScreen = onNavigateToWriteScreen,
                 wordList = todayWordUiState.wordList,
                 currentIndex = todayWordUiState.currentIndex,
                 currentWord = todayWordUiState.currentWord,
@@ -110,10 +110,10 @@ fun TodayStudyContent(
         LinearProgressIndicatorBox(currentIndex + 1, wordList.size)
         Box(modifier = Modifier.weight(1f)) {
             TodayWordCard(
-                onNavigateToListenScreen,
-                onNavigateToDictionaryScreen,
-                onNavigateToSpeechScreen,
-                onNavigateToWriteScreen,
+                onNavigateToListenScreen = onNavigateToListenScreen,
+                onNavigateToDictionaryScreen = onNavigateToDictionaryScreen,
+                onNavigateToSpeechScreen =onNavigateToSpeechScreen,
+                onNavigateToWriteScreen = onNavigateToWriteScreen,
                 wordList = wordList,
                 currentIndex = currentIndex,
                 currentWord = currentWord,

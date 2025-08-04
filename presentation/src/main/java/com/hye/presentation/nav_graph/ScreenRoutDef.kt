@@ -22,11 +22,15 @@ sealed interface ScreenRoutDef{
     @Serializable
     sealed interface HomeFlow : ScreenRoutDef {
         @Serializable
+        data object HomeFlowGraph : HomeFlow  // 추가 필요
+        @Serializable
         data object TodayStudyScreen : HomeFlow
 
     }
     @Serializable
     sealed interface GameFlow: ScreenRoutDef {
+        @Serializable
+        data object GameFlowGraph : GameFlow  // 추가 필요
         @Serializable
         data object DrawScreen : GameFlow
         @Serializable
@@ -41,6 +45,8 @@ sealed interface ScreenRoutDef{
     }
     @Serializable
     sealed interface TodayStudyFlow : ScreenRoutDef {
+        @Serializable
+        data object TodayStudyFlowGraph : TodayStudyFlow  // 추가 필요
         @Serializable
         data object ListenScreen : TodayStudyFlow
         @Serializable

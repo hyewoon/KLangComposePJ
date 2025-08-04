@@ -13,10 +13,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,12 +26,11 @@ import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 import com.hye.presentation.R
 
 
-
 @Composable
 fun TodayWordCard(
     onNavigateToListenScreen: () -> Unit,
     onNavigateToDictionaryScreen: () -> Unit,
-    onNavigateToSpeechScreen: () -> Unit ,
+    onNavigateToSpeechScreen: () -> Unit,
     onNavigateToWriteScreen: () -> Unit,
     wordList: List<TargetWordWithAllInfoEntity>,
     currentIndex: Int,
@@ -193,7 +190,7 @@ fun SelectButtons(
 
     ) {
         IconButton(
-            onClick = { onNavigateToWriteScreen },
+            onClick = { onNavigateToWriteScreen() },
             modifier = Modifier.size(70.dp)
         ) {
             Icon(
@@ -204,7 +201,7 @@ fun SelectButtons(
             )
         }
         IconButton(
-            onClick = { onNavigateToListenScreen },
+            onClick = { onNavigateToListenScreen() },
             modifier = Modifier.size(70.dp)
         ) {
             Icon(
@@ -216,7 +213,7 @@ fun SelectButtons(
 
         }
         IconButton(
-            onClick = { onNavigateToSpeechScreen },
+            onClick = { onNavigateToSpeechScreen() },
             modifier = Modifier.size(70.dp)
         ) {
             Icon(
@@ -228,9 +225,7 @@ fun SelectButtons(
 
         }
         IconButton(
-            onClick = {
-                onNavigateToDictionaryScreen
-            },
+            onClick = { onNavigateToDictionaryScreen()},
             modifier = Modifier.size(70.dp)
         ) {
             Icon(

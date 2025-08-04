@@ -11,9 +11,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material3.Icon
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -35,6 +35,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -62,6 +64,9 @@ fun MainScreen(sharedViewModel: SharedViewModel = hiltViewModel()) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
+    val homeViewModel: HomeViewModel = hiltViewModel()
+    val gameViewModel: GameViewModel = hiltViewModel()
+
     //snackbar 설정
     val snackBarHostState = remember { SnackbarHostState() }
 
@@ -70,7 +75,7 @@ fun MainScreen(sharedViewModel: SharedViewModel = hiltViewModel()) {
             SnackbarHost(hostState = snackBarHostState)
         },
         topBar = {
-            MainTopAppBar(currentRoute = currentDestination?.route,
+            MainTopAppBar(currentDestination = currentDestination,
                 onBackClick = { navController.popBackStack() })
 
         },
@@ -81,7 +86,10 @@ fun MainScreen(sharedViewModel: SharedViewModel = hiltViewModel()) {
                 BottomNavigationItem().renderBottomNavigationItems()
 
                     .forEachIndexed { _, navigationItem ->
-                        val isSelected = navigationItem.route == currentDestination?.route
+                       val isSelected = currentDestination?.hierarchy?.any {
+                           it.route == navigationItem.route::class.qualifiedName
+                       } ?:false
+
                         NavigationBarItem(
                             selected = isSelected,
                             label = {
@@ -94,7 +102,7 @@ fun MainScreen(sharedViewModel: SharedViewModel = hiltViewModel()) {
                             icon = {
                                 Icon(
                                     painter = painterResource(
-                                        id = if (isSelected) navigationItem.selectedIcon
+                                       id =  if (isSelected) navigationItem.selectedIcon
                                         else navigationItem.unSelectedIcon
                                     ),
                                     contentDescription = navigationItem.tabName,
@@ -114,7 +122,7 @@ fun MainScreen(sharedViewModel: SharedViewModel = hiltViewModel()) {
                                 indicatorColor = Color.Transparent
                             )
 
-                            )
+                        )
                     }
             }
         }
@@ -130,40 +138,57 @@ fun MainScreen(sharedViewModel: SharedViewModel = hiltViewModel()) {
                 startDestination = ScreenRoutDef.TopLevel.HomeTab
             ) {
 
-                composable<ScreenRoutDef.TopLevel.HomeTab>{
-                    val homeViewModel: HomeViewModel = hiltViewModel()
+                composable<ScreenRoutDef.TopLevel.HomeTab> {
                     HomeTabScreen(
-                        onNavigateToTodayStudy = {navController.navigate(ScreenRoutDef.HomeFlow.TodayStudyScreen)},
                         homeViewModel = homeViewModel,
                         sharedViewModel = sharedViewModel,
+                        onNavigateToTodayStudy = { navController.navigate(ScreenRoutDef.HomeFlow.TodayStudyScreen) },
                         snackBarHostState = snackBarHostState
-                        )
+                    )
                 }
-                composable<ScreenRoutDef.TopLevel.GameTab> {
-                     val gameViewModel: GameViewModel = hiltViewModel()
-                    GameTabScreen(navController = navController,
-                        gameViewModel = gameViewModel,
-                        sharedViewModel = sharedViewModel)
 
+                composable<ScreenRoutDef.TopLevel.GameTab> {
+                    GameTabScreen(
+                        gameViewModel = gameViewModel,
+                        sharedViewModel = sharedViewModel,
+                        onNavigateToGameScreen = { navController.navigate(ScreenRoutDef.TopLevel.GameTab) },
+                        onNavigateToTextToSpeechScreen = { navController.navigate(ScreenRoutDef.GameFlow.TextToSpeechScreen) },
+                        onNavigateToSearchScreen = { navController.navigate(ScreenRoutDef.GameFlow.SearchScreen) },
+                        onNavigateToVocabularyScreen = { navController.navigate(ScreenRoutDef.GameFlow.VocabularyScreen) },
+                        onNavigateToSpeechToTextScreen = { navController.navigate(ScreenRoutDef.GameFlow.SpeechToTextScreen) },
+                        onNavigateToDrawScreen = { navController.navigate(ScreenRoutDef.GameFlow.DrawScreen ) },
+                    )
                 }
+
                 composable<ScreenRoutDef.TopLevel.MyPageTab> {
                     MyPageTabScreen(
-                        navController = navController,
+                        onNavigateToMyPageScreen = { navController.navigate(ScreenRoutDef.TopLevel.MyPageTab) },
                         sharedViewModel = sharedViewModel
 
                     )
                 }
-                /*
-                * nested_graph*/
 
+                /* nested-graph*/
                 addHomeGraph(
-                    navController = navController,
-                    sharedViewModel =sharedViewModel ,
-                    snackBarHostState = snackBarHostState
+                    homeViewModel = homeViewModel,
+                    sharedViewModel = sharedViewModel,
+                    snackBarHostState = snackBarHostState,
+                    onNavigateToTodayStudyScreen = { navController.navigate(ScreenRoutDef.HomeFlow.TodayStudyScreen) },
+                    onNavigateToListenScreen = { navController.navigate(ScreenRoutDef.TodayStudyFlow.ListenScreen) },
+                    onNavigateToDictionaryScreen = { navController.navigate(ScreenRoutDef.TodayStudyFlow.DictionaryScreen) },
+                    onNavigateToSpeechScreen = { navController.navigate(ScreenRoutDef.TodayStudyFlow.SpeechScreen) },
+                    onNavigateToWriteScreen = { navController.navigate(ScreenRoutDef.TodayStudyFlow.WriteScreen) }
                 )
+
                 addGameGraph(
-                    navController = navController,
-                    sharedViewModel = sharedViewModel)
+                    gameViewModel = gameViewModel,
+                    sharedViewModel = sharedViewModel,
+                    onNavigateToDrawScreen = { navController.navigate(ScreenRoutDef.GameFlow.DrawScreen) },
+                    onNavigateToSearchScreen = { navController.navigate(ScreenRoutDef.GameFlow.SearchScreen) },
+                    onNavigateToVocabularyScreen = { navController.navigate(ScreenRoutDef.GameFlow.VocabularyScreen) },
+                    onNavigateToTextToSpeechScreen = { navController.navigate(ScreenRoutDef.GameFlow.TextToSpeechScreen) },
+                    onNavigateToSpeechToTextScreen = { navController.navigate(ScreenRoutDef.GameFlow.SpeechToTextScreen) }
+                )
             }
 
         }
@@ -173,7 +198,7 @@ fun MainScreen(sharedViewModel: SharedViewModel = hiltViewModel()) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainTopAppBar(currentRoute: String?, onBackClick: () -> Unit) {
+fun MainTopAppBar(currentDestination: NavDestination?, onBackClick: () -> Unit) {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.background,
@@ -183,7 +208,7 @@ fun MainTopAppBar(currentRoute: String?, onBackClick: () -> Unit) {
             AppBarItems()
         },
         navigationIcon = {
-            if (!(ShowBackButton(currentRoute))) {
+            if (!(ShowBackButton(currentDestination))) {
                 IconButton(onClick = onBackClick) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, "backIcon")
                 }
@@ -193,14 +218,14 @@ fun MainTopAppBar(currentRoute: String?, onBackClick: () -> Unit) {
 }
 
 @Composable
-fun ShowBackButton(currentRoute: String?): Boolean {
-    val topLevelRoutes = listOf(
-        ScreenRoutDef.TopLevel.HomeTab.routeName,
-        ScreenRoutDef.TopLevel.GameTab.routeName,
-        ScreenRoutDef.TopLevel.MyPageTab.routeName
-    )
-    return currentRoute in topLevelRoutes
-}
+fun ShowBackButton(currentRoute: NavDestination?): Boolean {
+   val topLevelRoutes = listOf(
+       ScreenRoutDef.TopLevel.HomeTab::class.qualifiedName,
+       ScreenRoutDef.TopLevel.GameTab::class.qualifiedName,
+       ScreenRoutDef.TopLevel.MyPageTab::class.qualifiedName
+   )
+    return currentRoute?.route in topLevelRoutes
+    }
 
 @Composable
 fun AppBarItems(modifier: Modifier = Modifier) {

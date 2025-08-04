@@ -1,8 +1,6 @@
 package com.hye.presentation.nav_graph.nav_graph_extended
 
-import androidx.compose.runtime.remember
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
+
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
@@ -15,58 +13,53 @@ import com.hye.presentation.ui.screen.game.VocabularyScreen
 import com.hye.presentation.ui.screen.model.GameViewModel
 import com.hye.presentation.ui.screen.model.SharedViewModel
 
-fun NavGraphBuilder.addGameGraph(navController: NavController,
-                                 sharedViewModel: SharedViewModel
-                                 ){
-    navigation(
-        startDestination = ScreenRoutDef.GameFlow.DrawScreen.routeName,
-        route = "game_flow_graph"
-    ){
-        composable(ScreenRoutDef.GameFlow.DrawScreen.routeName){
-            val gameTabEntry = remember(it) {
-                navController.getBackStackEntry(ScreenRoutDef.TopLevel.GameTab.routeName)
-            }
-            val gameViewModel: GameViewModel = hiltViewModel(gameTabEntry)
-            DrawScreen(navController = navController,
+fun NavGraphBuilder.addGameGraph(
+    gameViewModel: GameViewModel,
+    sharedViewModel: SharedViewModel,
+    onNavigateToDrawScreen: () -> Unit,
+    onNavigateToSearchScreen: () -> Unit,
+    onNavigateToVocabularyScreen: () -> Unit,
+    onNavigateToTextToSpeechScreen: () -> Unit,
+    onNavigateToSpeechToTextScreen: () -> Unit,
+) {
+    navigation<ScreenRoutDef.GameFlow.GameFlowGraph>(
+        startDestination = ScreenRoutDef.GameFlow.DrawScreen
+    ) {
+        composable<ScreenRoutDef.GameFlow.DrawScreen> {
+            DrawScreen(
+                onNavigateToDrawScreen = onNavigateToDrawScreen,
                 gameViewModel = gameViewModel,
-                sharedViewModel = sharedViewModel)
+                sharedViewModel = sharedViewModel
+            )
         }
-        composable(ScreenRoutDef.GameFlow.SearchScreen.routeName){
-            val gameTabEntry = remember(it) {
-                navController.getBackStackEntry(ScreenRoutDef.TopLevel.GameTab.routeName)
-            }
-            val gameViewModel: GameViewModel = hiltViewModel(gameTabEntry)
-            SearchScreen(navController = navController,
+        composable<ScreenRoutDef.GameFlow.SearchScreen> {
+            SearchScreen(
+                onNavigateToSearchScreen = onNavigateToSearchScreen,
                 gameViewModel = gameViewModel,
-                sharedViewModel = sharedViewModel)
+                sharedViewModel = sharedViewModel
+            )
         }
-        composable(ScreenRoutDef.GameFlow.VocabularyScreen.routeName){
-            val gameTabEntry = remember(it) {
-                navController.getBackStackEntry(ScreenRoutDef.TopLevel.GameTab.routeName)
-            }
-            val gameViewModel: GameViewModel = hiltViewModel(gameTabEntry)
-            VocabularyScreen(navController = navController,
+        composable<ScreenRoutDef.GameFlow.VocabularyScreen> {
+            VocabularyScreen(
+                onNavigateToVocabularyScreen = onNavigateToVocabularyScreen,
                 gameViewModel = gameViewModel,
-                sharedViewModel = sharedViewModel)
+                sharedViewModel = sharedViewModel
+            )
 
         }
-        composable(ScreenRoutDef.GameFlow.TextToSpeechScreen.routeName){
-            val gameTabEntry = remember(it) {
-                navController.getBackStackEntry(ScreenRoutDef.TopLevel.GameTab.routeName)
-            }
-            val gameViewModel: GameViewModel = hiltViewModel(gameTabEntry)
-            TextToSpeechScreen(navController = navController,
+        composable<ScreenRoutDef.GameFlow.TextToSpeechScreen> {
+            TextToSpeechScreen(
+                onNavigateToTextToSpeechScreen = onNavigateToTextToSpeechScreen,
                 gameViewModel = gameViewModel,
-                sharedViewModel = sharedViewModel)
+                sharedViewModel = sharedViewModel
+            )
         }
-        composable(ScreenRoutDef.GameFlow.SpeechToTextScreen.routeName){
-            val gameTabEntry = remember(it) {
-                navController.getBackStackEntry(ScreenRoutDef.TopLevel.GameTab.routeName)
-            }
-            val gameViewModel: GameViewModel = hiltViewModel(gameTabEntry)
-            SpeechToTextScreen(navController = navController,
+        composable<ScreenRoutDef.GameFlow.SpeechToTextScreen> {
+            SpeechToTextScreen(
+                onNavigateToSpeechToTextScreen = onNavigateToSpeechToTextScreen,
                 gameViewModel = gameViewModel,
-                sharedViewModel = sharedViewModel)
+                sharedViewModel = sharedViewModel
+            )
 
         }
 

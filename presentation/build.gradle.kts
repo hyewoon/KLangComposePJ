@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt.plugin)
     alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.kotlinx.serialization)
 
 }
 
@@ -62,11 +63,15 @@ dependencies {
 
     // Hilt
     implementation(libs.hilt.android)
+    implementation(libs.kotlinx.serialization.json)
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
     // Lifecycle
     implementation(libs.androidx.lifecycle.runtime.compose)
+
+    //serialization
+    implementation(libs.kotlinx.serialization.json)
 
     // 테스트
     testImplementation(libs.junit)

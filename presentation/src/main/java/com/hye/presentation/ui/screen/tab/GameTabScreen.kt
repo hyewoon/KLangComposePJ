@@ -24,18 +24,22 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.hye.presentation.R
-import com.hye.presentation.nav_graph.ScreenRoutDef
 import com.hye.presentation.ui.screen.model.GameViewModel
 import com.hye.presentation.ui.screen.model.SharedViewModel
 import com.hye.presentation.ui.theme.KLangComposePJTheme
 
 
 @Composable
-fun GameTabScreen(navController: NavController,
-                  gameViewModel: GameViewModel,
-                  sharedViewModel: SharedViewModel
+fun GameTabScreen(
+    onNavigateToGameScreen: () -> Unit,
+    onNavigateToTextToSpeechScreen: ()-> Unit,
+    onNavigateToSearchScreen: ()->Unit,
+    onNavigateToVocabularyScreen: ()->Unit,
+    onNavigateToSpeechToTextScreen: ()->Unit,
+    onNavigateToDrawScreen: () -> Unit,
+    gameViewModel: GameViewModel,
+    sharedViewModel: SharedViewModel,
 ) {
     KLangComposePJTheme {
         Surface(
@@ -50,7 +54,9 @@ fun GameTabScreen(navController: NavController,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(bottom= 16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.character_k_smile),
@@ -61,11 +67,13 @@ fun GameTabScreen(navController: NavController,
                     )
                 }
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(bottom= 28.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 28.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     ElevatedIconButton(
-                        onClick = { navController?.navigate(ScreenRoutDef.GameFlow.DrawScreen.routeName)},
+                        onClick =  {onNavigateToDrawScreen()},
                         icon = ImageVector.vectorResource(id = R.drawable.draw),
                         modifier = Modifier
                             .width(80.dp)
@@ -73,14 +81,14 @@ fun GameTabScreen(navController: NavController,
                     )
 
                     ElevatedIconButton(
-                        onClick = { navController?.navigate(ScreenRoutDef.GameFlow.TextToSpeechScreen.routeName)},
+                        onClick = { onNavigateToTextToSpeechScreen()},
                         icon = ImageVector.vectorResource(id = R.drawable.text_to_speech),
                         modifier = Modifier
                             .width(80.dp)
                             .height(120.dp)
                     )
                     ElevatedIconButton(
-                        onClick = { navController?.navigate(ScreenRoutDef.GameFlow.SpeechToTextScreen.routeName)},
+                        onClick = { onNavigateToSpeechToTextScreen() },
                         icon = ImageVector.vectorResource(id = R.drawable.speech_to_text),
                         modifier = Modifier
                             .width(80.dp)
@@ -94,7 +102,7 @@ fun GameTabScreen(navController: NavController,
                 ) {
 
                     ElevatedIconButton(
-                        onClick = { navController?.navigate(ScreenRoutDef.GameFlow.SearchScreen.routeName)},
+                        onClick = { onNavigateToSearchScreen() },
                         icon = ImageVector.vectorResource(id = R.drawable.search),
                         modifier = Modifier
                             .width(140.dp)
@@ -102,7 +110,7 @@ fun GameTabScreen(navController: NavController,
                     )
 
                     ElevatedIconButton(
-                        onClick = { navController?.navigate(ScreenRoutDef.GameFlow.VocabularyScreen.routeName)},
+                        onClick = { onNavigateToVocabularyScreen() },
                         icon = ImageVector.vectorResource(id = R.drawable.vocabulary),
                         modifier = Modifier
                             .width(140.dp)
