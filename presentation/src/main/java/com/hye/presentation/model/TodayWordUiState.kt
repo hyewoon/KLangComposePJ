@@ -22,6 +22,5 @@ data class TodayWordUiState(
         get() = currentIndex > 0
     val isMarked: Boolean
         get() = bookMarkedIndices.contains(currentIndex)
-
     }
 
