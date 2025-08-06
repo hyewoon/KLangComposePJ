@@ -34,8 +34,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hye.presentation.R
 import com.hye.presentation.model.DrawingPath
-import com.hye.presentation.model.TodayWordUiState
-import com.hye.presentation.model.UIState
 import com.hye.presentation.ui.component.common.HandWritingCanvasComponent
 import com.hye.presentation.ui.screen.model.HomeViewModel
 import com.hye.presentation.ui.screen.model.SharedViewModel
@@ -78,10 +76,7 @@ fun WriteScreen(
         onPathsChanged = { newPaths -> completedPaths = newPaths },
         onCurrentPathChanged = { newPath -> currentPath = newPath }
     )
-
-
 }
-
 
 @Composable
 fun DrawingCard(
