@@ -1,3 +1,3 @@
 package com.hye.presentation.model
 
-typealias TodayWordUiState = UIState<TodayWord>
+typealias TodayWordUiState = UIState<TodayWordUiState>

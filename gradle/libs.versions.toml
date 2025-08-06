@@ -19,11 +19,13 @@ digitalInkRecognition = "18.1.0"
 loggingInterceptor = "4.12.0"
 okhttp = "4.12.0"
 datastorePreferences = "1.1.7"
+
+#REST
 retrofit = "2.9.0"
+retrofitConverter = "0.8.13"
 retrofitBom = "2.9.0"
 core = "0.8.13"
 annotation = "0.8.13"
-retrofitConverter = "0.8.13"
 processor = "0.8.13"
 kotlinKapt = "2.1.0"
 roomRuntime = "2.7.2"
@@ -89,8 +91,6 @@ androidx-ui-tooling-preview-android = { group = "androidx.compose.ui", name = "u
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 
-
-
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
@@ -102,5 +102,11 @@ kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlinKapt" }
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "kotlinKsp" }
 hilt-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
+[bundles]
+rest-libs = [
+    "retrofit",
+    "okhttp"
+]
 
 

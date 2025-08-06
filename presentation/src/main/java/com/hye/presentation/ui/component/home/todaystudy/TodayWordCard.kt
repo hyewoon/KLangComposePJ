@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 import com.hye.presentation.R
+import com.hye.presentation.model.TodayWordUiState
 
 
 @Composable
@@ -32,11 +33,7 @@ fun TodayWordCard(
     onNavigateToDictionaryScreen: () -> Unit,
     onNavigateToSpeechScreen: () -> Unit,
     onNavigateToWriteScreen: () -> Unit,
-    wordList: List<TargetWordWithAllInfoEntity>,
-    currentIndex: Int,
-    currentWord: TargetWordWithAllInfoEntity,
-    hasNext: Boolean,
-    hasPrevious: Boolean,
+    todayWordUiState: TodayWordUiState,
     onNextClick: () -> Unit,
     onPreviousClick: () -> Unit,
     onBookmarkClick: () -> Unit = {},
@@ -84,9 +81,9 @@ fun TodayWordCard(
 
             }
             ShowCurrentWord(
-                currentWord,
-                hasPrevious,
-                hasNext,
+                todayWordUiState.currentWord,
+                todayWordUiState.hasPrevious,
+                todayWordUiState.hasNext,
                 onPreviousClick,
                 onNextClick
             )
@@ -99,7 +96,7 @@ fun TodayWordCard(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "${currentIndex + 1}/${wordList.size}",
+                    text = "${todayWordUiState.currentIndex + 1}/${todayWordUiState.wordList.size}",
                     fontSize = MaterialTheme.typography.bodySmall.fontSize
                 )
             }

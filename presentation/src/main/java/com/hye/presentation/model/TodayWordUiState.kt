@@ -3,7 +3,7 @@ package com.hye.presentation.model
 import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 import com.hye.domain.model.roomdb.WordExampleInfoEntity
 
-data class TodayWord(
+data class TodayWordUiState(
     val wordList: List<TargetWordWithAllInfoEntity> = emptyList(),
     val currentIndex: Int = 0,
     val snackBarMessage: String = "",
@@ -22,4 +22,6 @@ data class TodayWord(
         get() = currentIndex > 0
     val isMarked: Boolean
         get() = bookMarkedIndices.contains(currentIndex)
-}
+
+    }
+

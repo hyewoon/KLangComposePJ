@@ -10,7 +10,7 @@ import java.util.Locale
 
 
 /*
-* usecase 하나 더 만들기 : fetchAndInsertData 하나더 만들기
+*
 * usecase는 함수 하나만
 * hilt _ usecase 테스트코드하기 쉽다는 목적있음
 * 도메인에는 ineject코드들어가면 안된다.

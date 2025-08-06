@@ -35,7 +35,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 import com.hye.domain.model.roomdb.WordExampleInfoEntity
 import com.hye.presentation.R
-import com.hye.presentation.model.TodayWord
+import com.hye.presentation.model.TodayWordUiState
 import com.hye.presentation.model.UIState
 import com.hye.presentation.ui.component.home.todaystudy.TodayWordCard
 import com.hye.presentation.ui.screen.model.HomeViewModel
@@ -55,16 +55,10 @@ fun TodayStudyScreen(
 ) {
     val todayWordUiState by homeViewModel.todayWordUiState.collectAsStateWithLifecycle()
 
-    when (todayWordUiState) {
-        is UIState.Loading -> {}
-        is UIState.Error -> {}
-        is UIState.Success -> {
-            val todayWord = (todayWordUiState as UIState.Success<TodayWord>).data
-
-            // 안전한 LaunchedEffect: 성공시에만
-            LaunchedEffect(todayWord.snackBarMessage) {
-                if (todayWord.snackBarMessage.isNotEmpty()) {
-                    snackBarHostState.showSnackbar(todayWord.snackBarMessage)
+            // 스낵바 처리
+            LaunchedEffect(todayWordUiState.snackBarMessage) {
+                if (todayWordUiState.snackBarMessage.isNotEmpty()) {
+                    snackBarHostState.showSnackbar(todayWordUiState.snackBarMessage)
                     homeViewModel.clearSnackBarMessage()
                 }
             }
@@ -73,19 +67,11 @@ fun TodayStudyScreen(
                 onNavigateToDictionaryScreen = onNavigateToDictionaryScreen,
                 onNavigateToSpeechScreen = onNavigateToSpeechScreen,
                 onNavigateToWriteScreen = onNavigateToWriteScreen,
-                wordList = todayWord.wordList,
-                currentIndex = todayWord.currentIndex,
-                currentWord = todayWord.currentWord,
-                currentWordExample = todayWord.currentWordExample,
-                hasNext = todayWord.hasNext,
-                hasPrevious = todayWord.hasPrevious,
+                todayWordUiState = todayWordUiState,
                 onNextClick = { homeViewModel.moveToNext() },
                 onPreviousClick = { homeViewModel.moveToPrevious() },
             )
         }
-    }
-
-}
 
 
 @Composable
@@ -94,12 +80,7 @@ fun TodayStudyContent(
     onNavigateToDictionaryScreen: () -> Unit,
     onNavigateToSpeechScreen: () -> Unit,
     onNavigateToWriteScreen: () -> Unit,
-    wordList: List<TargetWordWithAllInfoEntity>,
-    currentIndex: Int,
-    currentWord: TargetWordWithAllInfoEntity,
-    currentWordExample: WordExampleInfoEntity,
-    hasNext: Boolean,
-    hasPrevious: Boolean,
+    todayWordUiState : TodayWordUiState,
     onPreviousClick: () -> Unit = {},
     onNextClick: () -> Unit = {},
     onBookmarkClick: () -> Unit = {},
@@ -112,25 +93,21 @@ fun TodayStudyContent(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LinearProgressIndicatorBox(currentIndex + 1, wordList.size)
+        LinearProgressIndicatorBox(todayWordUiState.currentIndex + 1, todayWordUiState.wordList.size)
         Box(modifier = Modifier.weight(1f)) {
             TodayWordCard(
                 onNavigateToListenScreen = onNavigateToListenScreen,
                 onNavigateToDictionaryScreen = onNavigateToDictionaryScreen,
                 onNavigateToSpeechScreen = onNavigateToSpeechScreen,
                 onNavigateToWriteScreen = onNavigateToWriteScreen,
-                wordList = wordList,
-                currentIndex = currentIndex,
-                currentWord = currentWord,
-                hasNext = hasNext,
-                hasPrevious = hasPrevious,
-                onNextClick = onNextClick,
+                todayWordUiState = todayWordUiState,
                 onPreviousClick = onPreviousClick,
                 onBookmarkClick = onBookmarkClick,
+                onNextClick = onNextClick
             )
         }
 
-        ExampleCard(currentWordExample)
+        ExampleCard(todayWordUiState.currentWordExample)
 
 
     }
