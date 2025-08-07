@@ -63,15 +63,15 @@ dependencies {
     implementation(project(":presentation"))
     implementation(project(":domain"))
     implementation(project(":data"))
-    
-    //hilt setting
-    implementation(libs.hilt.android)
+
+    //hilt bundle
+    implementation(libs.bundles.hilt)
     ksp(libs.hilt.android.compiler)
 
+    //testing
+    testImplementation(libs.bundles.testing)
 
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+
 
 }
 

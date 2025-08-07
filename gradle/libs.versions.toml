@@ -1,95 +1,133 @@
 [versions]
+
+#ANDROID & KOTLIN
 agp = "8.7.3"
-kotlin = "2.1.0"
+kotlin = "2.2.0"
+kotlinKsp = "2.2.0-2.0.2"
+kotlinKapt = "2.1.0"
+jetbrainsKotlinJvm = "2.2.0"
+
+#ANDROID CORE
 coreKtx = "1.16.0"
-junit = "4.13.2"
-junitVersion = "1.2.1"
-espressoCore = "3.6.1"
-lifecycleRuntimeKtx = "2.9.1"
-activityCompose = "1.10.1"
-composeBom = "2025.06.01"
-navigationCompose = "2.9.1"
-jetbrainsKotlinJvm = "2.1.0"
 appcompat = "1.7.1"
 material = "1.12.0"
+annotations = "26.0.2"
+annotationJvm = "1.9.1"
+
+# ANDROID LIFECYCLE
+lifecycleRuntimeKtx = "2.9.2"
+lifecycleRuntimeCompose = "2.9.2"
+
+#COMPOSE
+composeBom = "2025.07.00"
+activityCompose = "1.10.1"
+navigationCompose = "2.9.3"
+uiToolingPreviewAndroid = "1.8.3"
+
+#FIREBASE
 googleServices= "4.4.3"
-firebaseBom = "33.16.0"
+firebaseBom = "34.0.0"
 firebaseFirestoreKtx = "25.1.4"
+
+#MLKIT
 digitalInkRecognition = "18.1.0"
-loggingInterceptor = "4.12.0"
+
+#NETWORKING
+retrofit = "2.9.0"
 okhttp = "4.12.0"
+loggingInterceptor = "4.12.0"
+tikxmlRetrofitConverter = "0.8.13"
+
+#DATABASE
+roomRuntime = "2.7.2"
 datastorePreferences = "1.1.7"
 
-#REST
-retrofit = "2.9.0"
-retrofitConverter = "0.8.13"
-retrofitBom = "2.9.0"
-core = "0.8.13"
-annotation = "0.8.13"
-processor = "0.8.13"
-kotlinKapt = "2.1.0"
-roomRuntime = "2.7.2"
-roomCompiler = "2.7.2"
-kotlinKsp = "2.1.0-1.0.29"
-annotations = "26.0.2"
-tedpermissionNormal = "3.4.2"
-hilt = "2.55"
+#DEPENDENCE INJECTION
+hilt = "2.57"
 hiltNavigationCompose = "1.2.0"
-lifecycleRuntimeCompose = "2.9.1"
-javaxInject = "1"
-annotationJvm = "1.9.1"
-material3Android = "1.3.2"
-uiToolingPreviewAndroid = "1.8.3"
-kotlinxCoroutinesCore = "1.10.2"
-serialization = "1.7.3"
 
+#XML PROCESSING(TIKXML)
+tikxmlCore = "0.8.13"
+tikxmlAnnotation = "0.8.13"
+tikxmlProcessor = "0.8.13"
+
+#UTILITIES
+tedpermissionNormal = "3.4.2"
+kotlinxCoroutinesCore = "1.10.2"
+serialization = "1.9.0"
+
+#TESTING
+junit = "4.13.2"
+junitVersion = "1.3.0"
+espressoCore = "3.7.0"
 
 
 
 [libraries]
+#ANDROIDX CORE
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
+androidx-annotation-jvm = { group = "androidx.annotation", name = "annotation-jvm", version.ref = "annotationJvm" }
+
+#ANDROID LIFECYCLE
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
-androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleRuntimeCompose" }
+
+#COMPOSE
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
-androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
-androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-ui-tooling-preview-android = { group = "androidx.compose.ui", name = "ui-tooling-preview-android", version.ref = "uiToolingPreviewAndroid" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+
+
+#FIREBASE
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
+
+#MLKIT
 digital-ink-recognition = { group = "com.google.mlkit", name = "digital-ink-recognition", version.ref = "digitalInkRecognition" }
-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "loggingInterceptor" }
-okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
-androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
+
+#NETWORKING
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
-retrofit-bom = { group = "com.squareup.retrofit2", name = "retrofit-bom", version.ref = "retrofitBom" }
-core = { group = "com.tickaroo.tikxml", name = "core", version.ref = "core" }
-annotation = { group = "com.tickaroo.tikxml", name = "annotation", version.ref = "annotation" }
-processor = { group = "com.tickaroo.tikxml", name = "processor", version.ref = "processor" }
-retrofit-converter = { group = "com.tickaroo.tikxml", name = "retrofit-converter", version.ref = "retrofitConverter" }
-androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version = "2.7.2" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "loggingInterceptor" }
+tikxml-retrofit-converter = { group = "com.tickaroo.tikxml", name = "retrofit-converter", version.ref = "tikxmlRetrofitConverter" }
+
+#DATABASE
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomRuntime" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomRuntime" }
-annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
-tedpermission-normal = { group = "io.github.ParkSangGwon", name = "tedpermission-normal", version.ref = "tedpermissionNormal" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomRuntime" }
+
+#DEPENDENCY INJECTION
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
-androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleRuntimeCompose" }
-javax-inject = { group = "javax.inject", name = "javax.inject", version.ref = "javaxInject" }
-androidx-annotation-jvm = { group = "androidx.annotation", name = "annotation-jvm", version.ref = "annotationJvm" }
-androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
-androidx-ui-tooling-preview-android = { group = "androidx.compose.ui", name = "ui-tooling-preview-android", version.ref = "uiToolingPreviewAndroid" }
+
+#UTILITIES
+tedpermission-normal = { group = "io.github.ParkSangGwon", name = "tedpermission-normal", version.ref = "tedpermissionNormal" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
+
+#XML PROCESSING(TIKXML)
+tikxml-core = { group = "com.tickaroo.tikxml", name = "core", version.ref = "tikxmlCore" }
+tikxml-annotation = { group = "com.tickaroo.tikxml", name = "annotation", version.ref = "tikxmlAnnotation" }
+tikxml-processor = { group = "com.tickaroo.tikxml", name = "processor", version.ref = "tikxmlProcessor" }
+
+#TESTING
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -104,9 +142,77 @@ hilt-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 [bundles]
-rest-libs = [
-    "retrofit",
-    "okhttp"
+#COMPOSE UI
+compose-ui = [
+    "androidx-ui",
+    "androidx-ui-graphics",
+    "androidx-ui-tooling-preview",
+    "androidx-material3"
 ]
 
+#COMPOSE TOOLING
+compose-tooling = [
+    "androidx-ui-tooling",
+    "androidx-ui-tooling-preview-android"
+]
 
+#COMPOSE TESTING
+compose-testing  =[
+    "androidx-ui-test-manifest",
+    "androidx-ui-test-junit4"
+]
+
+#NETWORKING
+networking = [
+    "retrofit",
+    "okhttp",
+    "logging-interceptor",
+    "tikxml-retrofit-converter"
+]
+
+#ROOM DATABASE
+room = [
+    "androidx-room-runtime",
+    "androidx-room-ktx"
+]
+
+#FIREBASE
+firebase = [
+    "firebase-firestore-ktx"
+]
+
+#HILT
+hilt = [
+    "hilt-android",
+    "androidx-hilt-navigation-compose"
+]
+
+#TIKXML
+tikxml = [
+    "tikxml-core",
+    "tikxml-annotation"
+]
+
+#LIFECYCLE
+lifecycle = [
+    "androidx-lifecycle-runtime-ktx",
+    "androidx-lifecycle-runtime-compose"
+]
+
+#TESTING
+testing = [
+    "junit",
+    "androidx-junit",
+    "androidx-espresso-core"
+]
+
+#PERMISSION
+permission = [
+    "tedpermission-normal"
+]
+
+#UTILITES
+utils = [
+    "kotlinx-coroutines-core",
+    "kotlinx-serialization-json",
+]
