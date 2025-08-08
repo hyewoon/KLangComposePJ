@@ -1,5 +1,6 @@
 package com.hye.presentation.ui.screen.home
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,11 +33,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 import com.hye.domain.model.roomdb.WordExampleInfoEntity
 import com.hye.presentation.R
 import com.hye.presentation.model.TodayWordUiState
-import com.hye.presentation.model.UIState
 import com.hye.presentation.ui.component.home.todaystudy.TodayWordCard
 import com.hye.presentation.ui.screen.model.HomeViewModel
 import com.hye.presentation.ui.screen.model.SharedViewModel

@@ -2,6 +2,8 @@ package com.hye.presentation.model
 
 import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 import com.hye.domain.model.roomdb.WordExampleInfoEntity
+import java.util.Collections.emptyList
+import java.util.Collections.emptySet
 
 data class TodayWordUiState(
     val wordList: List<TargetWordWithAllInfoEntity> = emptyList(),

@@ -51,7 +51,7 @@ class LoadStudyWordUseCase(
             studyRepository.getStudyWords(today)
 
         } else {
-            studyRepository.getStudyWords(today) //room에 있는 데이터 가져오기
+            studyRepository.getStudyWords(today)
         }
     }
 }

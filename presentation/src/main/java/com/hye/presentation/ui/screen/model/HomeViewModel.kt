@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.hye.domain.result.RoomResult
 import com.hye.domain.usecase.LoadStudyWordUseCase
 import com.hye.presentation.model.TodayWordUiState
-import com.hye.presentation.model.UIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -57,33 +56,6 @@ class HomeViewModel @Inject constructor(
             }
         }
 
-        /*   when (val roomResult = loadStudyWordUseCase(count)) {
-               is RoomResult.Success -> {
-                   _todayWordUiState.update {
-                       it.copy(
-                           wordList = roomResult.data,
-                           isLoading = false,
-                           error = ""
-                       )
-                   }
-               }
-
-               is RoomResult.RoomDBError -> {
-                   _todayWordUiState.update {
-                       it.copy(
-                           isLoading = false,
-                           error = roomResult.exception.message ?: "Unknown error"
-                       )
-                   }
-               }
-
-               is RoomResult.Loading -> {
-                   _todayWordUiState.update { it.copy(isLoading = true) }
-               }
-
-               else -> {}
-
-           }*/
 
     }
 
@@ -94,6 +66,10 @@ class HomeViewModel @Inject constructor(
             _todayWordUiState.update {
                 it.copy(currentIndex = it.currentIndex + 1)
             }
+        } else{
+            _todayWordUiState.update {
+                it.copy(snackBarMessage = "마지막 단어입니다.")
+            }
         }
     }
 
@@ -102,6 +78,10 @@ class HomeViewModel @Inject constructor(
         if (currentState.hasPrevious) {
             _todayWordUiState.update {
                 it.copy(currentIndex = it.currentIndex - 1)
+            }
+        }else {
+            _todayWordUiState.update {
+                it.copy(snackBarMessage = "첫번째 단어입니다.")
             }
         }
     }

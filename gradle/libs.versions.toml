@@ -2,10 +2,10 @@
 
 #ANDROID & KOTLIN
 agp = "8.7.3"
-kotlin = "2.2.0"
-kotlinKsp = "2.2.0-2.0.2"
-kotlinKapt = "2.1.0"
-jetbrainsKotlinJvm = "2.2.0"
+kotlin ="2.0.21"
+kotlinKsp =  "2.0.21-1.0.28"
+kotlinKapt = "2.0.21"
+jetbrainsKotlinJvm = "2.0.21"
 
 #ANDROID CORE
 coreKtx = "1.16.0"
@@ -54,7 +54,7 @@ tikxmlProcessor = "0.8.13"
 #UTILITIES
 tedpermissionNormal = "3.4.2"
 kotlinxCoroutinesCore = "1.10.2"
-serialization = "1.9.0"
+serialization = "1.7.3"
 
 #TESTING
 junit = "4.13.2"
