@@ -10,8 +10,8 @@ import com.hye.presentation.ui.screen.game.SearchScreen
 import com.hye.presentation.ui.screen.game.SpeechToTextScreen
 import com.hye.presentation.ui.screen.game.TextToSpeechScreen
 import com.hye.presentation.ui.screen.game.VocabularyScreen
-import com.hye.presentation.ui.screen.model.GameViewModel
-import com.hye.presentation.ui.screen.model.SharedViewModel
+import com.hye.presentation.ui.model.GameViewModel
+import com.hye.presentation.ui.model.SharedViewModel
 
 fun NavGraphBuilder.addGameGraph(
     gameViewModel: GameViewModel,
@@ -29,7 +29,7 @@ fun NavGraphBuilder.addGameGraph(
             DrawScreen(
                 onNavigateToDrawScreen = onNavigateToDrawScreen,
                 gameViewModel = gameViewModel,
-                sharedViewModel = sharedViewModel
+                sharedViewModel = sharedViewModel,
             )
         }
         composable<ScreenRoutDef.GameFlow.SearchScreen> {

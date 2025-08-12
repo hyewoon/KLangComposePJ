@@ -16,8 +16,8 @@ import androidx.navigation.NavController
 import com.hye.presentation.ui.component.home.AttendanceCard
 import com.hye.presentation.ui.component.home.DailyQuestCard
 import com.hye.presentation.ui.component.home.TodayStudyCard
-import com.hye.presentation.ui.screen.model.HomeViewModel
-import com.hye.presentation.ui.screen.model.SharedViewModel
+import com.hye.presentation.ui.model.HomeViewModel
+import com.hye.presentation.ui.model.SharedViewModel
 
 import com.hye.presentation.ui.theme.KLangComposePJTheme
 

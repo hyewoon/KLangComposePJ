@@ -20,8 +20,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.hye.presentation.R
-import com.hye.presentation.ui.screen.model.HomeViewModel
-import com.hye.presentation.ui.screen.model.SharedViewModel
+import com.hye.presentation.ui.model.HomeViewModel
+import com.hye.presentation.ui.model.SharedViewModel
 
 
 @Composable

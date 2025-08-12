@@ -35,8 +35,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hye.presentation.R
 import com.hye.presentation.model.DrawingPath
 import com.hye.presentation.ui.component.common.HandWritingCanvasComponent
-import com.hye.presentation.ui.screen.model.HomeViewModel
-import com.hye.presentation.ui.screen.model.SharedViewModel
+import com.hye.presentation.ui.model.HomeViewModel
+import com.hye.presentation.ui.model.SharedViewModel
 
 @Preview(showBackground = true)
 @Composable

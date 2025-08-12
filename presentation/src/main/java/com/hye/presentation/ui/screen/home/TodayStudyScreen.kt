@@ -37,10 +37,11 @@ import com.hye.domain.model.roomdb.WordExampleInfoEntity
 import com.hye.presentation.R
 import com.hye.presentation.model.TodayWordUiState
 import com.hye.presentation.ui.component.home.todaystudy.TodayWordCard
-import com.hye.presentation.ui.screen.model.HomeViewModel
-import com.hye.presentation.ui.screen.model.SharedViewModel
+import com.hye.presentation.ui.model.HomeViewModel
+import com.hye.presentation.ui.model.SharedViewModel
 
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun TodayStudyScreen(
     onNavigateToTodayStudyScreen: () -> Unit,

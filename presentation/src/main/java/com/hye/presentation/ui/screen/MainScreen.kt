@@ -47,9 +47,9 @@ import com.hye.presentation.nav_graph.BottomNavigationItem
 import com.hye.presentation.nav_graph.ScreenRoutDef
 import com.hye.presentation.nav_graph.nav_graph_extended.addGameGraph
 import com.hye.presentation.nav_graph.nav_graph_extended.addHomeGraph
-import com.hye.presentation.ui.screen.model.GameViewModel
-import com.hye.presentation.ui.screen.model.HomeViewModel
-import com.hye.presentation.ui.screen.model.SharedViewModel
+import com.hye.presentation.ui.model.GameViewModel
+import com.hye.presentation.ui.model.HomeViewModel
+import com.hye.presentation.ui.model.SharedViewModel
 import com.hye.presentation.ui.screen.tab.GameTabScreen
 import com.hye.presentation.ui.screen.tab.HomeTabScreen
 import com.hye.presentation.ui.screen.tab.MyPageTabScreen

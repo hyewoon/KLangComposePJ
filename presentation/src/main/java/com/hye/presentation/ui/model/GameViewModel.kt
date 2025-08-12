@@ -1,4 +1,4 @@
-package com.hye.presentation.ui.screen.model
+package com.hye.presentation.ui.model
 
 
 import androidx.lifecycle.ViewModel

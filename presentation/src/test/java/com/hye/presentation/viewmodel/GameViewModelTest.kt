@@ -1,7 +1,8 @@
 package com.hye.presentation.viewmodel
 
-import com.hye.domain.usecase.LoadStudyWordUseCase
-import com.hye.presentation.ui.screen.model.GameViewModel
+
+
+import com.hye.presentation.ui.model.GameViewModel
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 

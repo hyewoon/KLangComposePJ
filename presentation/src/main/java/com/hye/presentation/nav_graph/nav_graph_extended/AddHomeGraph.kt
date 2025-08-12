@@ -10,8 +10,8 @@ import com.hye.presentation.ui.screen.home.ListenScreen
 import com.hye.presentation.ui.screen.home.SpeechScreen
 import com.hye.presentation.ui.screen.home.TodayStudyScreen
 import com.hye.presentation.ui.screen.home.WriteScreen
-import com.hye.presentation.ui.screen.model.HomeViewModel
-import com.hye.presentation.ui.screen.model.SharedViewModel
+import com.hye.presentation.ui.model.HomeViewModel
+import com.hye.presentation.ui.model.SharedViewModel
 
 
 fun NavGraphBuilder.addHomeGraph(

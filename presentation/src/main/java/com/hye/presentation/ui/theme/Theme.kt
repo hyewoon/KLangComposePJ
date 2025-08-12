@@ -25,8 +25,8 @@ private val LightColorScheme = lightColorScheme(
     background = Blue50, //전체 배경
     onBackground = Dark900,// 배경위의 텍스트
 
-    tertiary = Dark200, //3차 색상
-    onTertiary = Dark500, //3차 색상 위의 텍스트
+    tertiary = Blue300, //3차 색상
+    onTertiary = PointWhite, //3차 색상 위의 텍스트
 
     //surface(카드, topBar)
     surface = PointWhite, //surface배경(topBar, Card)
