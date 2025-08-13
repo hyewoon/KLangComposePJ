@@ -3,6 +3,14 @@
 # 🪅KLang- 외국인을 위한 한국어 단어 학습 앱 </br>      (with COMPOSE)
 ### 😸 기존 xml기반 프로젝트를  **ComposeUI/UX**와 **Hilt**를 적용해 마이그레이션을 진행하고 있습니다.  
 
+|기술 |적용사항 |
+|------------------------|------|
+| **Compose UI/UX** | UI를 component 단위로 관리하고, 상태변수를 통해 UI와 stateHolder를 명확히 분리한 MVVM패턴 구현|
+| **animation in Compose** |xml기반 프로젝트에서 MotionLayout을 이용해 애니메이션 효과를 준 것을 Compose Animation(setContentSize())을 활용해 더 빠르게 구현|
+| **Hilt(의존성 주입)** | Factory패턴을 이용한 수동 의존성 주입에서 hilt 의존성 주입을 통해 app을 통합적으로 관리(Hilt Navigation, Hilt viewModel) |
+
+
+
 ## 1️⃣ 프로젝트 개요
 
 * **KLang** 은 한국어능력시험인 TOPIK '초급' 단어를 학습 할 수 있는 앱입니다.
