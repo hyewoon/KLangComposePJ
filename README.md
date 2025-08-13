@@ -1,7 +1,7 @@
 
 
-# 🪅KLang- 외국인을 위한 한국어 단어 학습 앱 (with COMPOSE)
-###  기존 xml기반 프로젝트를  **ComposeUI/UX**와 **Hilt**를 적용해 마이그레이션을 진행하고 있습니다.  
+# 🪅KLang- 외국인을 위한 한국어 단어 학습 앱 </br>      (with COMPOSE)
+### 😸 기존 xml기반 프로젝트를  **ComposeUI/UX**와 **Hilt**를 적용해 마이그레이션을 진행하고 있습니다.  
 
 ## 1️⃣ 프로젝트 개요
 
@@ -62,3 +62,5 @@
     </td>
   </tr>
 </table>
+
+## 5️⃣ COMPOSE 적용 과정 
