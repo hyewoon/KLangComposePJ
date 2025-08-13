@@ -1,4 +1,4 @@
-package com.hye.presentation.ui.component.common
+package com.hye.presentation.ui.component.button
 
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
@@ -25,7 +25,7 @@ fun CustomButtonSmallPreview() {
 @Composable
 fun CustomButtonSmall(
     label: String="",
-    onClick: () -> Unit= {},
+    onClick:()-> Unit= {},
     modifier: Modifier = Modifier
 ){
     Button(

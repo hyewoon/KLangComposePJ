@@ -32,8 +32,8 @@ private val LightColorScheme = lightColorScheme(
     surface = PointWhite, //surface배경(topBar, Card)
     onSurface = Dark900, //surface 위의 텍스트
 
-    surfaceVariant = Dark50, //surface변형
-    onSurfaceVariant = Dark900, //surface변형 위의 텍스트
+    surfaceVariant = Dark500, //surface변형
+    onSurfaceVariant = Dark200, //surface변형 위의 텍스트
 
     surfaceTint = Dark300,
 

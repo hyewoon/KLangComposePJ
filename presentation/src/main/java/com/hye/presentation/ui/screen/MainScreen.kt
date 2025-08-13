@@ -95,8 +95,8 @@ fun MainScreen(sharedViewModel: SharedViewModel = hiltViewModel()) {
                             label = {
                                 Text(
                                     text = navigationItem.tabName,
-                                    color = if (isSelected) MaterialTheme.colorScheme.onTertiary
-                                    else MaterialTheme.colorScheme.tertiary
+                                    color = if (isSelected) MaterialTheme.colorScheme.surfaceVariant
+                                    else MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             },
                             icon = {

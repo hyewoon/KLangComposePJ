@@ -7,7 +7,7 @@ import com.hye.data.datasource.firestore.mapper.RoomToDomainMapper
 import com.hye.data.room.TargetWordDao
 import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 import com.hye.domain.repository.roomdb.StudyRepository
-import com.hye.domain.result.RoomResult
+import com.hye.domain.result.AppResult
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
@@ -23,36 +23,36 @@ class StudyRepositoryImpl @Inject constructor(
     override suspend fun insertStudyWords(words: List<TargetWordWithAllInfoEntity>)= runCatching {
         insertRoomDB(words)
         println("insert성공")
-        RoomResult.Success(Unit)
+        AppResult.Success(Unit)
 
     }.getOrElse {
-        RoomResult.RoomDBError(it)
+        AppResult.RoomDBError(it)
     }
 
-    override suspend fun getStudyWords(date: String): RoomResult<List<TargetWordWithAllInfoEntity>> = runCatching {
+    override suspend fun getStudyWords(date: String): AppResult<List<TargetWordWithAllInfoEntity>> = runCatching {
         val room = dao.searchTargetWordByDate(date).map{
             roomToDomainMapper.mapToDomain(it)
         }
         println("getRoon성공")
-        RoomResult.Success(room)
+        AppResult.Success(room)
     }.getOrElse {
-        RoomResult.RoomDBError(it)
+        AppResult.RoomDBError(it)
     }
 
-    override suspend fun getAllStudyWords(): RoomResult<List<TargetWordWithAllInfoEntity>> = runCatching{
+    override suspend fun getAllStudyWords(): AppResult<List<TargetWordWithAllInfoEntity>> = runCatching{
         val room  = dao.getAllTargetWords().map{
             roomToDomainMapper.mapToDomain(it)
         }
-        RoomResult.Success(room)
+        AppResult.Success(room)
     }.getOrElse {
-        RoomResult.RoomDBError(it)
+        AppResult.RoomDBError(it)
     }
 
-    override suspend fun deleteAllStudyWords(): RoomResult<Unit> = runCatching {
+    override suspend fun deleteAllStudyWords(): AppResult<Unit> = runCatching {
         dao.deleteAll()
-        RoomResult.Success(Unit)
+        AppResult.Success(Unit)
     }.getOrElse {
-        RoomResult.RoomDBError(it)
+        AppResult.RoomDBError(it)
     }
 
 

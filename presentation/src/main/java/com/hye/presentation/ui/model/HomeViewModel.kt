@@ -3,7 +3,7 @@ package com.hye.presentation.ui.model
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hye.domain.result.RoomResult
+import com.hye.domain.result.AppResult
 import com.hye.domain.usecase.LoadStudyWordUseCase
 import com.hye.presentation.model.TodayWordUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,7 +31,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
 
             when (val roomResult = loadStudyWordUseCase(count)) {
-                is RoomResult.Success -> {
+                is AppResult.Success -> {
                     _todayWordUiState.update {
                         it.copy(
                             wordList = roomResult.data, //실제 데이터 넣기
@@ -42,7 +42,7 @@ class HomeViewModel @Inject constructor(
                     }
                 }
 
-                is RoomResult.RoomDBError -> {
+                is AppResult.RoomDBError -> {
                     _todayWordUiState.update {
                         it.copy(
                             snackBarMessage = roomResult.exception.message ?: "Unknown error"
@@ -50,9 +50,9 @@ class HomeViewModel @Inject constructor(
                     }
                 }
 
-                is RoomResult.Loading -> {}
+                is AppResult.Loading -> {}
 
-                RoomResult.NoConstructor -> {}
+                AppResult.NoConstructor -> {}
             }
         }
 

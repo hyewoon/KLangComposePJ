@@ -13,20 +13,20 @@ data class BottomNavigationItem(
     fun renderBottomNavigationItems(): List<BottomNavigationItem> {
         return listOf(
             BottomNavigationItem(
-                tabName = "HomeTab",
+                tabName = "Home",
                 selectedIcon = R.drawable.home_selected,
                 unSelectedIcon = R.drawable.home_unselected,
                 route = ScreenRoutDef.TopLevel.HomeTab
             ),
             BottomNavigationItem(
-                tabName ="GameTab",
+                tabName ="Game",
                 selectedIcon = R.drawable.game_selected,
                 unSelectedIcon = R.drawable.game_unselected,
                 route = ScreenRoutDef.TopLevel.GameTab
 
             ),
             BottomNavigationItem(
-                tabName = "MyPageTab",
+                tabName = "MyPage",
                 selectedIcon = R.drawable.my_selected,
                 unSelectedIcon = R.drawable.my_unselected,
                 route = ScreenRoutDef.TopLevel.MyPageTab

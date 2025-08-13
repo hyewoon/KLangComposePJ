@@ -13,8 +13,8 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 abstract class FireStoreRepositoryModule {
 
-    @Singleton
     @Binds
+    @Singleton
     abstract fun bindFireStoreRepository(
         fireStoreRepositoryImpl: FireStoreRepositoryImpl
     ): FireStoreRepository
