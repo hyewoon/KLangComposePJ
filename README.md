@@ -74,4 +74,3 @@
   </tr>
 </table>
 
-## 5️⃣ COMPOSE 적용 과정 
