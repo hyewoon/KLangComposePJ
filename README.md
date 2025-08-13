@@ -1,6 +1,6 @@
 
 
-# 🪅KLang- 외국인을 위한 한국어 단어 학습 앱 (in COMPOSE)
+# 🪅KLang- 외국인을 위한 한국어 단어 학습 앱 (with COMPOSE)
 
 ## 1️⃣ 프로젝트 개요
 
@@ -32,10 +32,11 @@
 
 
 </br>
+
 ## 4️⃣ KLang 핵심기능
 
 
-![image](https://github.com/user-attachments/assets/42c97b6d-02e2-4421-bacf-f95589dd94ac)
+![image](https://github.com/user-attachments/assets/f0b6d8eb-8934-4585-96b4-333258bce120)
 
 
 
