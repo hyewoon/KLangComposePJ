@@ -46,7 +46,7 @@
 | **MLKit DigitalInk** | 손글씨 인식 기능을 onDevice로 구현 |
 | **TTS/STT** | 인식 기능 전반 개발 |
 | **DataStore** | 설정 및 전역 변수 관리 |
-| **DI** | Hilt를 이용한 의존성 주입 |
+| **Hilt(DI)** | Hilt를 이용한 의존성 주입 |
 | **Serverless Firebase Firestore** | 데이터 저장 및 동기화 구현 |
 | **Navigation Graph** | 앱 화면 전환 |
 
