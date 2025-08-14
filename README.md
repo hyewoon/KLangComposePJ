@@ -62,7 +62,7 @@
 
  ✅ **오늘의 단어 학습** 
   - 예문, 듣기, 말하기, 쓰기 기능을 통해 사용자가 직접 참여하는 학습
-  - 북마크 기능을 통해 나만의 단어장 만들기( 🔥개발 진행 중 )
+  - 북마크 기능을 통해 나만의 단어장 만들기( 🔥compose 프로젝트로 개발 진행 중 )
 
  <img src="https://github.com/user-attachments/assets/2dfc4851-6a7b-4667-9241-ac11e414d79e" width="250" hspace="5" vspace="5">
 
