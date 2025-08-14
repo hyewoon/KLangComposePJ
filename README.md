@@ -39,7 +39,7 @@
 | skills | 설명 |
 |------------------------|------|
 | **kotlin** |kotlin2.0 적용  |
-| **Compose UI/UX** |recomposition을 통한 UI자동 업데이트트|
+| **Compose UI/UX** |recomposition을 통한 UI자동 업데이트|
 | **MVVM 아키텍처 패턴** | 멀티모듈 적용 |
 | **ViewModel & StateFlow** | 상태변수를 이용한 UI와 StateHolder 분리|
 | **RoomDB** | SSOT(Single Source Of Truth)와 Offline First 구현 |
