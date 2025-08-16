@@ -14,7 +14,6 @@ import com.hye.domain.model.mlkit.HandWritingPoint
 import com.hye.domain.model.mlkit.HandWritingStroke
 import com.hye.domain.repository.mlkit.MLKitRepository
 import com.hye.domain.result.AppResult
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
@@ -79,7 +78,7 @@ class MLKitRepositoryImpl @Inject constructor() : MLKitRepository {
 
 
     }.catch {
-        emit(AppResult.Failure("인식 오류 ${it.message}"))
+        emit(AppResult.Failure(it.cause ?: Throwable("Unknown error")))
     }
 
     private fun convertToInk(strokes: List<HandWritingStroke>) = runCatching {
