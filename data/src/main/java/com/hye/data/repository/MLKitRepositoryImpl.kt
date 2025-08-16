@@ -78,7 +78,7 @@ class MLKitRepositoryImpl @Inject constructor() : MLKitRepository {
 
 
     }.catch {
-        emit(AppResult.Failure(it.cause ?: Throwable("Unknown error")))
+        emit(AppResult.Failure(Throwable("Unknown error")))
     }
 
     private fun convertToInk(strokes: List<HandWritingStroke>) = runCatching {
