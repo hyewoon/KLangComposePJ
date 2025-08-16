@@ -23,6 +23,12 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.hye.presentation.ui.component.button.CustomButtonSmall
 import com.hye.presentation.ui.theme.KLangComposePJTheme
 
+
+enum class DrawingMode {
+ HANDWRITING_RECOGNITION, TRACING
+}
+
+
 @Preview(apiLevel = 33, showBackground = true)
 @Composable
 fun DrawScreenPreview() {
@@ -32,7 +38,11 @@ fun DrawScreenPreview() {
 }
 
 @Composable
-fun DrawCard(recognizedText:String = "") {
+fun DrawCard(
+    mode: DrawingMode = DrawingMode.HANDWRITING_RECOGNITION,
+    recognizedText:String = "",
+    onTextRecognized: (String) -> Unit = {},
+    onDrawingCompleted: () -> Unit = {}) {
 
     //객체 참조
     var customView: DrawingCustomView? by remember { mutableStateOf(null) }
@@ -53,12 +63,13 @@ fun DrawCard(recognizedText:String = "") {
                         context,
                         attrs = null,
                     ).apply {
-                        setWatermarkText(recognizedText)
+                        if(mode == DrawingMode.TRACING) setWatermarkText(recognizedText)
+
                         customView = this
 
                     }
                 }, update = { customView ->
-
+                    if(mode == DrawingMode.TRACING) customView.setWatermarkText(recognizedText)
 
                 }
 
@@ -71,8 +82,22 @@ fun DrawCard(recognizedText:String = "") {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 CustomButtonSmall(
-                    label = "입력",
+                    label = when(mode){
+                        DrawingMode.HANDWRITING_RECOGNITION -> "인식"
+                        DrawingMode.TRACING -> "완료"
+                    },
+
                     onClick = {
+                        when(mode){
+                            DrawingMode.HANDWRITING_RECOGNITION -> {
+                                onTextRecognized
+
+                            }
+                            DrawingMode.TRACING -> {
+                                onDrawingCompleted
+                            }
+
+                        }
 
                     }
                 )

@@ -5,5 +5,6 @@ import com.hye.domain.result.AppResult
 import kotlinx.coroutines.flow.Flow
 
 interface MLKitRepository {
+    suspend fun initialize()
     suspend fun recognize(strokes: List<HandWritingStroke>): Flow<AppResult<String>>
 }

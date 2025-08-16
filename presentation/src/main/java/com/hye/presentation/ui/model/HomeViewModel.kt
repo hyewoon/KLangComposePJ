@@ -42,10 +42,10 @@ class HomeViewModel @Inject constructor(
                     }
                 }
 
-                is AppResult.RoomDBError -> {
+                is AppResult.Failure -> {
                     _todayWordUiState.update {
                         it.copy(
-                            snackBarMessage = roomResult.exception.message ?: "Unknown error"
+                            snackBarMessage = roomResult.exception.message.toString() ?: "Unknown error"
                         )
                     }
                 }

@@ -88,7 +88,11 @@ fun DrawingCard(
                 .fillMaxWidth()
                 .padding(8.dp)
         )
-        DrawCard(korean)
+        DrawCard(
+            mode = com.hye.presentation.ui.component.common.DrawingMode.TRACING,
+            recognizedText = korean,
+            onDrawingCompleted = {}
+        )
     }
 
 }
