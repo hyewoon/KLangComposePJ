@@ -5,9 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hye.domain.model.mlkit.HandWritingStroke
 import com.hye.domain.repository.mlkit.MLKitRepository
+import com.hye.domain.result.AppResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -15,13 +17,16 @@ import javax.inject.Inject
 class GameViewModel @Inject constructor(
     private val mlkitRepository: MLKitRepository
 ) : ViewModel() {
-    private val _recognizedText = MutableStateFlow("")
+    private var _recognizedText = MutableStateFlow("")
     val recognizedText = _recognizedText.asStateFlow()
 
-    private val _isRecognizing = MutableStateFlow(false)
+    private var _isRecognizing = MutableStateFlow(false)
     val isRecognizing = _isRecognizing.asStateFlow()
 
-    init{
+    private var _recognitionResult = MutableStateFlow<AppResult<String>>(AppResult.NoConstructor)
+    val recognitionResult = _recognitionResult.asStateFlow()
+
+    init {
         viewModelScope.launch {
             mlkitRepository.initialize()
         }
@@ -39,8 +44,27 @@ class GameViewModel @Inject constructor(
 
     fun sendStrokes(strokes: List<HandWritingStroke>) {
         viewModelScope.launch {
-            mlkitRepository.recognize(strokes)
-        }
-    }
+            mlkitRepository.recognize(strokes).collectLatest { mlkitResult ->
+                when (mlkitResult) {
+                    is AppResult.Success -> {
+                        startRecognizing()
+                        //_recognizedText.value = mlkitResult.data
+                        //completeRecognition(mlkitResult.data)
+                        _recognitionResult.value = AppResult.Success(mlkitResult.data)
+                    }
 
+                    is AppResult.Failure -> {
+                    }
+
+                    AppResult.Loading -> {
+                        _isRecognizing.value = true
+                    }
+                    AppResult.NoConstructor -> {
+                        _isRecognizing.value = false
+                    }
+                }
+            }
+        }
+
+    }
 }

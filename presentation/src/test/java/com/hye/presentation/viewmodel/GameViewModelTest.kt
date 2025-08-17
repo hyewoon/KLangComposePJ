@@ -2,9 +2,14 @@ package com.hye.presentation.viewmodel
 
 
 
+import com.hye.domain.repository.mlkit.MLKitRepository
+import com.hye.domain.result.AppResult
 import com.hye.presentation.ui.model.GameViewModel
+import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertTrue
 import org.junit.Test
+
 
 /*
 * TDD: Test-Driven_Development : 테스트 코드-> 실제 코드 작성
@@ -14,13 +19,13 @@ import org.junit.Test
 * */
 class GameViewModelTest {
 
+
     @Test
     fun `초기상태에서 mlkit 인식된 텍스트는 빈문자열이여야 한다`() {
 
         //Given
-        val mockUseCase = null
-        val viewModel = GameViewModel(useCase = mockUseCase)
-
+        val mockRepository = mockk<MLKitRepository>(relaxed = true)
+        val viewModel = GameViewModel(mlkitRepository = mockRepository)
         //when
         val result = viewModel.recognizedText.value
 
@@ -32,9 +37,9 @@ class GameViewModelTest {
     @Test
     fun `초기상태에서 인식 중 상태는 false여야 한다`() {
 
-        //given
-        val mockUseCase = null
-        val viewModel = GameViewModel(useCase = mockUseCase)
+        //Given
+        val mockRepository = mockk<MLKitRepository>(relaxed = true)
+        val viewModel = GameViewModel(mlkitRepository = mockRepository)
 
         //when
         val result = viewModel.isRecognizing.value
@@ -45,9 +50,9 @@ class GameViewModelTest {
 
     @Test
     fun `인식 시작하면 로딩 상태가 true가 된다`(){
-        //given
-        val mockUseCase = null
-        val viewModel = GameViewModel(useCase = mockUseCase)
+        //Given
+        val mockRepository = mockk<MLKitRepository>(relaxed = true)
+        val viewModel = GameViewModel(mlkitRepository = mockRepository)
 
         //when
         viewModel.startRecognizing()
@@ -59,9 +64,9 @@ class GameViewModelTest {
 
     @Test
     fun `인식이 완료되면 결과 텍스트가 업데이트 되어야한다`(){
-        //given
-        val mockUseCase = null
-        val viewModel = GameViewModel(useCase = mockUseCase)
+        //Given
+        val mockRepository = mockk<MLKitRepository>(relaxed = true)
+        val viewModel = GameViewModel(mlkitRepository = mockRepository)
         val expectedResult = "안녕하세요"
 
         //when
@@ -74,9 +79,9 @@ class GameViewModelTest {
 
     @Test
     fun `인식이 완료되면 로딩 상태가 false가 된다`(){
-        //given
-        val mockUseCase = null
-        val viewModel = GameViewModel(useCase = mockUseCase)
+        //Given
+        val mockRepository = mockk<MLKitRepository>(relaxed = true)
+        val viewModel = GameViewModel(mlkitRepository = mockRepository)
 
         //인식 시작해서 로딩 상태 true
         viewModel.startRecognizing() //인식시작해서 로딩 상태
@@ -88,5 +93,29 @@ class GameViewModelTest {
         assertEquals(false, viewModel.isRecognizing.value)
 
     }
+
+    /*
+    * refactor step1 : 인식상 태를 sealed class로 관리
+    * */
+
+    @Test
+    fun `recognitionResult 속성이 존재하고 초기값은 NoConstructor이다`() {
+
+        val mockRepository = mockk<MLKitRepository>(relaxed = true)
+        val viewModel = GameViewModel(mlkitRepository = mockRepository)
+
+        // When
+        val result = viewModel.recognitionResult.value
+
+        // Then
+        assertTrue(result is AppResult.NoConstructor)
+    }
+
+
+
+
+
+
+
 }
 

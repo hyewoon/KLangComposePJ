@@ -55,6 +55,21 @@ android {
     buildFeatures {
         buildConfig = true
     }
+
+    // 🔧 JUnit 5 충돌 해결을 위한 packaging 블록 추가
+    packaging {
+        resources {
+            excludes += setOf(
+                "META-INF/LICENSE.md",
+                "META-INF/LICENSE-notice.md",
+                "META-INF/LICENSE",
+                "META-INF/LICENSE.txt",
+                "META-INF/NOTICE",
+                "META-INF/NOTICE.txt"
+            )
+        }
+    }
+
 }
 
 

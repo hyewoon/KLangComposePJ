@@ -36,6 +36,7 @@ fun DrawScreen(
 ) {
     val recognizedText by gameViewModel.recognizedText.collectAsState()
     val isRecognizing by gameViewModel.isRecognizing.collectAsState()
+    val recognitionResult by gameViewModel.recognitionResult.collectAsState()
 
     //객체 참조
     var customView: DrawingCustomView? by remember { mutableStateOf(null) }
@@ -121,7 +122,7 @@ fun DrawScreen(
 
         }
         if(fold){
-            CustomResultCardSmall("새싹")
+            CustomResultCardSmall(recognizedText)
         }
 
     }

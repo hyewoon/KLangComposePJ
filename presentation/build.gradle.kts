@@ -63,6 +63,8 @@ dependencies {
 
     // Hilt
     implementation(libs.bundles.hilt)
+    implementation(libs.mockk)
+    implementation(libs.kotlinx.coroutines.test)
     ksp(libs.hilt.android.compiler)
 
     //Utilities

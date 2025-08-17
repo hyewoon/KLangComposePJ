@@ -26,7 +26,7 @@ class StudyRepositoryImpl @Inject constructor(
         AppResult.Success(Unit)
 
     }.getOrElse {
-        AppResult.RoomDBError(it)
+        AppResult.Failure(it)
     }
 
     override suspend fun getStudyWords(date: String): AppResult<List<TargetWordWithAllInfoEntity>> = runCatching {
@@ -36,7 +36,7 @@ class StudyRepositoryImpl @Inject constructor(
         println("getRoon성공")
         AppResult.Success(room)
     }.getOrElse {
-        AppResult.RoomDBError(it)
+        AppResult.Failure(it)
     }
 
     override suspend fun getAllStudyWords(): AppResult<List<TargetWordWithAllInfoEntity>> = runCatching{
@@ -45,14 +45,14 @@ class StudyRepositoryImpl @Inject constructor(
         }
         AppResult.Success(room)
     }.getOrElse {
-        AppResult.RoomDBError(it)
+        AppResult.Failure(it)
     }
 
     override suspend fun deleteAllStudyWords(): AppResult<Unit> = runCatching {
         dao.deleteAll()
         AppResult.Success(Unit)
     }.getOrElse {
-        AppResult.RoomDBError(it)
+        AppResult.Failure(it)
     }
 
 
