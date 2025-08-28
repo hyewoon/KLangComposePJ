@@ -3,6 +3,7 @@ package com.hye.presentation.ui.model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hye.domain.model.mlkit.HandWritingAnalysis
 import com.hye.domain.model.mlkit.HandWritingStroke
 import com.hye.domain.repository.mlkit.MLKitRepository
 import com.hye.domain.result.AppResult
@@ -23,7 +24,7 @@ class GameViewModel @Inject constructor(
     private var _isRecognizing = MutableStateFlow(false)
     val isRecognizing = _isRecognizing.asStateFlow()
 
-    private var _recognitionResult = MutableStateFlow<AppResult<String>>(AppResult.NoConstructor)
+    private var _recognitionResult = MutableStateFlow<AppResult<HandWritingAnalysis>>(AppResult.NoConstructor)
     val recognitionResult = _recognitionResult.asStateFlow()
 
     init {
@@ -54,6 +55,8 @@ class GameViewModel @Inject constructor(
                     }
 
                     is AppResult.Failure -> {
+                        _isRecognizing.value = false
+                        _recognitionResult.value = AppResult.Failure(mlkitResult.exception)
                     }
 
                     AppResult.Loading -> {

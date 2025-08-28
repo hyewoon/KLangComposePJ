@@ -10,10 +10,12 @@ import com.google.mlkit.vision.digitalink.DigitalInkRecognizerOptions
 import com.google.mlkit.vision.digitalink.Ink
 import com.google.mlkit.vision.digitalink.Ink.Point
 import com.google.mlkit.vision.digitalink.Ink.Stroke
+import com.hye.domain.model.mlkit.HandWritingAnalysis
 import com.hye.domain.model.mlkit.HandWritingPoint
 import com.hye.domain.model.mlkit.HandWritingStroke
 import com.hye.domain.repository.mlkit.MLKitRepository
 import com.hye.domain.result.AppResult
+import com.hye.data.validate.HandWritingValidator
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
@@ -24,8 +26,9 @@ import javax.inject.Inject
 * strokes-> Ink -> recognizer(Ink)
 *
 * */
-class MLKitRepositoryImpl @Inject constructor() : MLKitRepository {
-
+class MLKitRepositoryImpl @Inject constructor(
+    private val handwriteValid: HandWritingValidator
+) : MLKitRepository {
 
     private var remoteModelManager = RemoteModelManager.getInstance()
     private var recognizer: DigitalInkRecognizer? = null
@@ -41,10 +44,13 @@ class MLKitRepositoryImpl @Inject constructor() : MLKitRepository {
     }
 
 
-    override suspend fun recognize(strokes: List<HandWritingStroke>) = flow<AppResult<String>> {
+    override suspend fun recognize(strokes: List<HandWritingStroke>) = flow<AppResult<HandWritingAnalysis>> {
         val ink = convertToInk(strokes).getOrThrow()
         val currentRecognizer = recognizer ?: throw Exception("Recognizer not initialized")
         val result = currentRecognizer.recognize(ink).await()
+
+        //결과값 리스트로 반환
+        val candidateTexts = result.candidates.map{it.text}
 
         val bestResult = result.candidates.firstOrNull()?.text ?: "인식 실패"
         val firstCandidate = result.candidates.firstOrNull()
@@ -52,6 +58,10 @@ class MLKitRepositoryImpl @Inject constructor() : MLKitRepository {
         result.candidates.forEachIndexed { index, candidate ->
             println("Candidate $index: ${candidate.text} with score: ${candidate.score}")
         }
+
+        // 유효성 검사
+        val validator = HandWritingValidator()
+        val analysis = validator.validateHandWriting(candidateTexts)
 
         println("전체 결과: ${result}")
         println("candidates: ${result.candidates}")  // 리스트 확인
@@ -74,7 +84,7 @@ class MLKitRepositoryImpl @Inject constructor() : MLKitRepository {
 
 
 
-        emit(AppResult.Success(bestResult))
+        emit(AppResult.Success(analysis))
 
 
     }.catch {

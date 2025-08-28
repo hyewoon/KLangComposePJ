@@ -11,8 +11,13 @@ data class HandWritingStroke(
 )
 
 
-data class MLKitRecognitionResult(
-    val recognizedText: String,
-    val confidence: Float,
-    val isValidRecognition: Boolean = confidence >= -1000
+data class HandWritingAnalysis(
+    val level: ConfidenceLevel,
+    val recognizedText: String = "",
+    val candidates:List<String> = listOf(),
+    val consistency: Float = 0f
 )
+
+enum class ConfidenceLevel {
+    HIGH, MEDIUM, LOW
+}

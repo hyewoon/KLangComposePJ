@@ -22,9 +22,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.hye.domain.result.AppResult
 import com.hye.presentation.ui.component.button.CustomButtonSmall
 import com.hye.presentation.ui.component.card.CustomResultCardSmall
 import com.hye.presentation.ui.component.common.DrawingCustomView
+import com.hye.presentation.ui.component.indicator.CustomIndeterminateCircularIndicator
 import com.hye.presentation.ui.model.GameViewModel
 import com.hye.presentation.ui.model.SharedViewModel
 
@@ -34,7 +36,7 @@ fun DrawScreen(
     gameViewModel: GameViewModel,
     sharedViewModel: SharedViewModel,
 ) {
-    val recognizedText by gameViewModel.recognizedText.collectAsState()
+   //val recognizedText by gameViewModel.recognizedText.collectAsState()
     val isRecognizing by gameViewModel.isRecognizing.collectAsState()
     val recognitionResult by gameViewModel.recognitionResult.collectAsState()
 
@@ -122,8 +124,21 @@ fun DrawScreen(
 
         }
         if(fold){
-            CustomResultCardSmall(recognizedText)
-        }
+            when(recognitionResult){
+                is AppResult.Loading -> {
+                    CustomIndeterminateCircularIndicator()
+                }
+                is AppResult.Success -> {
+                    val data = (recognitionResult as AppResult.Success).data
+                    CustomResultCardSmall(data.recognizedText)
+                }
+                is AppResult.Failure -> {
+                    val error = (recognitionResult as AppResult.Failure).exception
+                    CustomResultCardSmall(error.toString())
+                }
+                AppResult.NoConstructor -> {}
 
+                }
+            }
     }
 }
