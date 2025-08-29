@@ -13,8 +13,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.hye.presentation.ui.theme.KLangComposePJTheme
 
-@Preview(showBackground = true)
+@Preview(apiLevel=33,  showBackground = true)
+@Composable
+fun AttendanceCardPreview(){
+ KLangComposePJTheme{
+     AttendanceCard()
+ }
+}
+
 @Composable
 fun AttendanceCard() {
     Column(

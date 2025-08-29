@@ -58,10 +58,11 @@ class HandWritingValidator@Inject constructor(
 
    private fun determineConfidenceLevel(consistency: Float): ConfidenceLevel {
        return when {
-            consistency >= 0.7f -> ConfidenceLevel.HIGH
-            consistency >= 0.5f ->ConfidenceLevel.MEDIUM
+            consistency >= 0.6f -> ConfidenceLevel.HIGH
+            consistency >= 0.3f ->ConfidenceLevel.MEDIUM
+            consistency == 0.0f -> ConfidenceLevel.LOW
             else -> ConfidenceLevel.LOW
-        }
-    }
-}
+       }
+   }
 
+}

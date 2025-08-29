@@ -22,10 +22,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.hye.domain.model.mlkit.ConfidenceLevel
 import com.hye.domain.result.AppResult
 import com.hye.presentation.ui.component.button.CustomButtonSmall
 import com.hye.presentation.ui.component.card.CustomResultCardSmall
 import com.hye.presentation.ui.component.common.DrawingCustomView
+import com.hye.presentation.ui.component.dialog.CustomDialog
 import com.hye.presentation.ui.component.indicator.CustomIndeterminateCircularIndicator
 import com.hye.presentation.ui.model.GameViewModel
 import com.hye.presentation.ui.model.SharedViewModel
@@ -99,6 +101,7 @@ fun DrawScreen(
                             if(!fold) {
                                 val strokes = customView?.getCurrentStrokes()
                                 if (!strokes.isNullOrEmpty()) {
+                                    gameViewModel.clearRecognitionResult()
                                     gameViewModel.sendStrokes(strokes)
                                     fold = true
                                 }
@@ -130,7 +133,22 @@ fun DrawScreen(
                 }
                 is AppResult.Success -> {
                     val data = (recognitionResult as AppResult.Success).data
-                    CustomResultCardSmall(data.recognizedText)
+                    val dataLevel: ConfidenceLevel = (recognitionResult as AppResult.Success).data.level
+                    when(dataLevel){
+                         ConfidenceLevel.HIGH, ConfidenceLevel.MEDIUM -> {
+                             CustomResultCardSmall(data.recognizedText)
+                         }
+                         ConfidenceLevel.LOW -> {
+                             CustomDialog(
+                                 dialogTitle = "문자를 인식 할 수 없어요.",
+                                 dialogText = "다시 시도해 보세요.",
+                                 onConfirmation = {
+                                     fold = false
+                                     customView?.clearCanvas()
+                                 }
+                             )
+                         }
+                    }
                 }
                 is AppResult.Failure -> {
                     val error = (recognitionResult as AppResult.Failure).exception
@@ -142,3 +160,5 @@ fun DrawScreen(
             }
     }
 }
+
+

@@ -70,4 +70,8 @@ class GameViewModel @Inject constructor(
         }
 
     }
+    fun clearRecognitionResult(){
+        _recognitionResult.value = AppResult.NoConstructor
+
+    }
 }

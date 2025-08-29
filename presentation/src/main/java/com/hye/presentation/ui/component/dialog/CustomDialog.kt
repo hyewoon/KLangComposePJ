@@ -4,12 +4,17 @@ package com.hye.presentation.ui.component.dialog
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.BlendMode.Companion.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.hye.presentation.R
 import com.hye.presentation.ui.theme.KLangComposePJTheme
 
 
@@ -27,17 +32,19 @@ fun CustomDialog(
     onConfirmation: ()-> Unit={},
     dialogTitle: String = "",
     dialogText: String = "",
+    icon: Painter = painterResource(id = R.drawable.paw_uncheck)
 ){
      AlertDialog(
+         icon={Icon(painter = icon, contentDescription = "Example Icon")},
          title = {
-             Text(text = "문자를 인식 할 수 없어요.",
+             Text(text = dialogTitle,
                  modifier = Modifier.fillMaxWidth(),
                  fontSize = MaterialTheme.typography.titleMedium.fontSize,
                  color = MaterialTheme.colorScheme.onSurface,
                  textAlign = androidx.compose.ui.text.style.TextAlign.Center)
          },
          text = {
-             Text(text = "다시 입력해 주세요",
+             Text(text = dialogText,
                  modifier =Modifier.fillMaxWidth(),
                  color = MaterialTheme.colorScheme.onSurface,
                  textAlign = androidx.compose.ui.text.style.TextAlign.Center)

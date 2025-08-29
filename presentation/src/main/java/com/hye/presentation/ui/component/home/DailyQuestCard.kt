@@ -22,8 +22,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hye.presentation.R
+import com.hye.presentation.ui.theme.KLangComposePJTheme
 
-@Preview(showBackground = true)
+@Preview(apiLevel = 33, showBackground = true)
+@Composable
+fun DailyQuestCardPreview(){
+    KLangComposePJTheme{
+        DailyQuestCard()
+    }
+}
+
 @Composable
 fun DailyQuestCard() {
     Column(

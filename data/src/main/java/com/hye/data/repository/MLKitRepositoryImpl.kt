@@ -60,8 +60,7 @@ class MLKitRepositoryImpl @Inject constructor(
         }
 
         // 유효성 검사
-        val validator = HandWritingValidator()
-        val analysis = validator.validateHandWriting(candidateTexts)
+        val analysis = handwriteValid.validateHandWriting(candidateTexts)
 
         println("전체 결과: ${result}")
         println("candidates: ${result.candidates}")  // 리스트 확인
