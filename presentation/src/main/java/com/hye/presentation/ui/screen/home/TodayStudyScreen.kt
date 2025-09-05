@@ -55,6 +55,7 @@ fun TodayStudyScreen(
 ) {
     val todayWordUiState by homeViewModel.todayWordUiState.collectAsStateWithLifecycle()
 
+
             // 스낵바 처리
             LaunchedEffect(todayWordUiState.snackBarMessage) {
                 if (todayWordUiState.snackBarMessage.isNotEmpty()) {
@@ -83,8 +84,6 @@ fun TodayStudyContent(
     todayWordUiState : TodayWordUiState,
     onPreviousClick: () -> Unit = {},
     onNextClick: () -> Unit = {},
-    onBookmarkClick: () -> Unit = {},
-
     ) {
     Column(
         modifier = Modifier
@@ -102,7 +101,6 @@ fun TodayStudyContent(
                 onNavigateToWriteScreen = onNavigateToWriteScreen,
                 todayWordUiState = todayWordUiState,
                 onPreviousClick = onPreviousClick,
-                onBookmarkClick = onBookmarkClick,
                 onNextClick = onNextClick
             )
         }

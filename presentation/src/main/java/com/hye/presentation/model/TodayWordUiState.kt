@@ -1,15 +1,43 @@
 package com.hye.presentation.model
 
+import android.util.Log
+import androidx.lifecycle.viewModelScope
 import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 import com.hye.domain.model.roomdb.WordExampleInfoEntity
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
 import java.util.Collections.emptyList
 import java.util.Collections.emptySet
 
+
+/*
+
+//combine(a, b) 두개의 flow를 결합
+todayWordsUiState,-> WordList
+currentIndex, -> currentIndex
+)
+  init {
+        viewModelScope.launch {
+
+            _currentWord.value = UiStateResult.Loading
+            combine(
+                todayWordsUiState,
+                currentIndex,
+            ) { todayWordsUiState, currentIndex ->
+                when (todayWordsUiState) {
+                    is UiStateResult.Success -> {
+                        val wordItem = state.data.getOrNull(currentIndex) ?: TodayWordsUiState()
+                        _pronunciationUrl.value = wordItem.pronunciation
+                        UiStateResult.Success(wordItem)
+                    }
+    }
+
+ */
 data class TodayWordUiState(
     val wordList: List<TargetWordWithAllInfoEntity> = emptyList(),
     val currentIndex: Int = 0,
     val snackBarMessage: String = "",
-    val bookMarkedIndices: Set<Int> = emptySet(),
+
 ) {
     //계산 속성
     val currentWord: TargetWordWithAllInfoEntity
@@ -22,7 +50,7 @@ data class TodayWordUiState(
         get() = wordList.isNotEmpty() && currentIndex < wordList.size - 1
     val hasPrevious: Boolean
         get() = currentIndex > 0
-    val isMarked: Boolean
-        get() = bookMarkedIndices.contains(currentIndex)
+   /* val isMarked: Boolean
+        get() = bookMarkedIndices.contains(currentIndex)*/
     }
 

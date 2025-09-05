@@ -9,12 +9,13 @@ import androidx.room.RoomDatabase
 * dap
 * */
 @Database(
-    entities = [TargetWord::class, TargetWordExampleInfo::class, TargetWordPronunciationInfo::class],
-    version = 2,
+    entities = [TargetWord::class, TargetWordExampleInfo::class, TargetWordPronunciationInfo::class, BookMarkedWords::class],
+    version = 4,
 )
 abstract class TargetWordRoomDatabase : RoomDatabase() {
 
    abstract fun targetWordDao(): TargetWordDao
+   abstract fun bookMarkedWordDao(): BookMarkedWordDao
 
 /*    companion object {
         private var INSTANCE: TargetWordRoomDatabase? = null

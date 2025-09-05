@@ -24,12 +24,15 @@ object RoomDBModule {
         return Room.databaseBuilder(
             context,
             TargetWordRoomDatabase::class.java,
-            "target_word_database"
+            "target_word_db"
         )
             .build()
     }
 
 
     @Provides
-    fun provideDao(database: TargetWordRoomDatabase) = database.targetWordDao()
+    fun provideTargetWordDao(database: TargetWordRoomDatabase) = database.targetWordDao()
+
+    @Provides
+    fun provideBookMarkedDao(database: TargetWordRoomDatabase) = database.bookMarkedWordDao()
 }

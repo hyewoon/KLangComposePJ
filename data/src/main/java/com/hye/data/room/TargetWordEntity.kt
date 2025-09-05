@@ -28,6 +28,7 @@ import androidx.room.Relation
         var isExampleLearned : Boolean = false,
         var isWritten : Boolean = false,
         var isRecorded : Boolean = false,
+        var isBookMarked: Boolean = false
     )
 
     @Entity(
@@ -91,3 +92,43 @@ import androidx.room.Relation
         val pronunciationInfo: List<TargetWordPronunciationInfo>,
 
         )
+
+
+/*
+북마크 entitiy추가
+*/
+
+        @Entity(tableName = "bookmarked_words",
+            foreignKeys = [
+                ForeignKey(
+                    entity = TargetWord::class,
+                    parentColumns = ["documentId"],
+                    childColumns = ["bookmarked_documentId_fk"],
+                    onDelete = ForeignKey.CASCADE)
+            ],
+            indices = [androidx.room.Index("bookmarked_documentId_fk")]
+        )
+        data class BookMarkedWords(
+            @PrimaryKey(autoGenerate = true)
+            val bookmarkedId: Int= 0,
+            @ColumnInfo(name = "bookmarked_documentId_fk")
+            val documentId: String= "",
+            val createdDate: String= "",
+            val bookMarkTime: Long= 0L,
+        )
+
+data class BookMarkedWordsWithAllInfo(
+    @Embedded val bookMarkedWords: BookMarkedWords,
+
+    @Relation(
+        entity = TargetWord::class,
+        parentColumn = "bookmarked_documentId_fk",
+        entityColumn = "documentId"
+    )
+    val targetWordWithAllInfo: TargetWordWithAllInfo,
+)
+
+
+
+
+

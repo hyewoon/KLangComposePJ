@@ -8,6 +8,9 @@ import com.hye.data.room.TargetWordDao
 import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 import com.hye.domain.repository.roomdb.StudyRepository
 import com.hye.domain.result.AppResult
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
@@ -17,10 +20,10 @@ import javax.inject.Singleton
 class StudyRepositoryImpl @Inject constructor(
     private val dao: TargetWordDao,
     private val domainToRoomMapper: DomainToRoomMapper,
-    private val roomToDomainMapper: RoomToDomainMapper
+    private val roomToDomainMapper: RoomToDomainMapper,
 ) : StudyRepository {
 
-    override suspend fun insertStudyWords(words: List<TargetWordWithAllInfoEntity>)= runCatching {
+    override suspend fun insertStudyWords(words: List<TargetWordWithAllInfoEntity>) = runCatching {
         insertRoomDB(words)
         println("insert성공")
         AppResult.Success(Unit)
@@ -29,26 +32,43 @@ class StudyRepositoryImpl @Inject constructor(
         AppResult.Failure(it)
     }
 
-    override suspend fun getStudyWords(date: String): AppResult<List<TargetWordWithAllInfoEntity>> = runCatching {
-        val room = dao.searchTargetWordByDate(date).map{
-            roomToDomainMapper.mapToDomain(it)
+    override fun getStudyWords(date: String): Flow<AppResult<List<TargetWordWithAllInfoEntity>>> =
+        flow {
+            try {
+                dao.searchTargetWordByDate(date)
+                    .map { roomList ->
+                        roomList.map { roomEntity ->
+                            roomToDomainMapper.mapToDomain(roomEntity)
+                        }
+                    }
+                    .collect { domainList ->
+                        println("getRoom성공")
+                        emit(AppResult.Success(domainList))
+                    }
+            } catch (exception: Exception) {
+                emit(AppResult.Failure(exception))
+            }
         }
-        println("getRoon성공")
-        AppResult.Success(room)
-    }.getOrElse {
-        AppResult.Failure(it)
+
+
+    override fun getAllStudyWords(): Flow<AppResult<List<TargetWordWithAllInfoEntity>>> = flow {
+        try {
+            dao.getAllTargetWords()
+                .map { roomEntity ->
+                    roomEntity.map { roomEntity ->
+                        roomToDomainMapper.mapToDomain(roomEntity)
+                    }
+                }
+                .collect { domainList ->
+                    emit(AppResult.Success(domainList))
+                }
+        } catch (e: Exception) {
+            emit(AppResult.Failure(e))
+        }
     }
 
-    override suspend fun getAllStudyWords(): AppResult<List<TargetWordWithAllInfoEntity>> = runCatching{
-        val room  = dao.getAllTargetWords().map{
-            roomToDomainMapper.mapToDomain(it)
-        }
-        AppResult.Success(room)
-    }.getOrElse {
-        AppResult.Failure(it)
-    }
 
-    override suspend fun deleteAllStudyWords(): AppResult<Unit> = runCatching {
+    override suspend fun deleteAllStudyWords() = runCatching {
         dao.deleteAll()
         AppResult.Success(Unit)
     }.getOrElse {

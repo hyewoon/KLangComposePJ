@@ -21,12 +21,27 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 import com.hye.presentation.R
 import com.hye.presentation.model.TodayWordUiState
 
-
+/*
+@Preview(apiLevel = 33,showBackground = true)
+@Composable
+fun TodayWordCardPreview(){
+    TodayWordCard(
+        onNavigateToListenScreen = TODO(),
+        onNavigateToDictionaryScreen = TODO(),
+        onNavigateToSpeechScreen = TODO(),
+        onNavigateToWriteScreen = TODO(),
+        todayWordUiState = TODO(),
+        onNextClick = TODO(),
+        onPreviousClick = TODO(),
+    )
+}
+*/
 
 
 @Composable
@@ -36,11 +51,10 @@ fun TodayWordCard(
     onNavigateToSpeechScreen: () -> Unit,
     onNavigateToWriteScreen: () -> Unit,
     todayWordUiState: TodayWordUiState,
-    onNextClick: () -> Unit,
-    onPreviousClick: () -> Unit,
-    onBookmarkClick: () -> Unit = {},
+    onNextClick: () -> Unit = {},
+    onPreviousClick: () -> Unit = {},
 ) {
-    val isMarked = true
+
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
@@ -60,18 +74,21 @@ fun TodayWordCard(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Icon(
-                    painter = if (isMarked) {
-                        painterResource(id = R.drawable.star)
-                    } else {
-                        painterResource(id = R.drawable.star_uncheck)
-                    },
-                    contentDescription = "bookmark",
-                    tint = Color.Unspecified,
-                    modifier = Modifier
-                        .size(width = 40.dp, height = 40.dp)
-                        .padding(8.dp)
-                )
+                IconButton(
+                    onClick = {
+
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(id = if (todayWordUiState.wordList[todayWordUiState.currentIndex].isBookmarked) R.drawable.star else R.drawable.star_uncheck),
+                        contentDescription = "bookmark",
+                        tint = Color.Unspecified,
+                        modifier = Modifier
+                            .size(width = 40.dp, height = 40.dp)
+                            .padding(8.dp)
+                    )
+                }
+
                 Icon(
                     painter = painterResource(id = R.drawable.paw_uncheck),
                     contentDescription = "bookmark",
@@ -224,7 +241,7 @@ fun SelectButtons(
 
         }
         IconButton(
-            onClick = { onNavigateToDictionaryScreen()},
+            onClick = { onNavigateToDictionaryScreen() },
             modifier = Modifier.size(70.dp)
         ) {
             Icon(

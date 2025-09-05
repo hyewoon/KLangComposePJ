@@ -3,6 +3,8 @@ package com.hye.presentation.ui.model
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hye.domain.repository.roomdb.BookMarkedWordsRepository
+import com.hye.domain.repository.roomdb.StudyRepository
 import com.hye.domain.result.AppResult
 import com.hye.domain.usecase.LoadStudyWordUseCase
 import com.hye.presentation.model.TodayWordUiState
@@ -10,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,6 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val loadStudyWordUseCase: LoadStudyWordUseCase,
+    private val roomRepository: StudyRepository,
+    private val bookMarkRepository: BookMarkedWordsRepository
 ) : ViewModel() {
 
     private val _todayWordUiState = MutableStateFlow(TodayWordUiState())
@@ -30,30 +35,31 @@ class HomeViewModel @Inject constructor(
     private fun loadStudyWord(count: Int) {
         viewModelScope.launch {
 
-            when (val roomResult = loadStudyWordUseCase(count)) {
+            loadStudyWordUseCase(count).collectLatest {roomResult->
+                when (roomResult) {
                 is AppResult.Success -> {
-                    _todayWordUiState.update {
-                        it.copy(
-                            wordList = roomResult.data, //실제 데이터 넣기
-                            currentIndex = 0,
-                            snackBarMessage = "",
-                            bookMarkedIndices = emptySet()
-                        )
-                    }
+                _todayWordUiState.update {
+                    it.copy(
+                        wordList = roomResult.data, //실제 데이터 넣기
+                        currentIndex = 0,
+                        snackBarMessage = ""
+                    )
                 }
+            }
 
                 is AppResult.Failure -> {
-                    _todayWordUiState.update {
-                        it.copy(
-                            snackBarMessage = roomResult.exception.message.toString() ?: "Unknown error"
-                        )
-                    }
+                _todayWordUiState.update {
+                    it.copy(
+                        snackBarMessage = roomResult.exception.message.toString() ?: "Unknown error"
+                    )
                 }
+            }
 
                 is AppResult.Loading -> {}
 
                 AppResult.NoConstructor -> {}
             }
+        }
         }
 
 
@@ -90,6 +96,11 @@ class HomeViewModel @Inject constructor(
     fun clearSnackBarMessage() {
         _todayWordUiState.update {
             it.copy(snackBarMessage = "")
+        }
+    }
+
+    fun toggleBookmark(id :String) {
+        viewModelScope.launch {
         }
     }
 }
