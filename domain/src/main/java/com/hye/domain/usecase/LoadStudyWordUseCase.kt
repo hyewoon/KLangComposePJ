@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 
 
@@ -34,7 +33,7 @@ class LoadStudyWordUseCase(
     private val studyRepository: StudyRepository,
     private val firestoreRepository: FireStoreRepository,
 ) {
-    suspend operator fun invoke(count: Int): Flow<AppResult<List<TargetWordWithAllInfoEntity>>> = flow {
+     operator fun invoke(count: Int): Flow<AppResult<List<TargetWordWithAllInfoEntity>>> = flow {
         val today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREA))
         val count = count.toLong()
 

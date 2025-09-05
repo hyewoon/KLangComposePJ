@@ -1,13 +1,9 @@
 package com.hye.presentation.model
 
-import android.util.Log
-import androidx.lifecycle.viewModelScope
+
 import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 import com.hye.domain.model.roomdb.WordExampleInfoEntity
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.launch
 import java.util.Collections.emptyList
-import java.util.Collections.emptySet
 
 
 /*
