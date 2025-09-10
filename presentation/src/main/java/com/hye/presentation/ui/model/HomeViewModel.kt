@@ -99,8 +99,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun toggleBookmark(id :String) {
+    fun toggleBookMark(id :String) {
         viewModelScope.launch {
+
         }
     }
 }
