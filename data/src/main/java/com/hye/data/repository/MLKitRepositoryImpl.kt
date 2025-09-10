@@ -16,8 +16,12 @@ import com.hye.domain.model.mlkit.HandWritingStroke
 import com.hye.domain.repository.mlkit.MLKitRepository
 import com.hye.domain.result.AppResult
 import com.hye.data.validate.HandWritingValidator
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -29,11 +33,14 @@ import javax.inject.Inject
 class MLKitRepositoryImpl @Inject constructor(
     private val handwriteValid: HandWritingValidator
 ) : MLKitRepository {
+    private var cleanupJob: Job? = null
 
     private var remoteModelManager = RemoteModelManager.getInstance()
     private var recognizer: DigitalInkRecognizer? = null
     private var model: DigitalInkRecognitionModel? = null
     private var isInitialized = false
+    private var lastUsedTime = 0L
+    private val CLEANUP_DELAY = 5 * 60 * 1000L // 5분
 
 
 
@@ -48,7 +55,7 @@ class MLKitRepositoryImpl @Inject constructor(
         val ink = convertToInk(strokes).getOrThrow()
         val currentRecognizer = recognizer ?: throw Exception("Recognizer not initialized")
         val result = currentRecognizer.recognize(ink).await()
-
+        lastUsedTime = System.currentTimeMillis()
         //결과값 리스트로 반환
         val candidateTexts = result.candidates.map{it.text}
 
@@ -73,6 +80,7 @@ class MLKitRepositoryImpl @Inject constructor(
         } catch (e: NoSuchMethodException) {
             println("score 필드 없음")
             null
+
         }
 
         println("텍스트: $bestResult")
@@ -84,10 +92,25 @@ class MLKitRepositoryImpl @Inject constructor(
 
 
         emit(AppResult.Success(analysis))
+        scheduleCleanUp()
 
 
     }.catch {
         emit(AppResult.Failure(Throwable("Unknown error")))
+    }
+
+
+    private fun scheduleCleanUp() {
+        cleanupJob?.cancel()
+        GlobalScope.launch {
+            delay(CLEANUP_DELAY)
+            if (System.currentTimeMillis() - lastUsedTime >= CLEANUP_DELAY) {
+                recognizer?.close()
+                recognizer = null
+                isInitialized = false
+            }
+
+        }
     }
 
     private fun convertToInk(strokes: List<HandWritingStroke>) = runCatching {
@@ -115,15 +138,15 @@ class MLKitRepositoryImpl @Inject constructor(
      * recognizer -> viewModel에서 인식
      */
    private suspend fun setUpRecognizer() {
+       //이미 초기화 되었는지 확인
+       if (isInitialized && recognizer != null) return
+
         val modelIdentifier = DigitalInkRecognitionModelIdentifier.fromLanguageTag("ko")
             ?: throw Exception("지원되지 않는 언어입니다.")
 
         val model = DigitalInkRecognitionModel.builder(modelIdentifier).build()
         downloadModelAndSetUpRecognizer(model)
-
-
     }
-
 
     /**
      * 모델객체 얻기
@@ -131,18 +154,24 @@ class MLKitRepositoryImpl @Inject constructor(
     private suspend fun downloadModelAndSetUpRecognizer(model: DigitalInkRecognitionModel) = runCatching {
 
         val currentModel = model ?: throw Exception("Model initialization failed")
-        recognizer?.close()
-        remoteModelManager.download(currentModel, DownloadConditions.Builder().build())
 
-        recognizer = DigitalInkRecognition.getClient(
-            DigitalInkRecognizerOptions.builder(currentModel).build()
-        )
+        val isDownloaded = remoteModelManager.isModelDownloaded(currentModel).await()
+
+        if(!isDownloaded) {
+            remoteModelManager.download(currentModel, DownloadConditions.Builder().build()).await()
+        }
+
+        if(recognizer == null) {
+            recognizer = DigitalInkRecognition.getClient(
+                DigitalInkRecognizerOptions.builder(currentModel).build()
+            )
+        }
         isInitialized = true
-
 
     }.onFailure {
         it.printStackTrace()
         isInitialized = false
+        recognizer?.close() //실패시에만 해제
         recognizer = null
 
     }
