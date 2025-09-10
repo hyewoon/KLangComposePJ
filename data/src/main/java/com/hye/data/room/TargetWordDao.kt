@@ -79,6 +79,9 @@ interface TargetWordDao {
     @Query("SELECT * FROM target_word")
     fun getAllTargetWords(): Flow<List<TargetWordWithAllInfo>>
 
+    @Query("SELECT * FROM target_word")
+    fun getAllTargetWordsOnce(): List<TargetWordWithAllInfo>
+
     /*
     * 북마크 상태 업데이트
     * */

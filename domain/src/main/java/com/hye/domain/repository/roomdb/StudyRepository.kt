@@ -10,4 +10,5 @@ interface StudyRepository {
     suspend fun deleteAllStudyWords(): AppResult<Unit>
     fun getStudyWords(date: String): Flow<AppResult<List<TargetWordWithAllInfoEntity>>>
     fun getAllStudyWords(): Flow<AppResult<List<TargetWordWithAllInfoEntity>>>
+    suspend fun getAllStudyWordsOnce(): AppResult<List<TargetWordWithAllInfoEntity>>
 }

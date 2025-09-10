@@ -8,9 +8,11 @@ import com.hye.data.room.TargetWordDao
 import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 import com.hye.domain.repository.roomdb.StudyRepository
 import com.hye.domain.result.AppResult
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
@@ -64,6 +66,21 @@ class StudyRepositoryImpl @Inject constructor(
                 }
         } catch (e: Exception) {
             emit(AppResult.Failure(e))
+        }
+    }
+
+    override suspend fun getAllStudyWordsOnce(): AppResult<List<TargetWordWithAllInfoEntity>> {
+        return withContext(Dispatchers.IO) {
+            try {
+                dao.getAllTargetWordsOnce()
+                    .map {
+                        roomToDomainMapper.mapToDomain(it)
+                    }.let {
+                        AppResult.Success(it)
+                    }
+            } catch (e: Exception) {
+                AppResult.Failure(e)
+            }
         }
     }
 
