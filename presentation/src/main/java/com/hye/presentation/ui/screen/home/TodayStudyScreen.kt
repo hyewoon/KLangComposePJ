@@ -71,6 +71,7 @@ fun TodayStudyScreen(
                 todayWordUiState = todayWordUiState,
                 onNextClick = { homeViewModel.moveToNext() },
                 onPreviousClick = { homeViewModel.moveToPrevious() },
+                homeViewModel = homeViewModel
             )
         }
 
@@ -84,6 +85,7 @@ fun TodayStudyContent(
     todayWordUiState : TodayWordUiState,
     onPreviousClick: () -> Unit = {},
     onNextClick: () -> Unit = {},
+    homeViewModel: HomeViewModel = hiltViewModel(),
     ) {
     Column(
         modifier = Modifier
@@ -101,7 +103,8 @@ fun TodayStudyContent(
                 onNavigateToWriteScreen = onNavigateToWriteScreen,
                 todayWordUiState = todayWordUiState,
                 onPreviousClick = onPreviousClick,
-                onNextClick = onNextClick
+                onNextClick = onNextClick,
+                homeViewModel = homeViewModel
             )
         }
 

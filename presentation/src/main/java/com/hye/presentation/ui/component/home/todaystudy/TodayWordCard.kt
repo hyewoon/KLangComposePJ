@@ -22,9 +22,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 import com.hye.presentation.R
 import com.hye.presentation.model.TodayWordUiState
+import com.hye.presentation.ui.model.HomeViewModel
 
 /*
 @Preview(apiLevel = 33,showBackground = true)
@@ -52,6 +54,7 @@ fun TodayWordCard(
     todayWordUiState: TodayWordUiState,
     onNextClick: () -> Unit = {},
     onPreviousClick: () -> Unit = {},
+    homeViewModel : HomeViewModel = hiltViewModel(),
 ) {
 
     Card(
@@ -75,11 +78,11 @@ fun TodayWordCard(
             ) {
                 IconButton(
                     onClick = {
-
+                        homeViewModel.toggleBookMark(todayWordUiState.currentWordId)
                     }
                 ) {
                     Icon(
-                        painter = painterResource(id = if (todayWordUiState.wordList[todayWordUiState.currentIndex].isBookmarked) R.drawable.star else R.drawable.star_uncheck),
+                        painter = painterResource(id = if (todayWordUiState.isCurrentWordBookMarked) R.drawable.star else R.drawable.star_uncheck),
                         contentDescription = "bookmark",
                         tint = Color.Unspecified,
                         modifier = Modifier
