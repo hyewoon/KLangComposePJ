@@ -12,7 +12,7 @@ data class TargetWordWithAllInfoEntity(
     val todayString: String ="",
     val exampleInfo: List<WordExampleInfoEntity> = emptyList(),
     val pronunciationInfo: List<WordPronunciationInfoEntity> = emptyList(),
-    val isBookmarked: Boolean = false
+    val isBookMarked: Boolean = false
 
     )
 
