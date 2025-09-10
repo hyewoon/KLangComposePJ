@@ -46,7 +46,9 @@ data class TodayWordUiState(
         get() = wordList.isNotEmpty() && currentIndex < wordList.size - 1
     val hasPrevious: Boolean
         get() = currentIndex > 0
-   /* val isMarked: Boolean
-        get() = bookMarkedIndices.contains(currentIndex)*/
+    val isCurrentWordBookMarked: Boolean
+        get() = currentWord.isBookMarked
+    val currentWordId: String
+        get() = currentWord.documentId
     }
 

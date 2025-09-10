@@ -8,6 +8,11 @@ plugins {
 
 }
 
+configurations.all {
+    exclude(group = "org.junit.jupiter")
+    exclude(group = "org.junit.platform")
+}
+
 android {
     namespace = "com.hye.presentation"
     compileSdk = 35
@@ -39,6 +44,20 @@ android {
     buildFeatures {
         buildConfig = true
         compose = true
+    }
+
+    packaging {
+        resources {
+            excludes += setOf(
+                "META-INF/LICENSE.md",
+                "META-INF/LICENSE-notice.md",
+                "META-INF/LICENSE",
+                "META-INF/LICENSE.txt",
+                "META-INF/NOTICE",
+                "META-INF/NOTICE.txt",
+                "META-INF/DEPENDENCIES"
+            )
+        }
     }
 }
 

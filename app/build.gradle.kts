@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.hilt.plugin)
     alias(libs.plugins.kotlin.ksp)
-    alias(libs.plugins.kotlin.kapt)
+    //alias(libs.plugins.kotlin.kapt)
 }
 
 android {
@@ -22,11 +22,11 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        packaging {
+     /*   packaging {
             resources {
                 excludes += "META-INF/gradle/incremental.annotation.processors"
             }
-        }
+        }*/
 
         val properties = Properties()
         properties.load(project.rootProject.file("local.properties").inputStream())
@@ -56,16 +56,18 @@ android {
         buildConfig = true
     }
 
-    // 🔧 JUnit 5 충돌 해결을 위한 packaging 블록 추가
+    //  JUnit 5 충돌 해결을 위한 packaging 블록 추가
     packaging {
         resources {
             excludes += setOf(
+                "META-INF/gradle/incremental.annotation.processors",
                 "META-INF/LICENSE.md",
                 "META-INF/LICENSE-notice.md",
                 "META-INF/LICENSE",
                 "META-INF/LICENSE.txt",
                 "META-INF/NOTICE",
-                "META-INF/NOTICE.txt"
+                "META-INF/NOTICE.txt",
+                "META-INF/DEPENDENCIES"
             )
         }
     }
@@ -84,9 +86,7 @@ dependencies {
     ksp(libs.hilt.android.compiler)
 
     //testing
-    testImplementation(libs.bundles.testing)
-
-
+    //testImplementation(libs.bundles.testing)
 
 }
 
