@@ -12,13 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.hye.presentation.ui.component.home.AttendanceCard
 import com.hye.presentation.ui.component.home.DailyQuestCard
 import com.hye.presentation.ui.component.home.TodayStudyCard
 import com.hye.presentation.ui.model.HomeViewModel
 import com.hye.presentation.ui.model.SharedViewModel
-
 import com.hye.presentation.ui.theme.KLangComposePJTheme
 
 
