@@ -20,14 +20,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.hye.presentation.R
-import com.hye.presentation.nav_graph.ScreenRoutDef
+import com.hye.presentation.ui.model.HomeViewModel
 
 
 @Preview(showBackground = true)
@@ -38,7 +37,10 @@ fun TodayStudyCardPreview() {
 
 
 @Composable
-fun TodayStudyCard(onNavigateToTodayStudy:()-> Unit) {
+fun TodayStudyCard(
+    onNavigateToTodayStudy: () -> Unit,
+    homeViewModel: HomeViewModel,
+) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 10.dp
@@ -104,7 +106,9 @@ fun TodayStudyCard(onNavigateToTodayStudy:()-> Unit) {
             }
             Button(
                 onClick = {
-                 onNavigateToTodayStudy()
+                    onNavigateToTodayStudy()
+                    homeViewModel.checkTodayWord()
+
                 },
                 modifier = Modifier
                     .fillMaxWidth()

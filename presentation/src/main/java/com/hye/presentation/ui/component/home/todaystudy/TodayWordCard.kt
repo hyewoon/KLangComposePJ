@@ -54,7 +54,7 @@ fun TodayWordCard(
     todayWordUiState: TodayWordUiState,
     onNextClick: () -> Unit = {},
     onPreviousClick: () -> Unit = {},
-    homeViewModel : HomeViewModel = hiltViewModel(),
+    homeViewModel : HomeViewModel,
 ) {
 
     Card(

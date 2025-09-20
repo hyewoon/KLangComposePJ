@@ -26,8 +26,8 @@ class StudyRepositoryImpl @Inject constructor(
 ) : StudyRepository {
 
     override suspend fun insertStudyWords(words: List<TargetWordWithAllInfoEntity>) = runCatching {
+
         insertRoomDB(words)
-        println("insert성공")
         AppResult.Success(Unit)
 
     }.getOrElse {
@@ -84,6 +84,21 @@ class StudyRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getStudyWordsOnce(date: String): AppResult<List<TargetWordWithAllInfoEntity>> {
+        return withContext(Dispatchers.IO) {
+            try {
+                dao.searchTargetWordByDateOnce(date)
+                    .map {
+                        roomToDomainMapper.mapToDomain(it)
+                    }.let {
+                        AppResult.Success(it)
+                    }
+            } catch (e: Exception) {
+                AppResult.Failure(e)
+            }
+        }
+    }
+
 
     override suspend fun deleteAllStudyWords() = runCatching {
         dao.deleteAll()
@@ -95,39 +110,41 @@ class StudyRepositoryImpl @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     private suspend fun insertRoomDB(words: List<TargetWordWithAllInfoEntity>) {
-        words.forEach { words ->
+        val currentTime = System.currentTimeMillis()
+        val today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
-            val currentTime = System.currentTimeMillis()
-            val today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-
-            var targetWord = domainToRoomMapper.mapToRoom(words)
-            targetWord = targetWord.copy(
-                timeStamp = currentTime,
-                todayString = today,
-                isBasicLearned = false,
-                isListened = false,
-                isExampleLearned = false,
-                isWritten = false,
-                isRecorded = false
-            )
+        words.forEach {word->
+            val targetWord = createTargetWord(word, currentTime, today)
 
             dao.insertLimitedTargetWordExampleInfo(
                 targetWord = targetWord,
-                exampleInfo = words.exampleInfo.map {
-                    domainToRoomMapper.mapToRoomExampleInfo(
-                        it,
-                        targetWord.documentId
-                    )
-                } ?: emptyList(),
-                pronunciationInfo = words.pronunciationInfo.map {
-                    domainToRoomMapper.mapToRoomPronunciationInfo(
-                        it,
-                        targetWord.documentId
-                    )
-                } ?: emptyList()
+                exampleInfo = word.exampleInfo.map {
+                    domainToRoomMapper.mapToRoomExampleInfo(it, targetWord.documentId)
+                },
+                pronunciationInfo = word.pronunciationInfo.map {
+                    domainToRoomMapper.mapToRoomPronunciationInfo(it, targetWord.documentId)
+                }
             )
-
 
         }
     }
+    private fun createTargetWord(
+        word: TargetWordWithAllInfoEntity,
+        currentTime: Long,
+        today: String
+    ) = domainToRoomMapper.mapToRoom(word).copy(
+        timeStamp = currentTime,
+        todayString = today,
+        isBasicLearned = false,
+        isListened = false,
+        isExampleLearned = false,
+        isWritten = false,
+        isRecorded = false
+    )
 }
+
+
+
+
+
+

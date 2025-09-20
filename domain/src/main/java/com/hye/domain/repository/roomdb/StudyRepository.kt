@@ -11,4 +11,5 @@ interface StudyRepository {
     fun getStudyWords(date: String): Flow<AppResult<List<TargetWordWithAllInfoEntity>>>
     fun getAllStudyWords(): Flow<AppResult<List<TargetWordWithAllInfoEntity>>>
     suspend fun getAllStudyWordsOnce(): AppResult<List<TargetWordWithAllInfoEntity>>
+    suspend fun getStudyWordsOnce(date: String): AppResult<List<TargetWordWithAllInfoEntity>>
 }

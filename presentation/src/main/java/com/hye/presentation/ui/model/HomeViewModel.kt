@@ -27,17 +27,24 @@ class HomeViewModel @Inject constructor(
     private val _todayWordUiState = MutableStateFlow(TodayWordUiState())
     val todayWordUiState: StateFlow<TodayWordUiState> = _todayWordUiState.asStateFlow()
 
-    init {
-        loadStudyWord(10)
-        Log.d("HomeViewModel", "HomeViewModel initialized")
-    }
+     fun checkTodayWord() {
+         Log.d("Cache", "checkTodayWord 호출 - wordList 크기: ${_todayWordUiState.value.wordList.size}")
+         if(_todayWordUiState.value.wordList.isNotEmpty()) {
+             Log.d("Cache", "캐시 HIT - 기존 데이터 사용")
+             return
+         }
+         Log.d("Cache", "캐시 MISS - 새로 로드")
+         loadStudyWord(10)
+     }
 
     private fun loadStudyWord(count: Int) {
         viewModelScope.launch {
-
             loadStudyWordUseCase(count).collectLatest {roomResult->
                 when (roomResult) {
                 is AppResult.Success -> {
+                    Log.d("StateUpdate", "업데이트 전 크기: ${_todayWordUiState.value.wordList.size}")
+                    Log.d("StateUpdate", "받은 데이터 크기: ${roomResult.data.size}")
+
                 _todayWordUiState.update {
                     it.copy(
                         wordList = roomResult.data, //실제 데이터 넣기
@@ -45,6 +52,7 @@ class HomeViewModel @Inject constructor(
                         snackBarMessage = ""
                     )
                 }
+                    Log.d("StateUpdate", "업데이트 후 크기: ${_todayWordUiState.value.wordList.size}")
             }
 
                 is AppResult.Failure -> {

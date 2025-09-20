@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import com.hye.domain.model.roomdb.WordExampleInfoEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -37,11 +38,13 @@ interface TargetWordDao {
         insertTargetWord(targetWord)
 
         //제한된 갯수의 데이터만 가져와서, firestore에서 받은 데이터와 일치시키기
+        val allowedTypes = setOf("문장", "구")
         val limitedExamples = exampleInfo
-            .groupBy { it.type }
+            .groupBy { it.type in allowedTypes }
             .mapValues { (_, examples) -> examples.take(3) }
             .values
             .flatten()
+            .take(6)
 
         insertTargetWordExampleInfo(limitedExamples)
         insertTargetWordPronunciationInfo(pronunciationInfo)
@@ -80,7 +83,10 @@ interface TargetWordDao {
     fun getAllTargetWords(): Flow<List<TargetWordWithAllInfo>>
 
     @Query("SELECT * FROM target_word")
-    fun getAllTargetWordsOnce(): List<TargetWordWithAllInfo>
+    suspend fun getAllTargetWordsOnce(): List<TargetWordWithAllInfo>
+
+    @Query("SELECT* FROM target_word WHERE todayString = :todayString")
+    suspend fun searchTargetWordByDateOnce(todayString: String): List<TargetWordWithAllInfo>
 
     /*
     * 북마크 상태 업데이트

@@ -5,12 +5,10 @@ import com.hye.domain.repository.roomdb.StudyRepository
 import com.hye.domain.repository.firestore.FireStoreRepository
 import com.hye.domain.result.AppResult
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emitAll
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlinx.coroutines.flow.flow
-
 
 /*
 *
@@ -30,73 +28,83 @@ import kotlinx.coroutines.flow.flow
 *
 * */
 
+
+/*       // Result처리 먼저
+val result = studyRepository.getAllStudyWords()
+if (result !is AppResult.Success) return result  // 접근 실패시 바로 반환
+
+//데이터가 아예 존재하지 않거나, 데이터가 존재하지만 오늘 날짜에 해당하는 데이터가 없는 경우
+val roomData = result.data.isEmpty() || result.data.none { it.todayString == today }
+
+return if (roomData) {
+    //firestore에서 받아오기 + room저장
+    if(result.data.isNotEmpty()) studyRepository.deleteAllStudyWords()
+
+    val firestoreResult =  firestoreRepository.getStudyWordFromFireStore(count)
+    studyRepository.insertStudyWords(firestoreResult)
+    studyRepository.getStudyWords(today)
+
+} else {
+    studyRepository.getStudyWords(today)
+}
+}*/
+
 class LoadStudyWordUseCase(
     private val studyRepository: StudyRepository,
     private val firestoreRepository: FireStoreRepository,
 ) {
+
+    private var lastInsertDate : String? = null
+
     operator fun invoke(count: Int): Flow<AppResult<List<TargetWordWithAllInfoEntity>>> = flow {
         val today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREA))
-        val count = count.toLong()
-
-
-        /*       // Result처리 먼저
-        val result = studyRepository.getAllStudyWords()
-        if (result !is AppResult.Success) return result  // 접근 실패시 바로 반환
-
-        //데이터가 아예 존재하지 않거나, 데이터가 존재하지만 오늘 날짜에 해당하는 데이터가 없는 경우
-        val roomData = result.data.isEmpty() || result.data.none { it.todayString == today }
-
-        return if (roomData) {
-            //firestore에서 받아오기 + room저장
-            if(result.data.isNotEmpty()) studyRepository.deleteAllStudyWords()
-
-            val firestoreResult =  firestoreRepository.getStudyWordFromFireStore(count)
-            studyRepository.insertStudyWords(firestoreResult)
-            studyRepository.getStudyWords(today)
-
-        } else {
-            studyRepository.getStudyWords(today)
-        }
-    }*/
+        val countLong = count.toLong()
 
         emit(AppResult.Loading)
 
+        try {//바로 반환
+            if (lastInsertDate == today) {
+                emit(studyRepository.getStudyWordsOnce(today))
+                return@flow
+            }
 
-        try {
-            // 한 번만 가져와서 처리
-            val roomResult = studyRepository.getAllStudyWordsOnce()
 
-            when (roomResult) {
+            when (val roomResult = studyRepository.getAllStudyWordsOnce()) {
                 is AppResult.Success -> {
-                    val needsRefresh = roomResult.data.isEmpty() ||
-                            roomResult.data.none { it.todayString == today }
+                    val todayData = roomResult.data.filter { it.todayString == today }
 
-                    if (needsRefresh) {
-                        if (roomResult.data.isNotEmpty()) {
-                            studyRepository.deleteAllStudyWords()
-                        }
-                        val firestoreResult =
-                            firestoreRepository.getStudyWordFromFireStore(count.toLong())
-                        studyRepository.insertStudyWords(firestoreResult)
+                    if (todayData.isNotEmpty()) {
+                        emit(AppResult.Success(todayData))
+                        return@flow
                     }
 
-                    // 최종 결과 flow로 수집
-                    /*  studyRepository.getStudyWords(today).first().let { finalResult ->
-                         emit(finalResult)*/
-                    emitAll(studyRepository.getStudyWords(today))
-                }
+                        println("UseCase - Room 데이터 개수: ${roomResult.data.size}")
+                        println("UseCase - 오늘 날짜 데이터: ${roomResult.data.filter { it.todayString == today }.size}개")
 
-                is AppResult.Failure -> {
-                    emit(roomResult)
-                }
+                        val needsRefresh = roomResult.data.isEmpty() ||
+                                roomResult.data.none { it.todayString == today }
 
-                else -> {
-                    emit(roomResult)
-                }
+                        println("UseCase - 새로고침 필요: $needsRefresh")
 
+                        if (needsRefresh) {
+                            if (roomResult.data.isNotEmpty()) {
+                                studyRepository.deleteAllStudyWords()
+                            }
+                            val firestoreResult =
+                                firestoreRepository.getStudyWordFromFireStore(countLong)
+                            studyRepository.insertStudyWords(firestoreResult)
+                            lastInsertDate = today
+                        }
+
+                        // 원래 방식대로 돌아가기
+                        emit(studyRepository.getStudyWordsOnce(today))
+                    }
+                    else -> {
+                        emit(roomResult)
+                    }
+                }
+            } catch (e: Exception) {
+                emit(AppResult.Failure(e))
             }
-        } catch (e: Exception) {
-            emit(AppResult.Failure(e))
         }
-    }
 }
