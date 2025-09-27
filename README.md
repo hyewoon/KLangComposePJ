@@ -10,7 +10,7 @@
 | **Compose UI/UX** | UI를 component 단위로 관리하고, 상태변수를 통해 UI와 stateHolder를 명확히 분리한 MVVM패턴 구현|
 | **Animation in Compose** |xml기반 프로젝트에서 MotionLayout을 이용해 애니메이션 효과를 준 것을 Compose Animation( setContentSize()) 통해 더 간결한 코드로 구현|
 | **androidView</br>(Using Views in Compose)** |안드로이드 View를 상속받은 CustomView를 Compose에 적용하기 위해 AndroidView()활용 |
-| **Hilt(의존성 주입)** | Factory패턴을 이용한 수동 의존성 주입에서 hilt 의존성 주입을 통해 멀티모듈 app을 통합적으로 관리(HiltModule, Hilt Navigation, hiltviewModel적용) |
+| **Hilt(의존성 주입)** | 수동 의존성 주입에서 hilt 의존성 주입을 통해 멀티모듈 app을 통합적으로 관리(HiltModule, Hilt Navigation, hiltviewModel적용) |
 
 
 
