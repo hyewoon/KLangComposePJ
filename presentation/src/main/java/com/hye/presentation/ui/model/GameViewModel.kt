@@ -49,11 +49,9 @@ class GameViewModel @Inject constructor(
                 when (mlkitResult) {
                     is AppResult.Success -> {
                         startRecognizing()
-                        //_recognizedText.value = mlkitResult.data
-                        //completeRecognition(mlkitResult.data)
+
                         _recognitionResult.value = AppResult.Success(mlkitResult.data)
                     }
-
                     is AppResult.Failure -> {
                         _isRecognizing.value = false
                         _recognitionResult.value = AppResult.Failure(mlkitResult.exception)

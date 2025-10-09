@@ -25,14 +25,17 @@ class StudyRepositoryImpl @Inject constructor(
     private val roomToDomainMapper: RoomToDomainMapper,
 ) : StudyRepository {
 
-    override suspend fun insertStudyWords(words: List<TargetWordWithAllInfoEntity>) = runCatching {
-
-        insertRoomDB(words)
-        AppResult.Success(Unit)
-
-    }.getOrElse {
-        AppResult.Failure(it)
+    override suspend fun insertStudyWords(words: List<TargetWordWithAllInfoEntity>): AppResult<Unit> {
+        return withContext(Dispatchers.IO) {
+            try {
+                insertRoomDB(words)
+                AppResult.Success(Unit)
+            } catch (e: Exception) {
+                AppResult.Failure(e)
+            }
+        }
     }
+
 
     override fun getStudyWords(date: String): Flow<AppResult<List<TargetWordWithAllInfoEntity>>> =
         flow {
@@ -56,8 +59,8 @@ class StudyRepositoryImpl @Inject constructor(
     override fun getAllStudyWords(): Flow<AppResult<List<TargetWordWithAllInfoEntity>>> = flow {
         try {
             dao.getAllTargetWords()
-                .map { roomEntity ->
-                    roomEntity.map { roomEntity ->
+                .map { roomList ->
+                    roomList.map { roomEntity ->
                         roomToDomainMapper.mapToDomain(roomEntity)
                     }
                 }
@@ -72,12 +75,12 @@ class StudyRepositoryImpl @Inject constructor(
     override suspend fun getAllStudyWordsOnce(): AppResult<List<TargetWordWithAllInfoEntity>> {
         return withContext(Dispatchers.IO) {
             try {
-                dao.getAllTargetWordsOnce()
+               val result =  dao.getAllTargetWordsOnce()
                     .map {
                         roomToDomainMapper.mapToDomain(it)
-                    }.let {
-                        AppResult.Success(it)
                     }
+                AppResult.Success(result)
+
             } catch (e: Exception) {
                 AppResult.Failure(e)
             }
@@ -87,25 +90,58 @@ class StudyRepositoryImpl @Inject constructor(
     override suspend fun getStudyWordsOnce(date: String): AppResult<List<TargetWordWithAllInfoEntity>> {
         return withContext(Dispatchers.IO) {
             try {
-                dao.searchTargetWordByDateOnce(date)
+               val result = dao.searchTargetWordByDateOnce(date)
                     .map {
                         roomToDomainMapper.mapToDomain(it)
-                    }.let {
-                        AppResult.Success(it)
                     }
+                        AppResult.Success(result)
+
+            } catch (e: Exception) {
+                AppResult.Failure(e)
+            }
+        }
+    }
+    override suspend fun deleteAllStudyWords(): AppResult<Unit> {
+        return withContext(Dispatchers.IO) {
+            try {
+                dao.deleteAll()
+                AppResult.Success(Unit)
             } catch (e: Exception) {
                 AppResult.Failure(e)
             }
         }
     }
 
-
-    override suspend fun deleteAllStudyWords() = runCatching {
-        dao.deleteAll()
-        AppResult.Success(Unit)
-    }.getOrElse {
-        AppResult.Failure(it)
+    override suspend fun updateBookmarkStatus(
+        documentId: String,
+        isBookmarked: Boolean,
+        bookmarkedTimeStamp: Long,
+    ): AppResult<Unit> {
+        return withContext(Dispatchers.IO) {
+            try {
+                dao.updateBookmarkStatus(documentId, isBookmarked, bookmarkedTimeStamp)
+                AppResult.Success(Unit)
+            } catch (e: Exception) {
+                AppResult.Failure(e)
+            }
+        }
     }
+
+    override fun getBookmarkedWords(): Flow<AppResult<List<TargetWordWithAllInfoEntity>>> = flow {
+        try {
+            dao.getBookmarkedWords()
+                .map { targetWords ->
+                    targetWords.map {
+                        roomToDomainMapper.mapToDomain(it)
+                    }
+                }.collect {
+                    emit(AppResult.Success(it))
+                }
+        } catch (e: Exception) {
+            emit(AppResult.Failure(e))
+        }
+    }
+
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -113,7 +149,7 @@ class StudyRepositoryImpl @Inject constructor(
         val currentTime = System.currentTimeMillis()
         val today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
-        words.forEach {word->
+        words.forEach { word ->
             val targetWord = createTargetWord(word, currentTime, today)
 
             dao.insertLimitedTargetWordExampleInfo(
@@ -128,10 +164,11 @@ class StudyRepositoryImpl @Inject constructor(
 
         }
     }
+
     private fun createTargetWord(
         word: TargetWordWithAllInfoEntity,
         currentTime: Long,
-        today: String
+        today: String,
     ) = domainToRoomMapper.mapToRoom(word).copy(
         timeStamp = currentTime,
         todayString = today,
@@ -139,7 +176,9 @@ class StudyRepositoryImpl @Inject constructor(
         isListened = false,
         isExampleLearned = false,
         isWritten = false,
-        isRecorded = false
+        isRecorded = false,
+        isBookmarked = false,
+        bookmarkedTimeStamp = 0L
     )
 }
 

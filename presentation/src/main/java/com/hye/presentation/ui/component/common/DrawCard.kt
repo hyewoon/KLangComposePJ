@@ -95,6 +95,7 @@ fun DrawCard(
                             }
                             DrawingMode.TRACING -> {
                                 onDrawingCompleted
+
                             }
 
                         }

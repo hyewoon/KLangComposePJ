@@ -90,9 +90,10 @@ interface TargetWordDao {
     /*
     * 북마크 상태 업데이트
     * */
-    @Query("UPDATE target_word SET isBookMarked = :isBookMarked WHERE documentId = :documentId")
-    suspend fun updateBookMarkStatus(documentId: String, isBookMarked: Boolean)
+    @Query("UPDATE target_word SET isBookmarked = :isBookmarked , bookmarkedTimeStamp = :bookmarkedTimeStamp WHERE documentId = :documentId")
+    suspend fun updateBookmarkStatus(documentId: String, isBookmarked: Boolean, bookmarkedTimeStamp: Long)
 
-
+    @Query("SELECT * FROM target_word WHERE isBookmarked = true ORDER BY bookmarkedTimeStamp DESC" )
+     fun getBookmarkedWords(): Flow<List<TargetWordWithAllInfo>>
 
 }

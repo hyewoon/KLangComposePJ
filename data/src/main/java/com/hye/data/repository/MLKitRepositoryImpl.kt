@@ -40,7 +40,12 @@ class MLKitRepositoryImpl @Inject constructor(
     private var model: DigitalInkRecognitionModel? = null
     private var isInitialized = false
     private var lastUsedTime = 0L
-    private val CLEANUP_DELAY = 5 * 60 * 1000L // 5분
+   // private val CLEANUP_DELAY = 5 * 60 * 1000L // 5분
+
+    // 개발/테스트 단계
+    private val CLEANUP_DELAY = 30 * 1000L // 30초
+   // private val AUTO_RELEASE_DELAY = 60 * 1000L // 1분
+   // private val AUTO_RELEASE_DELAY = 120 * 1000L // 2분
 
 
 
@@ -69,11 +74,6 @@ class MLKitRepositoryImpl @Inject constructor(
         // 유효성 검사
         val analysis = handwriteValid.validateHandWriting(candidateTexts)
 
-        println("전체 결과: ${result}")
-        println("candidates: ${result.candidates}")  // 리스트 확인
-        println("첫 번째 후보: $firstCandidate")  // 첫 번째 후보 확인
-        println("첫 번째 후보 클래스: ${firstCandidate?.javaClass}")  // 클래스 확인
-
         val candidate = try {
             firstCandidate?.javaClass?.getDeclaredMethod("getScore")
                 ?.invoke(firstCandidate) as? Number
@@ -82,14 +82,6 @@ class MLKitRepositoryImpl @Inject constructor(
             null
 
         }
-
-        println("텍스트: $bestResult")
-        println("confidence: ${candidate?.toFloat()}")
-
-        println("텍스트: $bestResult")
-        println("confidence: ${candidate?.toFloat()}")
-
-
 
         emit(AppResult.Success(analysis))
         scheduleCleanUp()

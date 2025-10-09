@@ -2,7 +2,6 @@ package com.hye.data.di.module.database
 
 import android.content.Context
 import androidx.room.Room
-
 import com.hye.data.room.TargetWordRoomDatabase
 import dagger.Module
 import dagger.Provides
@@ -33,6 +32,4 @@ object RoomDBModule {
     @Provides
     fun provideTargetWordDao(database: TargetWordRoomDatabase) = database.targetWordDao()
 
-    @Provides
-    fun provideBookMarkedDao(database: TargetWordRoomDatabase) = database.bookMarkedWordDao()
 }

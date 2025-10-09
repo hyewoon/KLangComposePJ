@@ -1,9 +1,7 @@
 package com.hye.presentation.ui.model
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hye.domain.repository.roomdb.BookMarkedWordsRepository
 import com.hye.domain.repository.roomdb.StudyRepository
 import com.hye.domain.result.AppResult
 import com.hye.domain.usecase.LoadStudyWordUseCase
@@ -16,24 +14,38 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+/*init {
+    viewModelScope.launch {
+        //sharedViewModel.resetDailyWordCount()
 
+        _currentWord.value = UiStateResult.Loading
+        combine(
+            todayWordsUiState,
+            currentIndex,
+        ) { state, index ->
+            when (state) {
+                is UiStateResult.Success -> {
+                    Log.d("HomeViewModel", "combine값 받음")
+                    val wordItem = state.data.getOrNull(index) ?: TodayWordsUiState()
+                    _pronunciationUrl.value = wordItem.pronunciation
+                    Log.d("HomeViewModel", "wordItem: ${wordItem.pronunciation}")
+                    UiStateResult.Success(wordItem)
+                }
+                //다른 경우 기본값 반환
+                is UiStateResult.Loading -> {
+                    UiStateResult.Loading
+                }*/
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val loadStudyWordUseCase: LoadStudyWordUseCase,
-    private val roomRepository: StudyRepository,
-    private val bookMarkRepository: BookMarkedWordsRepository
+    private val roomRepository: StudyRepository
 ) : ViewModel() {
 
     private val _todayWordUiState = MutableStateFlow(TodayWordUiState())
     val todayWordUiState: StateFlow<TodayWordUiState> = _todayWordUiState.asStateFlow()
 
      fun checkTodayWord() {
-         Log.d("Cache", "checkTodayWord 호출 - wordList 크기: ${_todayWordUiState.value.wordList.size}")
-         if(_todayWordUiState.value.wordList.isNotEmpty()) {
-             Log.d("Cache", "캐시 HIT - 기존 데이터 사용")
-             return
-         }
-         Log.d("Cache", "캐시 MISS - 새로 로드")
+         if(_todayWordUiState.value.wordList.isNotEmpty()) return
          loadStudyWord(10)
      }
 
@@ -42,9 +54,6 @@ class HomeViewModel @Inject constructor(
             loadStudyWordUseCase(count).collectLatest {roomResult->
                 when (roomResult) {
                 is AppResult.Success -> {
-                    Log.d("StateUpdate", "업데이트 전 크기: ${_todayWordUiState.value.wordList.size}")
-                    Log.d("StateUpdate", "받은 데이터 크기: ${roomResult.data.size}")
-
                 _todayWordUiState.update {
                     it.copy(
                         wordList = roomResult.data, //실제 데이터 넣기
@@ -52,7 +61,6 @@ class HomeViewModel @Inject constructor(
                         snackBarMessage = ""
                     )
                 }
-                    Log.d("StateUpdate", "업데이트 후 크기: ${_todayWordUiState.value.wordList.size}")
             }
 
                 is AppResult.Failure -> {
@@ -62,7 +70,6 @@ class HomeViewModel @Inject constructor(
                     )
                 }
             }
-
                 is AppResult.Loading -> {}
 
                 AppResult.NoConstructor -> {}

@@ -28,7 +28,8 @@ import androidx.room.Relation
         var isExampleLearned : Boolean = false,
         var isWritten : Boolean = false,
         var isRecorded : Boolean = false,
-        var isBookMarked: Boolean = false
+        var isBookmarked: Boolean = false,
+        val bookmarkedTimeStamp: Long = 0L
     )
 
     @Entity(
@@ -97,7 +98,7 @@ import androidx.room.Relation
 /*
 북마크 entitiy추가
 */
-
+/*
         @Entity(tableName = "bookmarked_words",
             foreignKeys = [
                 ForeignKey(
@@ -126,7 +127,7 @@ data class BookMarkedWordsWithAllInfo(
         entityColumn = "documentId"
     )
     val targetWordWithAllInfo: TargetWordWithAllInfo,
-)
+)*/
 
 
 

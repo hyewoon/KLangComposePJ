@@ -27,25 +27,19 @@ class FireStoreRepositoryImpl @Inject constructor(
             preference.saveDocumentId("")
 
             val lastDocId : String = preference.documentId.first()
-            println("lastDocId: $lastDocId")
 
             val snapshot = getFireStoreData(lastDocId, count)
 
             if (snapshot.documents.isNotEmpty()) {
                 val lastDocumentId = snapshot.documents.last().id
-                println("lastDocumentId: $lastDocumentId")
                 preference.saveDocumentId(lastDocumentId)
             }
 
             val dtoList = snapshot.documents.map { mapToTargetWordDto(it) } //snapShot을 FirestoreDto로 변환
 
-            println("dtoList: $dtoList")
-
-
            dtoList.map { dtoToDomainMapper.mapToDomain(it) }// FirestoreDto를 DomainEntity로 변환
 
         }.getOrElse { exception ->
-            println("Error getting Firestore word: ${exception.message}")
             exception.printStackTrace()
             emptyList()
 

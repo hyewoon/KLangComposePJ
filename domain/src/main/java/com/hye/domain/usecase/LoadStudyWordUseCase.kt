@@ -54,7 +54,7 @@ class LoadStudyWordUseCase(
     private val firestoreRepository: FireStoreRepository,
 ) {
 
-    private var lastInsertDate : String? = null
+    private var lastInsertDate: String? = null
 
     operator fun invoke(count: Int): Flow<AppResult<List<TargetWordWithAllInfoEntity>>> = flow {
         val today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREA))
@@ -78,33 +78,22 @@ class LoadStudyWordUseCase(
                         return@flow
                     }
 
-                        println("UseCase - Room 데이터 개수: ${roomResult.data.size}")
-                        println("UseCase - 오늘 날짜 데이터: ${roomResult.data.filter { it.todayString == today }.size}개")
-
-                        val needsRefresh = roomResult.data.isEmpty() ||
-                                roomResult.data.none { it.todayString == today }
-
-                        println("UseCase - 새로고침 필요: $needsRefresh")
-
-                        if (needsRefresh) {
-                            if (roomResult.data.isNotEmpty()) {
-                                studyRepository.deleteAllStudyWords()
-                            }
-                            val firestoreResult =
-                                firestoreRepository.getStudyWordFromFireStore(countLong)
-                            studyRepository.insertStudyWords(firestoreResult)
-                            lastInsertDate = today
-                        }
-
-                        // 원래 방식대로 돌아가기
-                        emit(studyRepository.getStudyWordsOnce(today))
+                    if (roomResult.data.isNotEmpty()) {
+                        studyRepository.deleteAllStudyWords()
                     }
-                    else -> {
-                        emit(roomResult)
-                    }
+                    val firestoreResult =
+                        firestoreRepository.getStudyWordFromFireStore(countLong)
+                    studyRepository.insertStudyWords(firestoreResult)
+                    lastInsertDate = today
+
+                    emit(studyRepository.getStudyWordsOnce(today))
                 }
-            } catch (e: Exception) {
-                emit(AppResult.Failure(e))
+                else -> {
+                    emit(roomResult)
+                }
             }
+        } catch (e: Exception) {
+            emit(AppResult.Failure(e))
         }
+    }
 }
