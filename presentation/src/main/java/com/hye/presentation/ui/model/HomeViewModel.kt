@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 /*init {
     viewModelScope.launch {
         //sharedViewModel.resetDailyWordCount()
@@ -38,43 +39,45 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val loadStudyWordUseCase: LoadStudyWordUseCase,
-    private val roomRepository: StudyRepository
+    private val roomRepository: StudyRepository,
 ) : ViewModel() {
 
     private val _todayWordUiState = MutableStateFlow(TodayWordUiState())
     val todayWordUiState: StateFlow<TodayWordUiState> = _todayWordUiState.asStateFlow()
 
-     fun checkTodayWord() {
-         if(_todayWordUiState.value.wordList.isNotEmpty()) return
-         loadStudyWord(10)
-     }
+    fun checkTodayWord() {
+        if (_todayWordUiState.value.wordList.isNotEmpty()) return
+        loadStudyWord(10)
+    }
 
     private fun loadStudyWord(count: Int) {
         viewModelScope.launch {
-            loadStudyWordUseCase(count).collectLatest {roomResult->
+            loadStudyWordUseCase(count).collectLatest { roomResult ->
                 when (roomResult) {
-                is AppResult.Success -> {
-                _todayWordUiState.update {
-                    it.copy(
-                        wordList = roomResult.data, //실제 데이터 넣기
-                        currentIndex = 0,
-                        snackBarMessage = ""
-                    )
+                    is AppResult.Success -> {
+                        _todayWordUiState.update {
+                            it.copy(
+                                wordList = roomResult.data, //실제 데이터 넣기
+                                currentIndex = 0,
+                                snackBarMessage = ""
+                            )
+                        }
+                    }
+
+                    is AppResult.Failure -> {
+                        _todayWordUiState.update {
+                            it.copy(
+                                snackBarMessage = roomResult.exception.message.toString()
+                                    ?: "Unknown error"
+                            )
+                        }
+                    }
+
+                    is AppResult.Loading -> {}
+
+                    AppResult.NoConstructor -> {}
                 }
             }
-
-                is AppResult.Failure -> {
-                _todayWordUiState.update {
-                    it.copy(
-                        snackBarMessage = roomResult.exception.message.toString() ?: "Unknown error"
-                    )
-                }
-            }
-                is AppResult.Loading -> {}
-
-                AppResult.NoConstructor -> {}
-            }
-        }
         }
 
 
@@ -87,7 +90,7 @@ class HomeViewModel @Inject constructor(
             _todayWordUiState.update {
                 it.copy(currentIndex = it.currentIndex + 1)
             }
-        } else{
+        } else {
             _todayWordUiState.update {
                 it.copy(snackBarMessage = "마지막 단어입니다.")
             }
@@ -100,7 +103,7 @@ class HomeViewModel @Inject constructor(
             _todayWordUiState.update {
                 it.copy(currentIndex = it.currentIndex - 1)
             }
-        }else {
+        } else {
             _todayWordUiState.update {
                 it.copy(snackBarMessage = "첫번째 단어입니다.")
             }
@@ -114,9 +117,28 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun toggleBookMark(id :String) {
+    fun toggleBookmark(id: String, currentBookmarkState: Boolean) {
         viewModelScope.launch {
+            val newBookmarkState = !currentBookmarkState
+            val timeStamp = if (newBookmarkState) System.currentTimeMillis() else 0L
 
+            roomRepository.updateBookmarkStatus(
+                documentId= id,
+                isBookmarked = newBookmarkState,
+                bookmarkedTimeStamp = timeStamp
+            )
+            //상태 업데이트
+            _todayWordUiState.update {currentWord ->
+                val updateList = currentWord.wordList.map{
+                    if(it.documentId == id){
+                        it.copy(isBookmarked = newBookmarkState, bookmarkedTimeStamp = timeStamp)
+                    }else{
+                        it
+                    }
+                }
+                currentWord.copy(wordList = updateList)
+            }
         }
+
     }
 }

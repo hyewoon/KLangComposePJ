@@ -77,12 +77,12 @@ fun TodayWordCard(
             ) {
                 IconButton(
                     onClick = {
-                        homeViewModel.toggleBookMark(todayWordUiState.currentWordId)
+                        homeViewModel.toggleBookmark(todayWordUiState.currentWord.documentId, todayWordUiState.currentWord.isBookmarked)
                     }
                 ) {
                     Icon(
-                        painter = painterResource(id = if (todayWordUiState.isCurrentWordBookMarked) R.drawable.star else R.drawable.star_uncheck),
-                        contentDescription = "bookmark",
+                        painter = painterResource(id = if (todayWordUiState.currentWord.isBookmarked) R.drawable.star else R.drawable.star_uncheck),
+                        contentDescription = "Bookmark",
                         tint = Color.Unspecified,
                         modifier = Modifier
                             .size(width = 40.dp, height = 40.dp)
@@ -106,6 +106,7 @@ fun TodayWordCard(
                 todayWordUiState.hasNext,
                 onPreviousClick,
                 onNextClick
+
             )
 
             //순서

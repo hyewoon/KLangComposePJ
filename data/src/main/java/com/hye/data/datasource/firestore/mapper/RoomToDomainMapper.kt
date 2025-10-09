@@ -2,9 +2,7 @@ package com.hye.data.datasource.firestore.mapper
 
 
 import android.util.Log
-import com.hye.data.room.BookMarkedWordsWithAllInfo
 import com.hye.data.room.TargetWordWithAllInfo
-import com.hye.domain.model.roomdb.BookMarkedWordWithAllInfoEntity
 import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 import com.hye.domain.model.roomdb.WordExampleInfoEntity
 import com.hye.domain.model.roomdb.WordPronunciationInfoEntity
@@ -56,38 +54,5 @@ class RoomToDomainMapper {
         )
     }
 
-    fun mapToDomainBookMarkedMapper(room: BookMarkedWordsWithAllInfo): BookMarkedWordWithAllInfoEntity {
-        mapToDomainBookMarkedCallCount++
-        Log.d("Mapper", "mapToDomainBookMarked 호출 횟수: $mapToDomainBookMarkedCallCount")
-
-        return BookMarkedWordWithAllInfoEntity(
-            bookmarkedId = room.bookMarkedWords.bookmarkedId,
-            bookMarKedTime = room.bookMarkedWords.bookMarkTime,
-            createdDate = room.bookMarkedWords.createdDate,
-            documentId = room.targetWordWithAllInfo.targetWord.documentId,
-            targetCode = room.targetWordWithAllInfo.targetWord.targetCode,
-            frequency = room.targetWordWithAllInfo.targetWord.frequency,
-            korean = room.targetWordWithAllInfo.targetWord.korean,
-            english = room.targetWordWithAllInfo.targetWord.english,
-            wordGrade = room.targetWordWithAllInfo.targetWord.wordGrade,
-            pos = room.targetWordWithAllInfo.targetWord.pos,
-            exampleInfo = room.targetWordWithAllInfo.exampleInfo.map {
-                WordExampleInfoEntity(
-                    type = it.type,
-                    example = it.example
-                )
-            },
-            pronunciationInfo = room.targetWordWithAllInfo.pronunciationInfo.map {
-                exampleInfoCreateCount++
-                Log.d("Mapper", "WordExampleInfoEntity 생성 횟수 (북마크): $exampleInfoCreateCount")
-
-                WordPronunciationInfoEntity(
-                    pronunciation = it.pronunciation,
-                    audioUrl = it.audioUrl
-                )
-            }
-        )
-
-    }
 
 }

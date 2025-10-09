@@ -9,6 +9,7 @@ import androidx.room.RoomDatabase
 @Database(
     entities = [TargetWord::class, TargetWordExampleInfo::class, TargetWordPronunciationInfo::class],
     version = 5,
+    exportSchema = false
 )
 abstract class TargetWordRoomDatabase : RoomDatabase() {
 

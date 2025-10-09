@@ -43,7 +43,7 @@ fun NavGraphBuilder.addGameGraph(
             VocabularyScreen(
                 onNavigateToVocabularyScreen = onNavigateToVocabularyScreen,
                 gameViewModel = gameViewModel,
-                sharedViewModel = sharedViewModel
+                sharedViewModel = sharedViewModel,
             )
 
         }

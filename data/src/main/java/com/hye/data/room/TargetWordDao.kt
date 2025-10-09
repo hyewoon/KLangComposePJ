@@ -74,25 +74,30 @@ interface TargetWordDao {
     @Query("DELETE FROM target_word")
     suspend fun deleteAll()
 
-
+    @Transaction
     @Query("SELECT* FROM target_word WHERE todayString = :todayString")
     fun searchTargetWordByDate(todayString: String): Flow<List<TargetWordWithAllInfo>>
 
+    @Transaction
     @Query("SELECT * FROM target_word")
     fun getAllTargetWords(): Flow<List<TargetWordWithAllInfo>>
 
+    @Transaction
     @Query("SELECT * FROM target_word")
     suspend fun getAllTargetWordsOnce(): List<TargetWordWithAllInfo>
 
+    @Transaction
     @Query("SELECT* FROM target_word WHERE todayString = :todayString")
     suspend fun searchTargetWordByDateOnce(todayString: String): List<TargetWordWithAllInfo>
 
     /*
     * 북마크 상태 업데이트
     * */
+    @Transaction
     @Query("UPDATE target_word SET isBookmarked = :isBookmarked , bookmarkedTimeStamp = :bookmarkedTimeStamp WHERE documentId = :documentId")
     suspend fun updateBookmarkStatus(documentId: String, isBookmarked: Boolean, bookmarkedTimeStamp: Long)
 
+    @Transaction
     @Query("SELECT * FROM target_word WHERE isBookmarked = true ORDER BY bookmarkedTimeStamp DESC" )
      fun getBookmarkedWords(): Flow<List<TargetWordWithAllInfo>>
 
