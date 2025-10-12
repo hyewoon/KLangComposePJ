@@ -23,6 +23,8 @@ class DomainToRoomMapper {
         english = domain.english,
         pos = domain.pos,
         wordGrade = domain.wordGrade,
+        isBookmarked = domain.isBookmarked,
+        bookmarkedTimeStamp = domain.bookmarkedTimeStamp
     )
 
     fun mapToRoomExampleInfo(domain: WordExampleInfoEntity, documentId: String) =

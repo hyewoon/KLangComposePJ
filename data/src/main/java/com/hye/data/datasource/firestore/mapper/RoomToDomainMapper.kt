@@ -31,6 +31,8 @@ class RoomToDomainMapper {
             pos = room.targetWord.pos,
             timeStamp = room.targetWord.timeStamp,
             todayString = room.targetWord.todayString,
+            isBookmarked = room.targetWord.isBookmarked,
+            bookmarkedTimeStamp = room.targetWord.bookmarkedTimeStamp,
             exampleInfo = room.exampleInfo.map {
                 exampleInfoCreateCount++
                 Log.d("Mapper", "WordExampleInfoEntity 생성 횟수: $exampleInfoCreateCount")
