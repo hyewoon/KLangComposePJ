@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.hye.presentation.ui.component.searchbar.CustomSearchBar
-import com.hye.presentation.ui.model.GameViewModel
 import com.hye.presentation.ui.model.SharedViewModel
 
 @Composable
