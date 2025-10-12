@@ -17,5 +17,5 @@ interface StudyRepository {
 
     //북마크 관련
     suspend fun updateBookmarkStatus(documentId: String, isBookmarked: Boolean, bookmarkedTimeStamp: Long): AppResult<Unit>
-    fun getBookmarkedWords(): Flow<AppResult<List<TargetWordWithAllInfoEntity>>>
+    fun getBookmarkedWords(isBookmarked : Boolean): Flow<AppResult<List<TargetWordWithAllInfoEntity>>>
 }
