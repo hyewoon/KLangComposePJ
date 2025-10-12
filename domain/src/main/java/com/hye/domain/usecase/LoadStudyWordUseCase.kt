@@ -82,7 +82,8 @@ class LoadStudyWordUseCase(
                     }
 
                     if (roomResult.data.isNotEmpty()) {
-                        studyRepository.deleteAllStudyWords()
+                     studyRepository.deleteOldAndNonBookmarkedWords(today)
+
                     }
                     val firestoreResult =
                         firestoreRepository.getStudyWordFromFireStore(countLong)

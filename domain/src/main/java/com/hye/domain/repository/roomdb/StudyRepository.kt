@@ -7,9 +7,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface StudyRepository {
     suspend fun insertStudyWords(words: List<TargetWordWithAllInfoEntity>): AppResult<Unit>
-    suspend fun deleteAllStudyWords(): AppResult<Unit>
+    suspend fun deleteOldAndNonBookmarkedWords(date:String): AppResult<Unit>
     fun getStudyWords(date: String): Flow<AppResult<List<TargetWordWithAllInfoEntity>>>
     fun getAllStudyWords(): Flow<AppResult<List<TargetWordWithAllInfoEntity>>>
+
 
     //캐시 확인용
     suspend fun getAllStudyWordsOnce(): AppResult<List<TargetWordWithAllInfoEntity>>

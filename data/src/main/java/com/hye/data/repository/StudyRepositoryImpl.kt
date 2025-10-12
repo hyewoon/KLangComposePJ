@@ -103,7 +103,7 @@ class StudyRepositoryImpl @Inject constructor(
             }
         }
     }
-    override suspend fun deleteAllStudyWords(): AppResult<Unit> {
+ /*   override suspend fun deleteAllStudyWords(): AppResult<Unit> {
         return withContext(Dispatchers.IO) {
             try {
                 dao.deleteAll()
@@ -112,7 +112,19 @@ class StudyRepositoryImpl @Inject constructor(
                 AppResult.Failure(e.toString())
             }
         }
+    }*/
+
+    override suspend fun deleteOldAndNonBookmarkedWords(date: String): AppResult<Unit> {
+        return withContext(Dispatchers.IO){
+            try{
+                dao.deleteOldAndNonBookmarkedWords(date)
+                AppResult.Success(Unit)
+            }catch(e:Exception){
+                AppResult.Failure(e.toString())
+            }
+        }
     }
+
 
     override suspend fun updateBookmarkStatus(
         documentId: String,
