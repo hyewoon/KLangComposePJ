@@ -5,6 +5,7 @@ import com.hye.domain.repository.roomdb.StudyRepository
 import com.hye.domain.repository.firestore.FireStoreRepository
 import com.hye.domain.result.AppResult
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -62,9 +63,10 @@ class LoadStudyWordUseCase(
 
         emit(AppResult.Loading)
 
-        try {//바로 반환
+        try {
+            //오늘 이미 로드했으면 바로 Flow 구독
             if (lastInsertDate == today) {
-                emit(studyRepository.getStudyWordsOnce(today))
+                emitAll(studyRepository.getStudyWords(today))
                 return@flow
             }
 
@@ -74,7 +76,8 @@ class LoadStudyWordUseCase(
                     val todayData = roomResult.data.filter { it.todayString == today }
 
                     if (todayData.isNotEmpty()) {
-                        emit(AppResult.Success(todayData))
+                        lastInsertDate = today
+                        emitAll(studyRepository.getStudyWords(today))
                         return@flow
                     }
 
@@ -86,14 +89,14 @@ class LoadStudyWordUseCase(
                     studyRepository.insertStudyWords(firestoreResult)
                     lastInsertDate = today
 
-                    emit(studyRepository.getStudyWordsOnce(today))
+                    emitAll(studyRepository.getStudyWords(today))
                 }
                 else -> {
                     emit(roomResult)
                 }
             }
         } catch (e: Exception) {
-            emit(AppResult.Failure(e))
+            emit(AppResult.Failure(e.toString()))
         }
     }
 }
