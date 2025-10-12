@@ -1,6 +1,7 @@
 package com.hye.presentation.ui.component.searchbar
 
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,54 +24,61 @@ import com.hye.presentation.R
 @Composable
 fun CustomSearchBar(
     query: String = "",
-    onQueryChange: (String) -> Unit = {}
+    onQueryChange: (String) -> Unit = {},
+    modifier: Modifier
 ) {
-        OutlinedTextField(
-            value = query,
-            onValueChange = onQueryChange,
-            modifier = Modifier
-                .fillMaxWidth(),
-            placeholder = {
-                Text(
-                    "검색어를 입력하세요",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.surfaceTint
-                )
-            },
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.search_icon),
-                    contentDescription = "search_icon",
-                    modifier = Modifier.size(24.dp),
-                    tint = Color.Unspecified
-                )
-
-            },
-            trailingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.cancel),
-                    contentDescription = "cancel",
-                    modifier = Modifier.size(24.dp),
-                    tint = Color.Unspecified
-                )
-            },
-            shape = RoundedCornerShape(28.dp),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-                focusedTextColor = MaterialTheme.colorScheme.onSurface,  // 추가
-                unfocusedTextColor = MaterialTheme.colorScheme.onSurface  // 추가
-
-
-                ),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Search
-            ),
-            keyboardActions = KeyboardActions(
-                onSearch = {
-                    //검색 로직
-                }
+    OutlinedTextField(
+        value = query,
+        onValueChange = onQueryChange,
+        modifier = Modifier
+            .fillMaxWidth(),
+        placeholder = {
+            Text(
+                "검색어를 입력하세요",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.surfaceTint
             )
+        },
+        leadingIcon = {
+            Icon(
+                painter = painterResource(id = R.drawable.search_icon),
+                contentDescription = "search_icon",
+                tint = Color.Unspecified,
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickable {
+
+                    }
+            )
+        },
+        trailingIcon = {
+            Icon(
+                painter = painterResource(id = R.drawable.cancel),
+                contentDescription = "cancel",
+                tint = Color.Unspecified,
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickable {
+                        onQueryChange("")
+                    }
+            )
+        },
+        shape = RoundedCornerShape(28.dp),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+            unfocusedTextColor = MaterialTheme.colorScheme.onSurface
+        ),
+        textStyle = MaterialTheme.typography.bodyMedium,
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Search
+        ),
+        keyboardActions = KeyboardActions(
+            onSearch = {
+                //검색 로직
+            }
         )
+    )
 }
