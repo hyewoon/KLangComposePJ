@@ -45,20 +45,22 @@ class HomeViewModel @Inject constructor(
     private val _todayWordUiState = MutableStateFlow(TodayWordUiState())
     val todayWordUiState: StateFlow<TodayWordUiState> = _todayWordUiState.asStateFlow()
 
-    fun checkTodayWord() {
-        if (_todayWordUiState.value.wordList.isNotEmpty()) return
+    init{
         loadStudyWord(10)
     }
 
-    private fun loadStudyWord(count: Int) {
+
+    fun loadStudyWord(count: Int) {
         viewModelScope.launch {
             loadStudyWordUseCase(count).collectLatest { roomResult ->
                 when (roomResult) {
+                    is AppResult.Loading -> {
+                        }
+
                     is AppResult.Success -> {
                         _todayWordUiState.update {
                             it.copy(
                                 wordList = roomResult.data, //실제 데이터 넣기
-                                currentIndex = 0,
                                 snackBarMessage = ""
                             )
                         }
@@ -67,15 +69,14 @@ class HomeViewModel @Inject constructor(
                     is AppResult.Failure -> {
                         _todayWordUiState.update {
                             it.copy(
-                                snackBarMessage = roomResult.exception.message.toString()
+                                snackBarMessage = roomResult.exception.toString()
                                     ?: "Unknown error"
                             )
                         }
                     }
 
-                    is AppResult.Loading -> {}
 
-                    AppResult.NoConstructor -> {}
+                    is AppResult.NoConstructor -> {}
                 }
             }
         }
@@ -127,17 +128,6 @@ class HomeViewModel @Inject constructor(
                 isBookmarked = newBookmarkState,
                 bookmarkedTimeStamp = timeStamp
             )
-            //상태 업데이트
-            _todayWordUiState.update {currentWord ->
-                val updateList = currentWord.wordList.map{
-                    if(it.documentId == id){
-                        it.copy(isBookmarked = newBookmarkState, bookmarkedTimeStamp = timeStamp)
-                    }else{
-                        it
-                    }
-                }
-                currentWord.copy(wordList = updateList)
-            }
         }
 
     }
