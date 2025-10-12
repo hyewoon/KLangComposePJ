@@ -7,7 +7,6 @@ import com.hye.presentation.ui.model.SharedViewModel
 @Composable
 fun SpeechToTextScreen(
     onNavigateToSpeechToTextScreen: ()-> Unit,
-    gameViewModel: GameViewModel,
     sharedViewModel: SharedViewModel,
 ) {
 

@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.hye.presentation.R
 import com.hye.presentation.ui.model.GameViewModel
 import com.hye.presentation.ui.model.SharedViewModel
@@ -38,7 +39,7 @@ fun GameTabScreen(
     onNavigateToVocabularyScreen: ()->Unit,
     onNavigateToSpeechToTextScreen: ()->Unit,
     onNavigateToDrawScreen: () -> Unit,
-    gameViewModel: GameViewModel,
+    gameViewModel: GameViewModel = hiltViewModel(),
     sharedViewModel: SharedViewModel,
 ) {
     KLangComposePJTheme {
@@ -110,7 +111,9 @@ fun GameTabScreen(
                     )
 
                     ElevatedIconButton(
-                        onClick = { onNavigateToVocabularyScreen() },
+                        onClick = {
+                            onNavigateToVocabularyScreen()
+                                  },
                         icon = ImageVector.vectorResource(id = R.drawable.vocabulary),
                         modifier = Modifier
                             .width(140.dp)

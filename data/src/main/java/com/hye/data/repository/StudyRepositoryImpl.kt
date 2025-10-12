@@ -1,6 +1,7 @@
 package com.hye.data.repository
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.hye.data.datasource.firestore.mapper.DomainToRoomMapper
 import com.hye.data.datasource.firestore.mapper.RoomToDomainMapper
@@ -9,6 +10,7 @@ import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 import com.hye.domain.repository.roomdb.StudyRepository
 import com.hye.domain.result.AppResult
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -31,7 +33,7 @@ class StudyRepositoryImpl @Inject constructor(
                 insertRoomDB(words)
                 AppResult.Success(Unit)
             } catch (e: Exception) {
-                AppResult.Failure(e)
+                AppResult.Failure(e.toString())
             }
         }
     }
@@ -51,7 +53,7 @@ class StudyRepositoryImpl @Inject constructor(
                         emit(AppResult.Success(domainList))
                     }
             } catch (exception: Exception) {
-                emit(AppResult.Failure(exception))
+                emit(AppResult.Failure(exception.toString()))
             }
         }
 
@@ -68,7 +70,7 @@ class StudyRepositoryImpl @Inject constructor(
                     emit(AppResult.Success(domainList))
                 }
         } catch (e: Exception) {
-            emit(AppResult.Failure(e))
+            emit(AppResult.Failure(e.toString()))
         }
     }
 
@@ -82,7 +84,7 @@ class StudyRepositoryImpl @Inject constructor(
                 AppResult.Success(result)
 
             } catch (e: Exception) {
-                AppResult.Failure(e)
+                AppResult.Failure(e.toString())
             }
         }
     }
@@ -97,7 +99,7 @@ class StudyRepositoryImpl @Inject constructor(
                         AppResult.Success(result)
 
             } catch (e: Exception) {
-                AppResult.Failure(e)
+                AppResult.Failure(e.toString())
             }
         }
     }
@@ -107,7 +109,7 @@ class StudyRepositoryImpl @Inject constructor(
                 dao.deleteAll()
                 AppResult.Success(Unit)
             } catch (e: Exception) {
-                AppResult.Failure(e)
+                AppResult.Failure(e.toString())
             }
         }
     }
@@ -117,19 +119,51 @@ class StudyRepositoryImpl @Inject constructor(
         isBookmarked: Boolean,
         bookmarkedTimeStamp: Long,
     ): AppResult<Unit> {
+        Log.d("Repository", "━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+        Log.d("Repository", "📝 UPDATE BOOKMARK STATUS")
+        Log.d("Repository", "   documentId: '$documentId'")
+        Log.d("Repository", "   isBookmarked: $isBookmarked")
+        Log.d("Repository", "   timeStamp: $bookmarkedTimeStamp")
+
         return withContext(Dispatchers.IO) {
             try {
-                dao.updateBookmarkStatus(documentId, isBookmarked, bookmarkedTimeStamp)
+                Log.d("Repository", "   ⏳ Calling DAO...")
+               val updatedRows =  dao.updateBookmarkAndNotify(
+                   documentId = documentId,
+                   isBookmarked= isBookmarked,
+                   bookmarkedTimeStamp = bookmarkedTimeStamp)
+                Log.d("Repository", "   ✅ DAO completed")
+                Log.d("Repository", "   📊 Updated rows: $updatedRows")
+
+                if (updatedRows == 0) {
+                    Log.e("Repository", "   ⚠️ WARNING: No rows updated!")
+                }
+
+                // 검증
+                delay(50)
+                val verified = dao.getWordById(documentId)
+                if(verified != null) {
+                    Log.d("Repository", "   🔍 Verified word: ${verified.targetWord.korean}")
+                    Log.d(
+                        "Repository",
+                        "   🔍 Verified: isBookmarked=${verified.targetWord.isBookmarked}"
+                    )
+                }else {
+                    Log.e("Repository", "   ⚠️ Verified: Word not found!")
+                }
+
                 AppResult.Success(Unit)
             } catch (e: Exception) {
-                AppResult.Failure(e)
+                Log.e("Repository", "   ❌ Exception: ${e.message}", e)
+                Log.d("Repository", "━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                AppResult.Failure(e.toString())
             }
         }
     }
 
-    override fun getBookmarkedWords(): Flow<AppResult<List<TargetWordWithAllInfoEntity>>> = flow {
+    override fun getBookmarkedWords(isBookmarked: Boolean): Flow<AppResult<List<TargetWordWithAllInfoEntity>>> = flow {
         try {
-            dao.getBookmarkedWords()
+            dao.getBookmarkedWords(isBookmarked)
                 .map { targetWords ->
                     targetWords.map {
                         roomToDomainMapper.mapToDomain(it)
@@ -138,7 +172,7 @@ class StudyRepositoryImpl @Inject constructor(
                     emit(AppResult.Success(it))
                 }
         } catch (e: Exception) {
-            emit(AppResult.Failure(e))
+            emit(AppResult.Failure(e.toString()))
         }
     }
 

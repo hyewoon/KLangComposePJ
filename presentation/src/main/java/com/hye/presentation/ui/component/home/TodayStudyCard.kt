@@ -106,7 +106,7 @@ fun TodayStudyCard(
             Button(
                 onClick = {
                     onNavigateToTodayStudy()
-                    homeViewModel.checkTodayWord()
+                    homeViewModel.loadStudyWord(10)
 
                 },
                 modifier = Modifier

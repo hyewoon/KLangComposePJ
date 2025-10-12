@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.hye.domain.model.mlkit.ConfidenceLevel
 import com.hye.domain.result.AppResult
 import com.hye.presentation.ui.component.button.CustomButtonSmall
@@ -35,7 +36,7 @@ import com.hye.presentation.ui.model.SharedViewModel
 @Composable
 fun DrawScreen(
     onNavigateToDrawScreen: () -> Unit,
-    gameViewModel: GameViewModel,
+    gameViewModel: GameViewModel= hiltViewModel(),
     sharedViewModel: SharedViewModel,
 ) {
    //val recognizedText by gameViewModel.recognizedText.collectAsState()

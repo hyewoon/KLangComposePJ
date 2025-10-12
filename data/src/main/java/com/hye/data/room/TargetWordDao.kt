@@ -73,10 +73,16 @@ interface TargetWordDao {
     @Transaction
     @Query("DELETE FROM target_word")
     suspend fun deleteAll()
+    @Query("DELETE FROM target_word WHERE isBookmarked = :isBookmarked")
+    suspend fun deleteWordExcept(isBookmarked: Boolean)
 
     @Transaction
     @Query("SELECT* FROM target_word WHERE todayString = :todayString")
     fun searchTargetWordByDate(todayString: String): Flow<List<TargetWordWithAllInfo>>
+
+    @Transaction
+    @Query("SELECT* FROM target_word WHERE todayString = :todayString")
+    suspend fun searchTargetWordByDateOnce(todayString: String): List<TargetWordWithAllInfo>
 
     @Transaction
     @Query("SELECT * FROM target_word")
@@ -86,19 +92,46 @@ interface TargetWordDao {
     @Query("SELECT * FROM target_word")
     suspend fun getAllTargetWordsOnce(): List<TargetWordWithAllInfo>
 
-    @Transaction
-    @Query("SELECT* FROM target_word WHERE todayString = :todayString")
-    suspend fun searchTargetWordByDateOnce(todayString: String): List<TargetWordWithAllInfo>
-
     /*
     * 북마크 상태 업데이트
     * */
     @Transaction
     @Query("UPDATE target_word SET isBookmarked = :isBookmarked , bookmarkedTimeStamp = :bookmarkedTimeStamp WHERE documentId = :documentId")
-    suspend fun updateBookmarkStatus(documentId: String, isBookmarked: Boolean, bookmarkedTimeStamp: Long)
+    suspend fun updateBookmarkStatus(documentId: String, isBookmarked: Boolean, bookmarkedTimeStamp: Long) : Int
+
+
+    @Query("SELECT * FROM target_word WHERE documentId = :documentId")
+    suspend fun getWordById(documentId: String): TargetWordWithAllInfo?
+
 
     @Transaction
-    @Query("SELECT * FROM target_word WHERE isBookmarked = true ORDER BY bookmarkedTimeStamp DESC" )
-     fun getBookmarkedWords(): Flow<List<TargetWordWithAllInfo>>
+    @Query("SELECT * FROM target_word WHERE isBookmarked = :isBookmarked ORDER BY bookmarkedTimeStamp DESC" )
+     fun getBookmarkedWords( isBookmarked : Boolean): Flow<List<TargetWordWithAllInfo>>
+
+
+    // 🔥 추가: Once 버전 (Flow 트리거용)
+    @Transaction
+    @Query("SELECT * FROM target_word WHERE isBookmarked = :isBookmarked ORDER BY bookmarkedTimeStamp DESC")
+    suspend fun getBookmarkedWordsOnce(isBookmarked: Boolean): List<TargetWordWithAllInfo>
+
+    // 🔥 수정: 여러 쿼리로 모든 Flow 트리거
+    @Transaction
+    suspend fun updateBookmarkAndNotify(
+        documentId: String,
+        isBookmarked: Boolean,
+        bookmarkedTimeStamp: Long
+    ): Int {
+        val result = updateBookmarkStatus(documentId, isBookmarked, bookmarkedTimeStamp)
+
+        // 🔥 여러 쿼리 실행으로 모든 Flow 트리거
+        if (result > 0) {
+            getWordById(documentId)
+            getAllTargetWordsOnce()
+            getBookmarkedWordsOnce(true)
+            getBookmarkedWordsOnce(false)
+        }
+
+        return result
+    }
 
 }

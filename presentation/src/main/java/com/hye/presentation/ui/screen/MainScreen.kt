@@ -47,7 +47,6 @@ import com.hye.presentation.nav_graph.BottomNavigationItem
 import com.hye.presentation.nav_graph.ScreenRoutDef
 import com.hye.presentation.nav_graph.nav_graph_extended.addGameGraph
 import com.hye.presentation.nav_graph.nav_graph_extended.addHomeGraph
-import com.hye.presentation.ui.model.GameViewModel
 import com.hye.presentation.ui.model.HomeViewModel
 import com.hye.presentation.ui.model.SharedViewModel
 import com.hye.presentation.ui.screen.tab.GameTabScreen
@@ -59,14 +58,14 @@ import com.hye.presentation.ui.screen.tab.MyPageTabScreen
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
-fun MainScreen(sharedViewModel: SharedViewModel = hiltViewModel()) {
+fun MainScreen() {
     //네비게이션 설정
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-    val homeViewModel: HomeViewModel = hiltViewModel()
-    val gameViewModel: GameViewModel = hiltViewModel()
 
+    val sharedViewModel: SharedViewModel = hiltViewModel()
+    val homeViewModel: HomeViewModel = hiltViewModel()
     //snackbar 설정
     val snackBarHostState = remember { SnackbarHostState() }
 
@@ -140,8 +139,8 @@ fun MainScreen(sharedViewModel: SharedViewModel = hiltViewModel()) {
 
                 composable<ScreenRoutDef.TopLevel.HomeTab> {
                     HomeTabScreen(
+                        sharedViewModel= sharedViewModel,
                         homeViewModel = homeViewModel,
-                        sharedViewModel = sharedViewModel,
                         onNavigateToTodayStudy = { navController.navigate(ScreenRoutDef.HomeFlow.TodayStudyScreen) },
                         snackBarHostState = snackBarHostState
                     )
@@ -149,7 +148,6 @@ fun MainScreen(sharedViewModel: SharedViewModel = hiltViewModel()) {
 
                 composable<ScreenRoutDef.TopLevel.GameTab> {
                     GameTabScreen(
-                        gameViewModel = gameViewModel,
                         sharedViewModel = sharedViewModel,
                         onNavigateToGameScreen = { navController.navigate(ScreenRoutDef.TopLevel.GameTab) },
                         onNavigateToTextToSpeechScreen = { navController.navigate(ScreenRoutDef.GameFlow.TextToSpeechScreen) },
@@ -170,8 +168,8 @@ fun MainScreen(sharedViewModel: SharedViewModel = hiltViewModel()) {
 
                 /* nested-graph*/
                 addHomeGraph(
-                    homeViewModel = homeViewModel,
                     sharedViewModel = sharedViewModel,
+                    homeViewModel = homeViewModel,
                     snackBarHostState = snackBarHostState,
                     onNavigateToTodayStudyScreen = { navController.navigate(ScreenRoutDef.HomeFlow.TodayStudyScreen) },
                     onNavigateToListenScreen = { navController.navigate(ScreenRoutDef.TodayStudyFlow.ListenScreen) },
@@ -181,13 +179,12 @@ fun MainScreen(sharedViewModel: SharedViewModel = hiltViewModel()) {
                 )
 
                 addGameGraph(
-                    gameViewModel = gameViewModel,
                     sharedViewModel = sharedViewModel,
                     onNavigateToDrawScreen = { navController.navigate(ScreenRoutDef.GameFlow.DrawScreen) },
                     onNavigateToSearchScreen = { navController.navigate(ScreenRoutDef.GameFlow.SearchScreen) },
                     onNavigateToVocabularyScreen = { navController.navigate(ScreenRoutDef.GameFlow.VocabularyScreen) },
                     onNavigateToTextToSpeechScreen = { navController.navigate(ScreenRoutDef.GameFlow.TextToSpeechScreen) },
-                    onNavigateToSpeechToTextScreen = { navController.navigate(ScreenRoutDef.GameFlow.SpeechToTextScreen) }
+                    onNavigateToSpeechToTextScreen = { navController.navigate(ScreenRoutDef.GameFlow.SpeechToTextScreen) },
                 )
             }
 
