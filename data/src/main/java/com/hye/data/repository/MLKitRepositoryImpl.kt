@@ -88,7 +88,7 @@ class MLKitRepositoryImpl @Inject constructor(
 
 
     }.catch {
-        emit(AppResult.Failure(Throwable("Unknown error")))
+        emit(AppResult.Failure(Throwable("Unknown error").toString()))
     }
 
 
