@@ -1,6 +1,5 @@
 package com.hye.presentation.model
 
-import androidx.compose.ui.graphics.vector.ImageVector
 import com.hye.presentation.R
 
 data class Bookmark(
