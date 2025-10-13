@@ -1,6 +1,5 @@
 package com.hye.presentation.ui.model
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hye.domain.repository.roomdb.StudyRepository
@@ -10,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,72 +26,56 @@ class BookmarkViewModel @Inject constructor(
         _searchQuery.value = query
     }
 
-
-    val bookmarkWords = roomRepository.getBookmarkedWords(true)
+    //전체 데이터 -필터링 전
+    private val _allBookmarkWords = roomRepository.getBookmarkedWords(true)
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = AppResult.Loading
         )
 
-    init {
-        // 🔍 디버깅용 로그
-        viewModelScope.launch {
-            bookmarkWords.collect { result ->
-                when (result) {
-                    is AppResult.Loading -> {
-                        Log.d("BookmarkViewModel", "⏳ Loading...")
+
+    val bookmarkWords = combine(
+        _allBookmarkWords,
+        _searchQuery
+    ) { wordsResult, query ->
+        when (wordsResult) {
+            is AppResult.Success -> {
+                if (query.isEmpty()) {
+                    // 검색어가 없으면 전체 표시
+                    wordsResult
+                } else {
+                    // 검색어로 필터링 : 영어, 한국어 양방향
+                    val filteredWords = wordsResult.data.filter { word ->
+                        word.korean.contains(query, ignoreCase = true) ||
+                                word.english.contains(query, ignoreCase = true)
                     }
-                    is AppResult.Success -> {
-                        Log.d("BookmarkViewModel", "✅ Success: ${result.data.size} items")
-                        result.data.forEach { word ->
-                            Log.d("BookmarkViewModel", "  - ${word.korean} / ${word.english}")
-                        }
-                    }
-                    is AppResult.Failure -> {
-                        Log.e("BookmarkViewModel", "❌ Failure: ${result.exception}")
-                    }
-                    else -> {
-                        Log.d("BookmarkViewModel", "🤷 Other state")
-                    }
+                    AppResult.Success(filteredWords)
                 }
             }
+
+            is AppResult.Loading -> wordsResult
+            is AppResult.Failure -> wordsResult
+            is AppResult.NoConstructor -> wordsResult
+
         }
-    }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = AppResult.Loading
+    )
 
 
     fun toggleBookmark(id: String, currentBookmarkState: Boolean) {
-            viewModelScope.launch {
-                val newBookmarkState = !currentBookmarkState
-                val timeStamp = if (newBookmarkState) System.currentTimeMillis() else 0L
+        viewModelScope.launch {
+            val newBookmarkState = !currentBookmarkState
+            val timeStamp = if (newBookmarkState) System.currentTimeMillis() else 0L
 
-                Log.d("BookmarkViewModel", "━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-                Log.d("BookmarkViewModel", "🔖 Toggle Bookmark")
-                Log.d("BookmarkViewModel", "   ID: $id")
-                Log.d("BookmarkViewModel", "   Current State: $currentBookmarkState")
-                Log.d("BookmarkViewModel", "   New State: $newBookmarkState")
-                Log.d("BookmarkViewModel", "   Timestamp: $timeStamp")
-                Log.d("BookmarkViewModel", "━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-               val result =  roomRepository.updateBookmarkStatus(
-                    documentId = id,
-                    isBookmarked = newBookmarkState,
-                    bookmarkedTimeStamp = timeStamp
-                )
-                when(result){
-                    is AppResult.Success -> {
-                        Log.d("BookmarkViewModel", "북마크 업데이트 성공")
-                    }
-
-                    is AppResult.Failure -> {
-                        Log.e("BookmarkViewModel", "   ❌ FAILURE: ${result.exception}")
-                    }
-                    else -> {
-                        Log.w("BookmarkViewModel", "   ⚠️ Unexpected result: $result")
-                    }
-                }
-                Log.d("BookmarkViewModel", "━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-            }
-
+            val result = roomRepository.updateBookmarkStatus(
+                documentId = id,
+                isBookmarked = newBookmarkState,
+                bookmarkedTimeStamp = timeStamp
+            )
+        }
     }
-
 }
