@@ -17,7 +17,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -31,18 +30,12 @@ import com.hye.presentation.ui.model.BookmarkViewModel
 import com.hye.presentation.ui.model.SharedViewModel
 
 
-@Preview(apiLevel = 33, showBackground = true)
-@Composable
-fun VocabularyScreenPreview() {
-
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VocabularyScreen(
-    onNavigateToVocabularyScreen: () -> Unit,
+    onNavigationToDetailScreen: (String) -> Unit,
     sharedViewModel: SharedViewModel,
-    bookmarkViewModel: BookmarkViewModel = hiltViewModel(),
+    bookmarkViewModel: BookmarkViewModel,
 
     ) {
     val bookmarkWords by bookmarkViewModel.bookmarkWords.collectAsStateWithLifecycle()
@@ -80,7 +73,6 @@ fun VocabularyScreen(
             }
 
             is AppResult.Success -> {
-                Log.d("BookmarkViewModel", "✅ Success: ${result.data.size} items")
                 if (result.data.isEmpty()) {
                     Box(
                         modifier = Modifier.fillMaxSize(),
@@ -99,18 +91,30 @@ fun VocabularyScreen(
 
                         ) { words ->
                             WordListItem(
+
                                 word = words,
                                 modifier = Modifier,
                                 onBookmarkClick = {
-                                    Log.d("VocabularyScreen", "북마크 클릭됨: ${words.korean}")
                                     /*
                                     * 클릭이 감지 되면,
                                     * */
                                     wordToDelete = Pair(words.documentId, words.korean)
                                     showDialog = true
-                                    Log.d("VocabularyScreen", "showDialog 변경 후: $showDialog")
                                 },
-                            )
+                                /*
+                                * 디테일페이지로 이동
+                                * */
+                                onItemClick = {
+                                    Log.d(
+                                        "VocabularyScreen",
+                                        "Clicked word: ${words.documentId}, ${words.korean}"
+                                    )
+                                    bookmarkViewModel.selectWord(words)
+                                    Log.d("VocabularyScreen", "After selectWord")
+                                    onNavigationToDetailScreen(words.documentId)
+                                },
+
+                                )
                         }
                     }
 

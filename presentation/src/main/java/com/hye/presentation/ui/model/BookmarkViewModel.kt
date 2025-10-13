@@ -2,6 +2,7 @@ package com.hye.presentation.ui.model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 import com.hye.domain.repository.roomdb.StudyRepository
 import com.hye.domain.result.AppResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,8 +23,16 @@ class BookmarkViewModel @Inject constructor(
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
+    private val _selectedWord = MutableStateFlow<TargetWordWithAllInfoEntity?>(null)
+    val selectedWord : StateFlow<TargetWordWithAllInfoEntity?> = _selectedWord.asStateFlow()
+
+
     fun onSearchQueryChange(query: String) {
         _searchQuery.value = query
+    }
+
+    fun selectWord(word: TargetWordWithAllInfoEntity){
+        _selectedWord.value = word
     }
 
     //전체 데이터 -필터링 전

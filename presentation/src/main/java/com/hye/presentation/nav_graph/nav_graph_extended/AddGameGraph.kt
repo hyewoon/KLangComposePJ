@@ -4,21 +4,26 @@ package com.hye.presentation.nav_graph.nav_graph_extended
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import androidx.navigation.toRoute
 import com.hye.presentation.nav_graph.ScreenRoutDef
+import com.hye.presentation.ui.model.BookmarkViewModel
 import com.hye.presentation.ui.screen.game.DrawScreen
 import com.hye.presentation.ui.screen.game.SearchScreen
 import com.hye.presentation.ui.screen.game.SpeechToTextScreen
 import com.hye.presentation.ui.screen.game.TextToSpeechScreen
 import com.hye.presentation.ui.screen.game.VocabularyScreen
 import com.hye.presentation.ui.model.SharedViewModel
+import com.hye.presentation.ui.screen.game.DetailVocabularyScreen
 
 fun NavGraphBuilder.addGameGraph(
+    bookmarkViewModel: BookmarkViewModel,
     sharedViewModel: SharedViewModel,
     onNavigateToDrawScreen: () -> Unit,
     onNavigateToSearchScreen: () -> Unit,
     onNavigateToVocabularyScreen: () -> Unit,
     onNavigateToTextToSpeechScreen: () -> Unit,
     onNavigateToSpeechToTextScreen: () -> Unit,
+    onNavigateToDetailScreen: (String) -> Unit,
 ) {
     navigation<ScreenRoutDef.GameFlow.GameFlowGraph>(
         startDestination = ScreenRoutDef.GameFlow.DrawScreen
@@ -35,13 +40,6 @@ fun NavGraphBuilder.addGameGraph(
                 sharedViewModel = sharedViewModel
             )
         }
-        composable<ScreenRoutDef.GameFlow.VocabularyScreen> {
-            VocabularyScreen(
-                onNavigateToVocabularyScreen = onNavigateToVocabularyScreen,
-                sharedViewModel = sharedViewModel
-            )
-
-        }
         composable<ScreenRoutDef.GameFlow.TextToSpeechScreen> {
             TextToSpeechScreen(
                 onNavigateToTextToSpeechScreen = onNavigateToTextToSpeechScreen,
@@ -55,6 +53,27 @@ fun NavGraphBuilder.addGameGraph(
             )
 
         }
+        navigation<ScreenRoutDef.GameFlow.VocabularyScreenGraph>(
+            startDestination = ScreenRoutDef.GameFlow.VocabularyScreen
+        ){
+            composable<ScreenRoutDef.GameFlow.VocabularyScreen> {
+                VocabularyScreen(
+                    onNavigationToDetailScreen = onNavigateToDetailScreen,
+                    bookmarkViewModel = bookmarkViewModel,
+                    sharedViewModel = sharedViewModel
+                )
+            }
+            composable<ScreenRoutDef.GameFlow.DetailVocabularyScreen> {backStackEntry->
+                val args = backStackEntry.toRoute<ScreenRoutDef.GameFlow.DetailVocabularyScreen>()
+                DetailVocabularyScreen(
+                    documentId = args.documentId,
+                    bookmarkViewModel = bookmarkViewModel,
+                    sharedViewModel = sharedViewModel
+                )
+            }
+        }
+
+
 
     }
 

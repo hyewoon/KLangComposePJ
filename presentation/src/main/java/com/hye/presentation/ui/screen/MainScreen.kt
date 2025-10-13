@@ -47,6 +47,7 @@ import com.hye.presentation.nav_graph.BottomNavigationItem
 import com.hye.presentation.nav_graph.ScreenRoutDef
 import com.hye.presentation.nav_graph.nav_graph_extended.addGameGraph
 import com.hye.presentation.nav_graph.nav_graph_extended.addHomeGraph
+import com.hye.presentation.ui.model.BookmarkViewModel
 import com.hye.presentation.ui.model.HomeViewModel
 import com.hye.presentation.ui.model.SharedViewModel
 import com.hye.presentation.ui.screen.tab.GameTabScreen
@@ -66,6 +67,7 @@ fun MainScreen() {
 
     val sharedViewModel: SharedViewModel = hiltViewModel()
     val homeViewModel: HomeViewModel = hiltViewModel()
+    val bookmarkViewModel: BookmarkViewModel = hiltViewModel()
     //snackbar 설정
     val snackBarHostState = remember { SnackbarHostState() }
 
@@ -155,6 +157,7 @@ fun MainScreen() {
                         onNavigateToVocabularyScreen = { navController.navigate(ScreenRoutDef.GameFlow.VocabularyScreen) },
                         onNavigateToSpeechToTextScreen = { navController.navigate(ScreenRoutDef.GameFlow.SpeechToTextScreen) },
                         onNavigateToDrawScreen = { navController.navigate(ScreenRoutDef.GameFlow.DrawScreen ) },
+
                     )
                 }
 
@@ -185,6 +188,14 @@ fun MainScreen() {
                     onNavigateToVocabularyScreen = { navController.navigate(ScreenRoutDef.GameFlow.VocabularyScreen) },
                     onNavigateToTextToSpeechScreen = { navController.navigate(ScreenRoutDef.GameFlow.TextToSpeechScreen) },
                     onNavigateToSpeechToTextScreen = { navController.navigate(ScreenRoutDef.GameFlow.SpeechToTextScreen) },
+                    onNavigateToDetailScreen = { documentId ->
+                        navController.navigate(
+                            ScreenRoutDef.GameFlow.DetailVocabularyScreen(
+                                documentId
+                            )
+                        )
+                    },
+                    bookmarkViewModel = bookmarkViewModel,
                 )
             }
 

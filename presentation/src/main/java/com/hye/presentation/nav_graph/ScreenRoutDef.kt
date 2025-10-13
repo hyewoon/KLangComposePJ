@@ -36,11 +36,15 @@ sealed interface ScreenRoutDef{
         @Serializable
         data object SearchScreen : GameFlow
         @Serializable
-        data object VocabularyScreen : GameFlow
-        @Serializable
         data object TextToSpeechScreen : GameFlow
         @Serializable
         data object SpeechToTextScreen : GameFlow
+        @Serializable
+        data object VocabularyScreen : GameFlow
+        @Serializable
+        data object VocabularyScreenGraph : GameFlow //추가 필요
+        @Serializable
+        data class DetailVocabularyScreen(val documentId: String) : GameFlow
 
     }
     @Serializable

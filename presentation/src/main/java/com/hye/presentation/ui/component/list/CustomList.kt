@@ -1,6 +1,7 @@
 package com.hye.presentation.ui.component.list
 
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -47,7 +48,8 @@ fun WordListItem(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(top = 16.dp, bottom = 16.dp, start = 8.dp, end = 8.dp),
+            .padding(top = 16.dp, bottom = 16.dp, start = 8.dp, end = 8.dp)
+            .clickable { onItemClick() },
         shape = RoundedCornerShape(28.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface,
@@ -56,7 +58,8 @@ fun WordListItem(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 4.dp,
             pressedElevation = 8.dp
-        )
+        ),
+
     ) {
         Row(
             modifier = Modifier
