@@ -38,14 +38,14 @@ fun BoomMarkLisPreview() {
 @Composable
 fun WordListItem(
     word: TargetWordWithAllInfoEntity,
-    onBookmarkClick: () -> Unit= {},
-    onItemClick: () -> Unit= {},
-    modifier: Modifier = Modifier
+    onBookmarkClick: () -> Unit = {},
+    onItemClick: () -> Unit = {},
+    modifier: Modifier = Modifier,
 ) {
-    println( "Rendering: ${word.documentId}, korean: ${word.korean}, isBookmarked: ${word.isBookmarked}")
+    println("Rendering: ${word.documentId}, korean: ${word.korean}, isBookmarked: ${word.isBookmarked}")
 
     Card(
-        modifier =modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(top = 16.dp, bottom = 16.dp, start = 8.dp, end = 8.dp),
         shape = RoundedCornerShape(28.dp),
@@ -75,7 +75,10 @@ fun WordListItem(
                 fontSize = MaterialTheme.typography.bodyMedium.fontSize
             )
             Spacer(modifier = Modifier.weight(1f))
-            IconButton(onClick = onBookmarkClick) {
+            IconButton(onClick = {
+                onBookmarkClick()
+            }
+            ) {
                 Icon(
                     painter = painterResource(
                         id = if (word.isBookmarked) R.drawable.star else R.drawable.star_uncheck

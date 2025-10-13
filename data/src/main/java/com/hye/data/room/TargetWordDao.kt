@@ -70,11 +70,13 @@ interface TargetWordDao {
     @Query("DELETE FROM example_info WHERE example_documentId_fk = :documentId")
     suspend fun deleteExampleInfo(documentId: String)
 
+    /*
+    * 과제 북마크 되지 않은 단어들은 삭제
+    * 오늘의 단어는 유지
+    * */
     @Transaction
-    @Query("DELETE FROM target_word")
-    suspend fun deleteAll()
-    @Query("DELETE FROM target_word WHERE isBookmarked = :isBookmarked")
-    suspend fun deleteWordExcept(isBookmarked: Boolean)
+    @Query("DELETE FROM target_word WHERE isBookmarked = 0 AND todayString < :date")
+    suspend fun deleteOldAndNonBookmarkedWords(date: String)
 
     @Transaction
     @Query("SELECT* FROM target_word WHERE todayString = :todayString")

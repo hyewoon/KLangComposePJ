@@ -28,7 +28,7 @@ import com.hye.domain.result.AppResult
 import com.hye.presentation.ui.component.button.CustomButtonSmall
 import com.hye.presentation.ui.component.card.CustomResultCardSmall
 import com.hye.presentation.ui.component.common.DrawingCustomView
-import com.hye.presentation.ui.component.dialog.CustomDialog
+import com.hye.presentation.ui.component.dialog.CustomConfirmationDialog
 import com.hye.presentation.ui.component.indicator.CustomIndeterminateCircularIndicator
 import com.hye.presentation.ui.model.GameViewModel
 import com.hye.presentation.ui.model.SharedViewModel
@@ -140,7 +140,7 @@ fun DrawScreen(
                              CustomResultCardSmall(data.recognizedText)
                          }
                          ConfidenceLevel.LOW -> {
-                             CustomDialog(
+                             CustomConfirmationDialog(
                                  dialogTitle = "문자를 인식 할 수 없어요.",
                                  dialogText = "다시 시도해 보세요.",
                                  onConfirmation = {
