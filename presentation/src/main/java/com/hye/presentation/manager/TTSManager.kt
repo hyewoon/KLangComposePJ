@@ -46,12 +46,12 @@ class TTSManager @Inject constructor() {
     }
 
     fun pause(){
-        if(::tts.isInitialized && isReady)
+        if(::tts.isInitialized)
         tts.stop()
     }
 
     fun release() {
-        if(::tts.isInitialized && isReady)
+        if(::tts.isInitialized)
             tts.stop()
             tts.shutdown()
 
