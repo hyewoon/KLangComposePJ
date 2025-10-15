@@ -142,9 +142,9 @@ fun VocabularyScreen(
                 showDialog = false
                 wordToDelete = null
             },
-            dialogTitle = "\"${wordToDelete!!.second}\"\n 북마크에서 삭제할까요?",
+            dialogTitle = " 북마크를 해제 할까요?",
             dialogText = "북마크 해제 하면 내 단어장에서\n 제거 됩니다.",
-            confirmText = "삭제",
+            confirmText = "해제",
             dismissText = "취소"
         )
     }

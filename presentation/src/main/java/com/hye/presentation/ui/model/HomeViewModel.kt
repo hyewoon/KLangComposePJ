@@ -45,12 +45,17 @@ class HomeViewModel @Inject constructor(
     private val _todayWordUiState = MutableStateFlow(TodayWordUiState())
     val todayWordUiState: StateFlow<TodayWordUiState> = _todayWordUiState.asStateFlow()
 
+    //로딩 여부
+    private var isDataLoaded = false
+
     init{
         loadStudyWord(10)
     }
 
 
     fun loadStudyWord(count: Int) {
+        //캐싱 처리: viewModel 생명주기 동안 여러번 호출될 수 있음
+        if (_todayWordUiState.value.wordList.isNotEmpty()) return
         viewModelScope.launch {
             loadStudyWordUseCase(count).collectLatest { roomResult ->
                 when (roomResult) {
