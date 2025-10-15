@@ -12,6 +12,15 @@
 | **androidView</br>(Using Views in Compose)** |안드로이드 View를 상속받은 CustomView를 Compose에 적용하기 위해 AndroidView()활용 |
 | **Hilt(의존성 주입)** | 수동 의존성 주입에서 hilt 의존성 주입을 통해 멀티모듈 app을 통합적으로 관리(HiltModule, Hilt Navigation, hiltviewModel적용) |
 
+🚩 구현 예정 사항 
+|기능 |진행도 |상태 |
+|------------------------|------|-----|
+| STT(SpeechToText) |🔸▫️▫️▫️▫️ | UI 및 STTMananger 이용해 구현 중 |
+| Preference 적용한 목표설정 및 포인트 관리 기능  |▫️▫️▫️▫️▫️ |Preference 연결 |
+| 학습탭 관련 세부 기능(듣기,말하기,사전,쓰기) | 🔸🔸▫️▫️▫️ |쓰기 완료, 나머지 기능 연결 중 |
+| MLKit 손글씨 인식 정확도 개선|🔸🔸🔸▫️▫️|기존 로직 수정 중 |
+
+
 
 
 ## 1️⃣ 프로젝트 개요
