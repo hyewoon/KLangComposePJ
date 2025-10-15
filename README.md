@@ -16,25 +16,38 @@
 
 ## 1️⃣ 프로젝트 개요
 
-* **KLang** 은 한국어능력시험인 TOPIK '초급' 단어를 학습 할 수 있는 앱입니다.
+* **KLang** 은 외국인을 위한 한국어 단어 학습앱입니다.
+* 학습 길잡이인 캐릭터 'K(케이)'😸와 함께 언어(Lang:랑)을 학습한다는 의미를 담은 **KLang(케이랑)** 을 앱의 이름으로 선정하였습니다.
+* 신뢰할 수 있는 단어데이터베이스인 **'한국어기초사전'API**에서 제공하는 단어 정보와 예문을 학습 할 수 있습니다.
 
- 
-## 2️⃣ 개발인원
+
+ ## 2️⃣ 개발인원
 |역할  |이름 |
 |------------------------|------|
 |기획,개발|김혜운( 1인 개발) |
 |디자인|박혜민|
 
 
-## 3️⃣ KLang 이란
+### 🚩 구현 예정 사항 
+|기능 |진행도 |상태 |
+|------------------------|------|-----|
+| STT(SpeechToText) |🔸▫️▫️▫️▫️ | UI 및 STTMananger 이용해 구현 중 |
+| Preference 적용한 목표설정 및 포인트 관리 기능  |▫️▫️▫️▫️▫️ |Preference 연결 |
+| 학습탭 관련 세부 기능(듣기,말하기,사전,쓰기) | 🔸🔸▫️▫️▫️ |쓰기 완료, 나머지 기능 연결 중 |
+| MLKit 손글씨 인식 정확도 개선|🔸🔸🔸▫️▫️|기존 로직 수정 중 |
+ 
 
 
-* 학습 길잡이인 캐릭터 'K(케이)'😸와 함께 언어(Lang:랑)을 학습한다는 의미를 담은 **KLang(케이랑)** 을 앱의 이름으로 선정하였습니다.
-* 사용자가 **학습목표를 설정**하고, 학습한 만큼 **포인트를 획득** 할 수 있는 앱입니다.
-* 신뢰할 수 있는 단어데이터베이스인 **'한국어기초사전'API**에서 제공하는 단어 정보와 예문을 학습 할 수 있습니다.
+ ## 4️⃣ 아키텍쳐
+ ### 시스템 아키텍쳐
+ <img width="1031" height="593" alt="image" src="https://github.com/user-attachments/assets/d5bd66da-6198-41f1-8cb4-8e466501c6d7" />
+
+ ### Clean Architechure 레이어구조
+<img width="449" height="659" alt="image" src="https://github.com/user-attachments/assets/7ce3cd5a-0e40-40a5-bc44-8b37d9f4bc47" />
 
 
-## 4️⃣ 기술 스택
+
+## 5️⃣ 기술 스택
 
 | skills | 설명 |
 |------------------------|------|
@@ -44,7 +57,7 @@
 | **ViewModel & StateFlow** | 상태변수를 이용한 UI와 StateHolder 분리|
 | **RoomDB** | SSOT(Single Source Of Truth)와 Offline First 구현 |
 | **MLKit DigitalInk** | 손글씨 인식 기능을 onDevice로 구현 |
-| **TTS/STT** | 인식 기능 전반 개발 |
+| **TTS/STT** | 음성 및 텍스트 인식 |
 | **DataStore** | 설정 및 전역 변수 관리 |
 | **Hilt(DI)** | Hilt를 이용한 의존성 주입 |
 | **Serverless Firebase Firestore** | 데이터 저장 및 동기화 구현 |
@@ -53,7 +66,7 @@
 
 </br>
 
-## 5️⃣ KLang 핵심기능
+## 6️⃣ KLang 핵심기능
 
 
 ![image](https://github.com/user-attachments/assets/f0b6d8eb-8934-4585-96b4-333258bce120)
@@ -64,22 +77,12 @@
   - 예문, 듣기, 말하기, 쓰기 기능을 통해 사용자가 직접 참여하는 학습
   - 북마크 기능을 통해 나만의 단어장 만들기
 
- <img src="https://github.com/user-attachments/assets/2dfc4851-6a7b-4667-9241-ac11e414d79e" width="250" hspace="5" vspace="5">
 
+![Screen_recording_20251015_142642](https://github.com/user-attachments/assets/3a0322b5-3297-4cf0-93e6-bec056bb75bf)
 
 
 ✅ **단어와 놀기 : MLKit 손글씨 인식기능**
 * 사용자가 손글씨를 입력하면 그에 해당하는 한글 단어를 비교해서 보여줌
 * 손글씨 정확성 높이기 위한 리팩토링 진행중 🚩
 
-<table width="90%">
-  <tr>
-    <td width="45%" align="center">
-      <img src="https://github.com/user-attachments/assets/f4a753c4-a239-47aa-bff0-b5f4b0f475d5"  width="250" hspace="5" vspace="5">
-    </td>
-    <td width="45%" align="center">
-      <img src="https://github.com/user-attachments/assets/7275c65a-471d-4db1-96c5-bc2c5efae2d9"  width="250" hspace="5" vspace="5">
-    </td>
-  </tr>
-</table>
-
+![Screen_recording_20251015_135629](https://github.com/user-attachments/assets/844113af-b594-46f0-a4cb-b72194e018d0)
