@@ -36,7 +36,7 @@ import com.hye.presentation.ui.model.SharedViewModel
 @Composable
 fun DrawScreen(
     onNavigateToDrawScreen: () -> Unit,
-    gameViewModel: GameViewModel= hiltViewModel(),
+    gameViewModel: GameViewModel = hiltViewModel(),
     sharedViewModel: SharedViewModel,
 ) {
    //val recognizedText by gameViewModel.recognizedText.collectAsState()

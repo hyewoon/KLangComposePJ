@@ -20,7 +20,6 @@ fun NavGraphBuilder.addGameGraph(
     sharedViewModel: SharedViewModel,
     onNavigateToDrawScreen: () -> Unit,
     onNavigateToSearchScreen: () -> Unit,
-    onNavigateToVocabularyScreen: () -> Unit,
     onNavigateToTextToSpeechScreen: () -> Unit,
     onNavigateToSpeechToTextScreen: () -> Unit,
     onNavigateToDetailScreen: (String) -> Unit,
@@ -31,8 +30,7 @@ fun NavGraphBuilder.addGameGraph(
         composable<ScreenRoutDef.GameFlow.DrawScreen> {
             DrawScreen(
                 onNavigateToDrawScreen = onNavigateToDrawScreen,
-                sharedViewModel = sharedViewModel,
-            )
+                sharedViewModel = sharedViewModel)
         }
         composable<ScreenRoutDef.GameFlow.SearchScreen> {
             SearchScreen(

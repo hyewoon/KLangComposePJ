@@ -1,6 +1,8 @@
 package com.hye.presentation.nav_graph.nav_graph_extended
 
+import android.annotation.SuppressLint
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
@@ -14,6 +16,7 @@ import com.hye.presentation.ui.model.HomeViewModel
 import com.hye.presentation.ui.model.SharedViewModel
 
 
+@SuppressLint("RememberReturnType")
 fun NavGraphBuilder.addHomeGraph(
     homeViewModel: HomeViewModel,
     sharedViewModel: SharedViewModel,
@@ -29,8 +32,7 @@ fun NavGraphBuilder.addHomeGraph(
     ) {
 
         //homeflow
-        composable<ScreenRoutDef.HomeFlow.TodayStudyScreen> { it ->
-
+        composable<ScreenRoutDef.HomeFlow.TodayStudyScreen> {
             TodayStudyScreen(
                 onNavigateToTodayStudyScreen = onNavigateToTodayStudyScreen,
                 onNavigateToListenScreen = onNavigateToListenScreen,

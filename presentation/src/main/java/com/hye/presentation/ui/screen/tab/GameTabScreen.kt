@@ -39,7 +39,6 @@ fun GameTabScreen(
     onNavigateToVocabularyScreen: ()->Unit,
     onNavigateToSpeechToTextScreen: ()->Unit,
     onNavigateToDrawScreen: () -> Unit,
-    gameViewModel: GameViewModel = hiltViewModel(),
     sharedViewModel: SharedViewModel,
 ) {
     KLangComposePJTheme {

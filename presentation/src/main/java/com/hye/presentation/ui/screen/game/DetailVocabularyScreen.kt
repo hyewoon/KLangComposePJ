@@ -115,22 +115,18 @@ fun ShowCurrentWord(word: TargetWordWithAllInfoEntity) {
             text = word.korean,
             style = MaterialTheme.typography.bodyLarge,
         )
-
+        Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = word.english,
             style = MaterialTheme.typography.bodyMedium
         )
+        Spacer(modifier = Modifier.height(16.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = word.pos,
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            Text(
-                text = word.wordGrade.toString(),
+                text = "${word.pos}" + " / " + "${word.wordGrade}",
                 style = MaterialTheme.typography.bodyMedium
             )
         }
@@ -146,14 +142,15 @@ fun ShowCurrentWord(word: TargetWordWithAllInfoEntity) {
         Text(
             text = "예문",
             modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Start
+            textAlign = TextAlign.Start,
+            style = MaterialTheme.typography.bodyLarge
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             modifier = Modifier
                 .fillMaxWidth(),
             text = word.exampleInfo.joinToString("\n\n") {
-               "* ${it.example}"
+               " - ${it.example}"
             },
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Start
