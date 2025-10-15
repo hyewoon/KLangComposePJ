@@ -62,26 +62,14 @@
 
  ✅ **오늘의 단어 학습** 
   - 예문, 듣기, 말하기, 쓰기 기능을 통해 사용자가 직접 참여하는 학습
-  - 북마크 기능을 통해 나만의 단어장 만들기
+  <img src="https://github.com/user-attachments/assets/2dfc4851-6a7b-4667-9241-ac11e414d79e" width="250" hspace="5" vspace="5">
 
- <img src="https://github.com/user-attachments/assets/2dfc4851-6a7b-4667-9241-ac11e414d79e" width="250" hspace="5" vspace="5">
-
+- 북마크 기능을 통해 나만의 단어장 만들기
 ![Screen_recording_20251015_142642](https://github.com/user-attachments/assets/3a0322b5-3297-4cf0-93e6-bec056bb75bf)
 
 
 ✅ **단어와 놀기 : MLKit 손글씨 인식기능**
 * 사용자가 손글씨를 입력하면 그에 해당하는 한글 단어를 비교해서 보여줌
 * 손글씨 정확성 높이기 위한 리팩토링 진행중 🚩
-
-<table width="90%">
-  <tr>
-    <td width="45%" align="center">
-      <img src="https://github.com/user-attachments/assets/f4a753c4-a239-47aa-bff0-b5f4b0f475d5"  width="250" hspace="5" vspace="5">
-    </td>
-    <td width="45%" align="center">
-      <img src="https://github.com/user-attachments/assets/7275c65a-471d-4db1-96c5-bc2c5efae2d9"  width="250" hspace="5" vspace="5">
-    </td>
-  </tr>
-</table>
 
 ![Screen_recording_20251015_135629](https://github.com/user-attachments/assets/844113af-b594-46f0-a4cb-b72194e018d0)
