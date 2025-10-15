@@ -37,7 +37,7 @@
 
 
 
-## 4️⃣ 기술 스택
+## 5️⃣ 기술 스택
 
 | skills | 설명 |
 |------------------------|------|
@@ -56,7 +56,7 @@
 
 </br>
 
-## 5️⃣ KLang 핵심기능
+## 6️⃣ KLang 핵심기능
 
 
 ![image](https://github.com/user-attachments/assets/f0b6d8eb-8934-4585-96b4-333258bce120)
