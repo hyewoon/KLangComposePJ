@@ -28,7 +28,7 @@ fun AttendanceCard() {
     Column(
     ) {
         Text(
-            text = "출석체크",
+            text = "",
             fontSize = MaterialTheme.typography.bodyMedium.fontSize,
             fontWeight = FontWeight.Bold
         )

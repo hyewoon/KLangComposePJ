@@ -65,6 +65,7 @@ kotlinxCoroutinesTest = "1.7.3"
 testRunner = "1.5.2"
 testRules = "1.5.0"
 foundationLayout = "1.0.1"
+runtimeAnnotationAndroid = "1.9.3"
 
 
 
@@ -137,6 +138,7 @@ kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "testRunner" }
 androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "testRules" }
 androidx-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
+androidx-runtime-annotation-android = { group = "androidx.compose.runtime", name = "runtime-annotation-android", version.ref = "runtimeAnnotationAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
