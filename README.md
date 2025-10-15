@@ -16,7 +16,9 @@
 
 ## 1️⃣ 프로젝트 개요
 
-* **KLang** 은 한국어능력시험인 TOPIK '초급' 단어를 학습 할 수 있는 앱입니다.
+* **KLang** 은 외국인을 위한 한국어 단어 학습앱입니다.
+* 학습 길잡이인 캐릭터 'K(케이)'😸와 함께 언어(Lang:랑)을 학습한다는 의미를 담은 **KLang(케이랑)** 을 앱의 이름으로 선정하였습니다.
+* 신뢰할 수 있는 단어데이터베이스인 **'한국어기초사전'API**에서 제공하는 단어 정보와 예문을 학습 할 수 있습니다.
 
  
 ## 2️⃣ 개발인원
@@ -26,11 +28,13 @@
 |디자인|박혜민|
 
 
-## 3️⃣ KLang 이란
+ ## 4️⃣ 아키텍쳐
+ ### 시스템 아키텍쳐
+ <img width="1031" height="593" alt="image" src="https://github.com/user-attachments/assets/d5bd66da-6198-41f1-8cb4-8e466501c6d7" />
 
+ ### Clean Architechure 레이어구조
+<img width="449" height="659" alt="image" src="https://github.com/user-attachments/assets/7ce3cd5a-0e40-40a5-bc44-8b37d9f4bc47" />
 
-* 학습 길잡이인 캐릭터 'K(케이)'😸와 함께 언어(Lang:랑)을 학습한다는 의미를 담은 **KLang(케이랑)** 을 앱의 이름으로 선정하였습니다.
-* 신뢰할 수 있는 단어데이터베이스인 **'한국어기초사전'API**에서 제공하는 단어 정보와 예문을 학습 할 수 있습니다.
 
 
 ## 4️⃣ 기술 스택
@@ -43,7 +47,7 @@
 | **ViewModel & StateFlow** | 상태변수를 이용한 UI와 StateHolder 분리|
 | **RoomDB** | SSOT(Single Source Of Truth)와 Offline First 구현 |
 | **MLKit DigitalInk** | 손글씨 인식 기능을 onDevice로 구현 |
-| **TTS/STT** | 인식 기능 전반 개발 |
+| **TTS/STT** | 음성 및 텍스트 인식 |
 | **DataStore** | 설정 및 전역 변수 관리 |
 | **Hilt(DI)** | Hilt를 이용한 의존성 주입 |
 | **Serverless Firebase Firestore** | 데이터 저장 및 동기화 구현 |
