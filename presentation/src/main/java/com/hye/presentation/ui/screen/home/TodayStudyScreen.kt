@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,11 +32,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 import com.hye.domain.model.roomdb.WordExampleInfoEntity
 import com.hye.presentation.R
-import com.hye.presentation.model.TodayWordUiState
 import com.hye.presentation.ui.component.home.todaystudy.TodayWordCard
 import com.hye.presentation.ui.model.HomeViewModel
 import com.hye.presentation.ui.model.SharedViewModel
@@ -49,12 +49,32 @@ fun TodayStudyScreen(
     onNavigateToDictionaryScreen: () -> Unit,
     onNavigateToSpeechScreen: () -> Unit,
     onNavigateToWriteScreen: () -> Unit,
-    homeViewModel: HomeViewModel = hiltViewModel(),
-    sharedViewModel: SharedViewModel = hiltViewModel(),
+    homeViewModel: HomeViewModel,
+    sharedViewModel: SharedViewModel,
     snackBarHostState: SnackbarHostState,
 ) {
     val todayWordUiState by homeViewModel.todayWordUiState.collectAsStateWithLifecycle()
 
+    val currentWord = todayWordUiState.currentWord
+    val currentIndex = todayWordUiState.currentIndex
+    val totalWords = todayWordUiState.wordList.size
+    val hasNext = todayWordUiState.hasNext
+    val hasPrevious = todayWordUiState.hasPrevious
+    val currentWordExample = todayWordUiState.currentWordExample
+    val snackBarMessage = todayWordUiState.snackBarMessage
+
+    val onBookmarkToggle = remember<(String, Boolean) -> Unit> {
+        { documentId, isBookmarked ->
+            homeViewModel.toggleBookmark(documentId, isBookmarked)
+        }
+    }
+    val onNextClick = remember {
+        { homeViewModel.moveToNext() }
+    }
+
+    val onPreviousClick = remember {
+        { homeViewModel.moveToPrevious() }
+    }
 
             // 스낵바 처리
             LaunchedEffect(todayWordUiState.snackBarMessage) {
@@ -68,10 +88,15 @@ fun TodayStudyScreen(
                 onNavigateToDictionaryScreen = onNavigateToDictionaryScreen,
                 onNavigateToSpeechScreen = onNavigateToSpeechScreen,
                 onNavigateToWriteScreen = onNavigateToWriteScreen,
-                todayWordUiState = todayWordUiState,
-                onNextClick = { homeViewModel.moveToNext() },
-                onPreviousClick = { homeViewModel.moveToPrevious() },
-                homeViewModel = homeViewModel
+                currentWord = currentWord,
+                currentIndex = currentIndex,
+                totalWords = totalWords,
+                hasNext = hasNext,
+                hasPrevious = hasPrevious,
+                currentWordExample = currentWordExample,
+                onNextClick = onNextClick,
+                onPreviousClick = onPreviousClick,
+                onBookmarkToggle = onBookmarkToggle
             )
         }
 
@@ -82,11 +107,17 @@ fun TodayStudyContent(
     onNavigateToDictionaryScreen: () -> Unit,
     onNavigateToSpeechScreen: () -> Unit,
     onNavigateToWriteScreen: () -> Unit,
-    todayWordUiState : TodayWordUiState,
+    currentWord : TargetWordWithAllInfoEntity,
+    currentIndex: Int,
+    totalWords: Int,
+    hasNext: Boolean,
+    hasPrevious: Boolean,
+    currentWordExample: WordExampleInfoEntity,
     onPreviousClick: () -> Unit = {},
     onNextClick: () -> Unit = {},
-    homeViewModel: HomeViewModel = hiltViewModel(),
+    onBookmarkToggle: (String, Boolean)->Unit ,
     ) {
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -94,21 +125,26 @@ fun TodayStudyContent(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LinearProgressIndicatorBox(todayWordUiState.currentIndex + 1, todayWordUiState.wordList.size)
+        LinearProgressIndicatorBox(currentIndex + 1, totalWords)
         Box(modifier = Modifier.weight(1f)) {
             TodayWordCard(
                 onNavigateToListenScreen = onNavigateToListenScreen,
                 onNavigateToDictionaryScreen = onNavigateToDictionaryScreen,
                 onNavigateToSpeechScreen = onNavigateToSpeechScreen,
                 onNavigateToWriteScreen = onNavigateToWriteScreen,
-                todayWordUiState = todayWordUiState,
+                documentId = currentWord.documentId,
+                isBookmarked = currentWord.isBookmarked,
+                korean = currentWord.korean,
+                english = currentWord.english,
+                currentIndex = currentIndex,
+                totalWords = totalWords,
                 onPreviousClick = onPreviousClick,
                 onNextClick = onNextClick,
-                homeViewModel = homeViewModel
+                onBookmarkToggle = onBookmarkToggle,
             )
         }
 
-        ExampleCard(todayWordUiState.currentWordExample)
+        ExampleCard(currentWordExample)
 
 
     }

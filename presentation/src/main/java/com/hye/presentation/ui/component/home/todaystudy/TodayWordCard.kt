@@ -15,6 +15,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,10 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 import com.hye.presentation.R
-import com.hye.presentation.model.TodayWordUiState
-import com.hye.presentation.ui.model.HomeViewModel
 
 /*
 @Preview(apiLevel = 33,showBackground = true)
@@ -50,11 +49,23 @@ fun TodayWordCard(
     onNavigateToDictionaryScreen: () -> Unit,
     onNavigateToSpeechScreen: () -> Unit,
     onNavigateToWriteScreen: () -> Unit,
-    todayWordUiState: TodayWordUiState,
+    documentId: String,
+    isBookmarked: Boolean,
+    korean: String,
+    english: String,
+    currentIndex: Int,
+    totalWords: Int,
     onNextClick: () -> Unit = {},
     onPreviousClick: () -> Unit = {},
-    homeViewModel : HomeViewModel,
+    onBookmarkToggle : (String, Boolean)-> Unit,
 ) {
+
+    //documentId와 isBookmarked가 같으면 같은 람다 재사용
+    val handleBookmarkToggle = remember(documentId,isBookmarked) {
+        {
+            onBookmarkToggle(documentId, isBookmarked)
+        }
+    }
 
     Card(
         colors = CardDefaults.cardColors(
@@ -68,57 +79,25 @@ fun TodayWordCard(
                 .padding(top = 10.dp, bottom = 16.dp, start = 16.dp, end = 16.dp)
         ) {
             //북마크
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 10.dp, start = 16.dp, end = 16.dp, bottom = 10.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                IconButton(
-                    onClick = {
-                        homeViewModel.toggleBookmark(todayWordUiState.currentWord.documentId, todayWordUiState.currentWord.isBookmarked)
-                    }
-                ) {
-                    Icon(
-                        painter = painterResource(id = if (todayWordUiState.currentWord.isBookmarked) R.drawable.star else R.drawable.star_uncheck),
-                        contentDescription = "Bookmark",
-                        tint = Color.Unspecified,
-                        modifier = Modifier
-                            .size(width = 40.dp, height = 40.dp)
-                            .padding(8.dp)
-                    )
-                }
-
-                Icon(
-                    painter = painterResource(id = R.drawable.paw_uncheck),
-                    contentDescription = "bookmark",
-                    tint = Color.Unspecified,
-                    modifier = Modifier
-                        .size(width = 40.dp, height = 40.dp)
-                        .padding(8.dp)
+            key(isBookmarked) {
+                BookmarkSection(
+                    isBookmarked = isBookmarked,
+                    onBookmarkToggle = handleBookmarkToggle
                 )
-
             }
-            ShowCurrentWord(
-                todayWordUiState.currentWord,
-                todayWordUiState.hasPrevious,
-                todayWordUiState.hasNext,
-                onPreviousClick,
-                onNextClick
+            key(korean, english) {
+                ShowCurrentWord(
+                    korean = korean,
+                    english = english,
+                    onPreviousClick = onPreviousClick,
+                    onNextClick = onNextClick,
+                )
+            }
 
-            )
-
-            //순서
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = "${todayWordUiState.currentIndex + 1}/${todayWordUiState.wordList.size}",
-                    fontSize = MaterialTheme.typography.bodySmall.fontSize
+            key(currentIndex, totalWords){
+                WordIndexIndicator(
+                    currentIndex = currentIndex,
+                    totalWords = totalWords
                 )
             }
         }
@@ -144,9 +123,8 @@ fun TodayWordCard(
 
 @Composable
 fun ShowCurrentWord(
-    currentWord: TargetWordWithAllInfoEntity,
-    hasPrevious: Boolean,
-    hasNext: Boolean,
+    korean: String,
+    english: String,
     onPreviousClick: () -> Unit,
     onNextClick: () -> Unit,
 ) {
@@ -166,7 +144,7 @@ fun ShowCurrentWord(
         }
 
         Text(
-            text = currentWord.korean,
+            text = korean,
             fontSize = MaterialTheme.typography.headlineSmall.fontSize
         )
 
@@ -181,7 +159,7 @@ fun ShowCurrentWord(
     }
     Column() {
         Text(
-            text = currentWord.english,
+            text = english,
             fontSize = MaterialTheme.typography.bodyMedium.fontSize,
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center
@@ -255,6 +233,59 @@ fun SelectButtons(
         }
 
 
+    }
+
+}
+
+@Composable
+fun BookmarkSection(
+    isBookmarked : Boolean,
+    onBookmarkToggle : ()-> Unit,
+){
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 10.dp, start = 16.dp, end = 16.dp, bottom = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        IconButton(onClick = onBookmarkToggle) {
+            Icon(
+                painter = painterResource(id = if (isBookmarked) R.drawable.star else R.drawable.star_uncheck),
+                contentDescription = "Bookmark",
+                tint = Color.Unspecified,
+                modifier = Modifier
+                    .size(width = 40.dp, height = 40.dp)
+                    .padding(8.dp)
+            )
+        }
+
+        Icon(
+            painter = painterResource(id = R.drawable.paw_uncheck),
+            contentDescription = "bookmark",
+            tint = Color.Unspecified,
+            modifier = Modifier
+                .size(width = 40.dp, height = 40.dp)
+                .padding(8.dp)
+        )
+    }
+}
+
+@Composable
+fun WordIndexIndicator(
+    currentIndex: Int,
+    totalWords: Int,
+){
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "${currentIndex + 1}/${totalWords}",
+            fontSize = MaterialTheme.typography.bodySmall.fontSize
+        )
     }
 
 }
