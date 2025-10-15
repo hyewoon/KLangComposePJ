@@ -18,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hye.domain.result.AppResult
 import com.hye.presentation.R
@@ -38,8 +37,9 @@ fun VocabularyScreen(
     bookmarkViewModel: BookmarkViewModel,
 
     ) {
-    val bookmarkWords by bookmarkViewModel.bookmarkWords.collectAsStateWithLifecycle()
     val searchQuery by bookmarkViewModel.searchQuery.collectAsStateWithLifecycle()
+    val bookmarkWords by bookmarkViewModel.bookmarkWords.collectAsStateWithLifecycle()
+
 
     // 다이얼로그
     var showDialog by remember { mutableStateOf(false) }
@@ -58,7 +58,6 @@ fun VocabularyScreen(
         CustomSearchBar(
             query = searchQuery,
             onQueryChange = bookmarkViewModel::onSearchQueryChange,
-            modifier = Modifier.padding(bottom = 16.dp)
         )
         when (val result = bookmarkWords) {
             is AppResult.Loading -> {

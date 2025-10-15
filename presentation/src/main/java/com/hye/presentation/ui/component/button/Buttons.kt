@@ -39,3 +39,12 @@ fun CustomButtonSmall(
         Text(label)
     }
 }
+
+enum class InputMode {
+    KEYBOARD, HANDWRITING
+}
+
+@Composable
+fun SegmentedButton(){
+
+}

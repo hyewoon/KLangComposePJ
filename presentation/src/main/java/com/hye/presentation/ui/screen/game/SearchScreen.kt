@@ -18,6 +18,6 @@ fun SearchScreen(
         modifier = Modifier.fillMaxSize()
             .padding(16.dp)
     ){
-        CustomSearchBar(modifier =Modifier)
+        CustomSearchBar()
     }
 }
