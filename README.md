@@ -66,6 +66,7 @@
 
  <img src="https://github.com/user-attachments/assets/2dfc4851-6a7b-4667-9241-ac11e414d79e" width="250" hspace="5" vspace="5">
 
+![Screen_recording_20251015_142642](https://github.com/user-attachments/assets/3a0322b5-3297-4cf0-93e6-bec056bb75bf)
 
 
 ✅ **단어와 놀기 : MLKit 손글씨 인식기능**
@@ -83,3 +84,4 @@
   </tr>
 </table>
 
+![Screen_recording_20251015_135629](https://github.com/user-attachments/assets/844113af-b594-46f0-a4cb-b72194e018d0)
