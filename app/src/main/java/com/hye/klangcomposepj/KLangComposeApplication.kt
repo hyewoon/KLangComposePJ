@@ -7,7 +7,7 @@ import dagger.hilt.android.HiltAndroidApp
 * */
 @HiltAndroidApp
 class KLangComposeApplication: Application(){
-    override fun onCreate() {
+  /*  override fun onCreate() {
         super.onCreate()
         myApplication = this
     }
@@ -15,6 +15,6 @@ class KLangComposeApplication: Application(){
         private lateinit var myApplication: KLangComposeApplication
             fun getInstance() = myApplication
 
-        }
+        }*/
     }
 
