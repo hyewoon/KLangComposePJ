@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.hye.presentation.ui.component.home.AttendanceCard
 import com.hye.presentation.ui.component.home.DailyQuestCard
 import com.hye.presentation.ui.component.home.TodayStudyCard
 import com.hye.presentation.ui.model.HomeViewModel
@@ -38,7 +37,6 @@ fun HomeTabScreen(onNavigateToTodayStudy: () -> Unit,
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 TodayStudyCard(onNavigateToTodayStudy, homeViewModel)
-                AttendanceCard()
                 DailyQuestCard()
 
             }
