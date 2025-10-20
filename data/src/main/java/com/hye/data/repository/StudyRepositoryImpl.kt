@@ -77,7 +77,7 @@ class StudyRepositoryImpl @Inject constructor(
     override suspend fun getAllStudyWordsOnce(): AppResult<List<TargetWordWithAllInfoEntity>> {
         return withContext(Dispatchers.IO) {
             try {
-               val result =  dao.getAllTargetWordsOnce()
+                val result = dao.getAllTargetWordsOnce()
                     .map {
                         roomToDomainMapper.mapToDomain(it)
                     }
@@ -92,34 +92,34 @@ class StudyRepositoryImpl @Inject constructor(
     override suspend fun getStudyWordsOnce(date: String): AppResult<List<TargetWordWithAllInfoEntity>> {
         return withContext(Dispatchers.IO) {
             try {
-               val result = dao.searchTargetWordByDateOnce(date)
+                val result = dao.searchTargetWordByDateOnce(date)
                     .map {
                         roomToDomainMapper.mapToDomain(it)
                     }
-                        AppResult.Success(result)
+                AppResult.Success(result)
 
             } catch (e: Exception) {
                 AppResult.Failure(e.toString())
             }
         }
     }
- /*   override suspend fun deleteAllStudyWords(): AppResult<Unit> {
-        return withContext(Dispatchers.IO) {
-            try {
-                dao.deleteAll()
-                AppResult.Success(Unit)
-            } catch (e: Exception) {
-                AppResult.Failure(e.toString())
-            }
-        }
-    }*/
+    /*   override suspend fun deleteAllStudyWords(): AppResult<Unit> {
+           return withContext(Dispatchers.IO) {
+               try {
+                   dao.deleteAll()
+                   AppResult.Success(Unit)
+               } catch (e: Exception) {
+                   AppResult.Failure(e.toString())
+               }
+           }
+       }*/
 
     override suspend fun deleteOldAndNonBookmarkedWords(date: String): AppResult<Unit> {
-        return withContext(Dispatchers.IO){
-            try{
+        return withContext(Dispatchers.IO) {
+            try {
                 dao.deleteOldAndNonBookmarkedWords(date)
                 AppResult.Success(Unit)
-            }catch(e:Exception){
+            } catch (e: Exception) {
                 AppResult.Failure(e.toString())
             }
         }
@@ -131,66 +131,49 @@ class StudyRepositoryImpl @Inject constructor(
         isBookmarked: Boolean,
         bookmarkedTimeStamp: Long,
     ): AppResult<Unit> {
-        Log.d("Repository", "━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-        Log.d("Repository", "📝 UPDATE BOOKMARK STATUS")
-        Log.d("Repository", "   documentId: '$documentId'")
-        Log.d("Repository", "   isBookmarked: $isBookmarked")
-        Log.d("Repository", "   timeStamp: $bookmarkedTimeStamp")
-
         return withContext(Dispatchers.IO) {
             try {
                 Log.d("Repository", "   ⏳ Calling DAO...")
-               val updatedRows =  dao.updateBookmarkAndNotify(
-                   documentId = documentId,
-                   isBookmarked= isBookmarked,
-                   bookmarkedTimeStamp = bookmarkedTimeStamp)
-                Log.d("Repository", "   ✅ DAO completed")
-                Log.d("Repository", "   📊 Updated rows: $updatedRows")
+                val updatedRows = dao.updateBookmarkAndNotify(
+                    documentId = documentId,
+                    isBookmarked = isBookmarked,
+                    bookmarkedTimeStamp = bookmarkedTimeStamp
+                )
 
                 if (updatedRows == 0) {
-                    Log.e("Repository", "   ⚠️ WARNING: No rows updated!")
                 }
 
                 // 검증
                 delay(50)
                 val verified = dao.getWordById(documentId)
-                if(verified != null) {
-                    Log.d("Repository", "   🔍 Verified word: ${verified.targetWord.korean}")
-                    Log.d(
-                        "Repository",
-                        "   🔍 Verified: isBookmarked=${verified.targetWord.isBookmarked}"
-                    )
-                }else {
-                    Log.e("Repository", "   ⚠️ Verified: Word not found!")
+                if (verified != null) {
+                } else {
                 }
 
                 AppResult.Success(Unit)
             } catch (e: Exception) {
-                Log.e("Repository", "   ❌ Exception: ${e.message}", e)
-                Log.d("Repository", "━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
                 AppResult.Failure(e.toString())
             }
         }
     }
 
-    override fun getBookmarkedWords(isBookmarked: Boolean): Flow<AppResult<List<TargetWordWithAllInfoEntity>>> = flow {
-        try {
-            dao.getBookmarkedWords(isBookmarked)
-                .map { targetWords ->
-                    targetWords.map {
-                        roomToDomainMapper.mapToDomain(it)
+    override fun getBookmarkedWords(isBookmarked: Boolean): Flow<AppResult<List<TargetWordWithAllInfoEntity>>> =
+        flow {
+            try {
+                dao.getBookmarkedWords(isBookmarked)
+                    .map { targetWords ->
+                        targetWords.map {
+                            roomToDomainMapper.mapToDomain(it)
+                        }
+                    }.collect {
+                        emit(AppResult.Success(it))
                     }
-                }.collect {
-                    emit(AppResult.Success(it))
-                }
-        } catch (e: Exception) {
-            emit(AppResult.Failure(e.toString()))
+            } catch (e: Exception) {
+                emit(AppResult.Failure(e.toString()))
+            }
         }
-    }
 
 
-
-    @RequiresApi(Build.VERSION_CODES.O)
     private suspend fun insertRoomDB(words: List<TargetWordWithAllInfoEntity>) {
         val currentTime = System.currentTimeMillis()
         val today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
