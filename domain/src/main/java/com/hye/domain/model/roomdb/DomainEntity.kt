@@ -1,5 +1,6 @@
 package com.hye.domain.model.roomdb
 
+
 data class TargetWordWithAllInfoEntity(
     val documentId: String = "",
     val targetCode: Long = 0L,
@@ -17,10 +18,12 @@ data class TargetWordWithAllInfoEntity(
 
     )
 
+
 data class WordExampleInfoEntity(
     val type: String = "",
     val example: String = "",
 )
+
 
 data class WordPronunciationInfoEntity(
     val pronunciation: String = "",
