@@ -1,8 +1,6 @@
 package com.hye.data.repository
 
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import com.hye.data.datasource.firestore.mapper.DomainToRoomMapper
 import com.hye.data.datasource.firestore.mapper.RoomToDomainMapper
 import com.hye.data.room.TargetWordDao
