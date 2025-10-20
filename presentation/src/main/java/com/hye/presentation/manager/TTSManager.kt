@@ -1,5 +1,6 @@
 package com.hye.presentation.manager
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.speech.tts.TextToSpeech
 import java.util.Locale
@@ -45,11 +46,13 @@ class TTSManager @Inject constructor() {
         }
     }
 
+    @SuppressLint("SuspiciousIndentation")
     fun pause(){
         if(::tts.isInitialized)
         tts.stop()
     }
 
+    @SuppressLint("SuspiciousIndentation")
     fun release() {
         if(::tts.isInitialized)
             tts.stop()
