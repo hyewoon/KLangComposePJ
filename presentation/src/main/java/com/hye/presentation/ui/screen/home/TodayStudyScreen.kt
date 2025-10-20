@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -83,6 +84,7 @@ fun TodayStudyScreen(
                     homeViewModel.clearSnackBarMessage()
                 }
             }
+
             TodayStudyContent(
                 onNavigateToListenScreen = onNavigateToListenScreen,
                 onNavigateToDictionaryScreen = onNavigateToDictionaryScreen,
@@ -127,21 +129,25 @@ fun TodayStudyContent(
     ) {
         LinearProgressIndicatorBox(currentIndex + 1, totalWords)
         Box(modifier = Modifier.weight(1f)) {
-            TodayWordCard(
-                onNavigateToListenScreen = onNavigateToListenScreen,
-                onNavigateToDictionaryScreen = onNavigateToDictionaryScreen,
-                onNavigateToSpeechScreen = onNavigateToSpeechScreen,
-                onNavigateToWriteScreen = onNavigateToWriteScreen,
-                documentId = currentWord.documentId,
-                isBookmarked = currentWord.isBookmarked,
-                korean = currentWord.korean,
-                english = currentWord.english,
-                currentIndex = currentIndex,
-                totalWords = totalWords,
-                onPreviousClick = onPreviousClick,
-                onNextClick = onNextClick,
-                onBookmarkToggle = onBookmarkToggle,
-            )
+            key(
+                currentWord.documentId,
+                ) {
+                TodayWordCard(
+                    onNavigateToListenScreen = onNavigateToListenScreen,
+                    onNavigateToDictionaryScreen = onNavigateToDictionaryScreen,
+                    onNavigateToSpeechScreen = onNavigateToSpeechScreen,
+                    onNavigateToWriteScreen = onNavigateToWriteScreen,
+                    documentId = currentWord.documentId,
+                    isBookmarked = currentWord.isBookmarked,
+                    korean = currentWord.korean,
+                    english = currentWord.english,
+                    currentIndex = currentIndex,
+                    totalWords = totalWords,
+                    onPreviousClick = onPreviousClick,
+                    onNextClick = onNextClick,
+                    onBookmarkToggle = onBookmarkToggle,
+                )
+            }
         }
 
         ExampleCard(currentWordExample)

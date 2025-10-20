@@ -15,7 +15,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -79,27 +78,21 @@ fun TodayWordCard(
                 .padding(top = 10.dp, bottom = 16.dp, start = 16.dp, end = 16.dp)
         ) {
             //북마크
-            key(isBookmarked) {
                 BookmarkSection(
                     isBookmarked = isBookmarked,
                     onBookmarkToggle = handleBookmarkToggle
                 )
-            }
-            key(korean, english) {
                 ShowCurrentWord(
                     korean = korean,
                     english = english,
                     onPreviousClick = onPreviousClick,
                     onNextClick = onNextClick,
                 )
-            }
-
-            key(currentIndex, totalWords){
                 WordIndexIndicator(
                     currentIndex = currentIndex,
                     totalWords = totalWords
                 )
-            }
+
         }
         //디바이더
         HorizontalDivider(
