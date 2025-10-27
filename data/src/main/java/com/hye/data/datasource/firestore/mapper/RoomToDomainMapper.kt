@@ -11,11 +11,6 @@ import com.hye.domain.model.roomdb.WordPronunciationInfoEntity
 * roomDB- > domain
 * */
 class RoomToDomainMapper {
-  /*  // 카운터 추가
-    private var exampleInfoCreateCount = 0
-    private var pronunciationInfoCreateCount = 0
-    private var mapToDomainCallCount = 0
-    private var mapToDomainBookMarkedCallCount = 0*/
 
     fun mapToDomain(room: TargetWordWithAllInfo): TargetWordWithAllInfoEntity {
 

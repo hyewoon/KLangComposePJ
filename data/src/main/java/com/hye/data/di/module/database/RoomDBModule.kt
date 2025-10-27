@@ -32,7 +32,7 @@ object RoomDBModule {
             context,
             TargetWordRoomDatabase::class.java,
             "target_word_db"
-        )
+        ).apply {}
             .addMigrations(migration4to5)
             .build()
     }
