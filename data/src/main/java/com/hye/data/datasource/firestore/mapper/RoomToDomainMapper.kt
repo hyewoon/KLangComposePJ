@@ -1,7 +1,6 @@
 package com.hye.data.datasource.firestore.mapper
 
 
-import android.util.Log
 import com.hye.data.room.TargetWordWithAllInfo
 import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 import com.hye.domain.model.roomdb.WordExampleInfoEntity
