@@ -19,6 +19,7 @@ import com.hye.data.validate.HandWritingValidator
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -90,7 +91,6 @@ class MLKitRepositoryImpl @Inject constructor(
     }.catch {
         emit(AppResult.Failure(Throwable("Unknown error").toString()))
     }
-
 
     private fun scheduleCleanUp() {
         cleanupJob?.cancel()
