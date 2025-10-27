@@ -2,17 +2,19 @@ package com.hye.domain.repository.datastore
 
 import kotlinx.coroutines.flow.Flow
 
-
 interface PreferencesDataStoreRepository {
 
-    val targetCode : Flow<Int>
-    val documentId : Flow<String>
-    val targetWordCount : Flow<Int>
-    val currentWordCount : Flow<Int>
+    suspend fun getDocumentId(): Flow<String>
+    suspend fun saveDocumentId(id: String)
 
-    fun <T> readPreference(keyName:String, defaultValue: T): Flow<T>
-    suspend fun <T> writePreference(keyName:String, value: T)
-    suspend fun <T> deletePreference(keyName:String)
+    suspend fun getTargetWordCount( ): Flow<Int>
+    suspend fun saveTargetWordCount()
+
+    suspend fun getTotalWordCount(): Flow<Int>
+    suspend fun incrementTotalWordCount()
+
+    suspend fun getTotalPoint(): Flow<Int>
+    suspend fun addTotalPoint()
 
 
 
