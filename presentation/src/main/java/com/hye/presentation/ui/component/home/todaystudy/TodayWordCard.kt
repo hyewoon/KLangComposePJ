@@ -44,10 +44,10 @@ fun TodayWordCardPreview(){
 
 @Composable
 fun TodayWordCard(
-    onNavigateToListenScreen: () -> Unit,
+    onNavigateToListenScreen: (String,String) -> Unit,
     onNavigateToDictionaryScreen: () -> Unit,
-    onNavigateToSpeechScreen: () -> Unit,
-    onNavigateToWriteScreen: () -> Unit,
+    onNavigateToSpeechScreen: (String, String) -> Unit,
+    onNavigateToWriteScreen: (String,String) -> Unit,
     documentId: String,
     isBookmarked: Boolean,
     korean: String,
@@ -103,6 +103,8 @@ fun TodayWordCard(
             color = MaterialTheme.colorScheme.background
         )
         SelectButtons(
+            korean = korean,
+            english = english,
             onNavigateToListenScreen,
             onNavigateToDictionaryScreen,
             onNavigateToSpeechScreen,
@@ -164,10 +166,12 @@ fun ShowCurrentWord(
 
 @Composable
 fun SelectButtons(
-    onNavigateToListenScreen: () -> Unit,
+    korean: String,
+    english: String,
+    onNavigateToListenScreen: (String,String) -> Unit,
     onNavigateToDictionaryScreen: () -> Unit,
-    onNavigateToSpeechScreen: () -> Unit,
-    onNavigateToWriteScreen: () -> Unit,
+    onNavigateToSpeechScreen: (String,String) -> Unit,
+    onNavigateToWriteScreen: (String, String) -> Unit,
 ) {
     val isMarked = false
     Row(
@@ -179,7 +183,9 @@ fun SelectButtons(
 
     ) {
         IconButton(
-            onClick = { onNavigateToWriteScreen() },
+            onClick = {
+                onNavigateToWriteScreen(korean, english)
+                      },
             modifier = Modifier.size(70.dp)
         ) {
             Icon(
@@ -190,7 +196,7 @@ fun SelectButtons(
             )
         }
         IconButton(
-            onClick = { onNavigateToListenScreen() },
+            onClick = { onNavigateToListenScreen(korean, english) },
             modifier = Modifier.size(70.dp)
         ) {
             Icon(
@@ -202,7 +208,7 @@ fun SelectButtons(
 
         }
         IconButton(
-            onClick = { onNavigateToSpeechScreen() },
+            onClick = { onNavigateToSpeechScreen(korean, english) },
             modifier = Modifier.size(70.dp)
         ) {
             Icon(

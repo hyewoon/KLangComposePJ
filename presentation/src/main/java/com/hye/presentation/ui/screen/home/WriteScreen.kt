@@ -15,45 +15,31 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hye.presentation.ui.component.common.DrawCard
-import com.hye.presentation.ui.model.HomeViewModel
 import com.hye.presentation.ui.model.SharedViewModel
-
-@Preview(
-    apiLevel = 33, showBackground = true
-)
-@Composable
-fun WriteScreenPreview() {
-    WriteScreen()
-}
 
 @Composable
 fun WriteScreen(
-    onNavigateToWriteScreen: () -> Unit = {},
-    homeViewModel: HomeViewModel = hiltViewModel(),
-    sharedViewModel: SharedViewModel = hiltViewModel(),
+    korean: String,
+    english: String,
+    onNavigateToWriteScreen: (String, String) -> Unit,
+    sharedViewModel: SharedViewModel,
     snackBarHostState: SnackbarHostState = SnackbarHostState(),
 ) {
 
 
-    val todayWordUiState by homeViewModel.todayWordUiState.collectAsStateWithLifecycle()
-
-    val currentWord = todayWordUiState.currentWord
-
     DrawingCard(
-        korean = currentWord.korean,
-        english = currentWord.english,
+        korean = korean,
+        english = english,
     )
 }
 
 @Composable
 fun DrawingCard(
-    korean : String,
-    english : String,
+    korean: String,
+    english: String,
 ) {
     Column(
         modifier = Modifier.padding(16.dp),
@@ -72,16 +58,10 @@ fun DrawingCard(
                 textAlign = TextAlign.Center,
                 modifier = Modifier
             )
-            Spacer(modifier = Modifier.size(16.dp))
-            Text(
-                text = english,
-                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                textAlign = TextAlign.Center
-            )
-
+            Spacer(modifier = Modifier.size(8.dp))
         }
         Text(
-            text = "단어를 따라 쓰세요",
+            text = english,
             fontSize = MaterialTheme.typography.bodyMedium.fontSize,
             textAlign = TextAlign.Center,
             modifier = Modifier

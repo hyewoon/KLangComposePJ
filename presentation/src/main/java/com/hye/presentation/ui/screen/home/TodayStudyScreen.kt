@@ -46,10 +46,10 @@ import com.hye.presentation.ui.model.SharedViewModel
 @Composable
 fun TodayStudyScreen(
     onNavigateToTodayStudyScreen: () -> Unit,
-    onNavigateToListenScreen: () -> Unit,
+    onNavigateToListenScreen: (String, String) -> Unit,
     onNavigateToDictionaryScreen: () -> Unit,
-    onNavigateToSpeechScreen: () -> Unit,
-    onNavigateToWriteScreen: () -> Unit,
+    onNavigateToSpeechScreen: (String,String) -> Unit,
+    onNavigateToWriteScreen: (String, String) -> Unit,
     homeViewModel: HomeViewModel,
     sharedViewModel: SharedViewModel,
     snackBarHostState: SnackbarHostState,
@@ -105,11 +105,11 @@ fun TodayStudyScreen(
 
 @Composable
 fun TodayStudyContent(
-    onNavigateToListenScreen: () -> Unit,
+    onNavigateToListenScreen: (String, String) -> Unit,
     onNavigateToDictionaryScreen: () -> Unit,
-    onNavigateToSpeechScreen: () -> Unit,
-    onNavigateToWriteScreen: () -> Unit,
-    currentWord : TargetWordWithAllInfoEntity,
+    onNavigateToSpeechScreen: (String, String) -> Unit,
+    onNavigateToWriteScreen: (String, String) -> Unit,
+    currentWord: TargetWordWithAllInfoEntity,
     currentIndex: Int,
     totalWords: Int,
     hasNext: Boolean,
@@ -117,7 +117,7 @@ fun TodayStudyContent(
     currentWordExample: WordExampleInfoEntity,
     onPreviousClick: () -> Unit = {},
     onNextClick: () -> Unit = {},
-    onBookmarkToggle: (String, Boolean)->Unit ,
+    onBookmarkToggle: (String, Boolean)->Unit,
     ) {
 
     Column(

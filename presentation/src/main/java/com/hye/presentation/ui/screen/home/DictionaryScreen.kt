@@ -14,79 +14,91 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hye.presentation.ui.model.HomeViewModel
 import com.hye.presentation.ui.model.SharedViewModel
 
 
 @Composable
 fun DictionaryScreen(
-    onNavigateToDictionaryScreen: ()-> Unit,
+    onNavigateToDictionaryScreen: () -> Unit,
     homeViewModel: HomeViewModel,
     sharedViewModel: SharedViewModel,
-    snackBarHostState: SnackbarHostState
+    snackBarHostState: SnackbarHostState,
 ) {
-            Card(
-                modifier = Modifier.fillMaxSize().padding(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                ),
+
+    val todayWordUiState by homeViewModel.todayWordUiState.collectAsStateWithLifecycle()
+    val currentWord = todayWordUiState.currentWord
+
+
+    Card(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(top = 32.dp, start = 16.dp, end = 16.dp, bottom = 32.dp)
+                .fillMaxSize(),
+
             ) {
-                Column(
-                    modifier = Modifier.padding(top = 32.dp, start = 16.dp, end = 16.dp, bottom = 32.dp).fillMaxSize(),
+            Text(
+                text = currentWord.korean,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                fontWeight = Bold
+            )
 
-                    ) {
-                    Text(
-                        text = "사과",
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                        fontWeight = Bold
-                    )
+            Text(
+                text = currentWord.english,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                fontSize = MaterialTheme.typography.bodyMedium.fontSize
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = currentWord.pos,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp),
+                textAlign = TextAlign.Start,
+                fontWeight = Bold,
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = MaterialTheme.typography.bodyMedium.fontSize
 
-                    Text(
-                        text = "apple",
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                        fontSize = MaterialTheme.typography.bodyMedium.fontSize
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        text = "명사",
-                        modifier = Modifier.fillMaxWidth().padding(start=16.dp),
-                        textAlign = TextAlign.Start,
-                        fontWeight = Bold,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontSize = MaterialTheme.typography.bodyMedium.fontSize
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            HorizontalDivider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(10.dp)
+                    .clip(RoundedCornerShape(10.dp)),
+                color = MaterialTheme.colorScheme.background
+            )
 
-                    )
-                    Text(
-                        text = "모양이 둥글고 붉으며 새콤 하고 단맛이 나는 과일",
-                        modifier = Modifier.fillMaxWidth().padding(start=16.dp),
-                        textAlign = TextAlign.Start,
-                        fontSize = MaterialTheme.typography.bodyMedium.fontSize
-                    )
-                    Spacer(modifier = Modifier.height(10.dp))
-                    HorizontalDivider(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(10.dp)
-                            .clip(RoundedCornerShape(10.dp)),
-                        color = MaterialTheme.colorScheme.background)
-
-                    Text(text="모양이 둥글고 붉으며 새콤 하고 단맛이 나는 과일",
-                        modifier = Modifier.fillMaxSize(),
-                        fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                        textAlign = TextAlign.Center)
-
-                }
-            }
+            Text(
+                text = currentWord.exampleInfo.joinToString("\n") {
+                    " - ${it.example}"
+                },
+                modifier = Modifier.fillMaxSize(),
+                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                textAlign = TextAlign.Start
+            )
 
         }
+    }
+
+}
 
 
 
