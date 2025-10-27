@@ -3,11 +3,8 @@ package com.hye.data.preferences
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.hye.domain.repository.datastore.PreferencesDataStoreRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -28,72 +25,81 @@ class PreferencesDataStoreManager @Inject constructor(
 
     private val dataSource = context.dataStore
 
-    override fun <T> readPreference(keyName: String, defaultValue: T): Flow<T> =
-        dataSource.data.catch() { exception ->
+    override suspend fun getDocumentId(): Flow<String> {
+        return dataSource.data.catch { exception ->
             if (exception is IOException) {
                 emit(emptyPreferences())
             } else {
                 throw exception
             }
-        }.map {
-            when (defaultValue) {
-                is Boolean -> it[booleanPreferencesKey(keyName)] ?: defaultValue
-                is Int -> it[intPreferencesKey(keyName)] ?: defaultValue
-                is String -> it[stringPreferencesKey(keyName)] ?: defaultValue
-                else -> throw IllegalArgumentException("Unsupported preference type")
-            } as T
-
+        }.map { preferences ->
+            preferences[PreferenceDataStoreConstants.DOCUMENT_ID] ?: ""
         }
+    }
 
+    override suspend fun saveDocumentId(id: String) {
+        dataSource.edit { preferences ->
+            preferences[PreferenceDataStoreConstants.DOCUMENT_ID] ?: ""
+        }
+    }
 
-    override suspend fun <T> writePreference(keyName: String, value: T) {
-        dataSource.edit {
-            when (value) {
-                is Boolean -> it[booleanPreferencesKey(keyName)] = value
-                is Int -> it[intPreferencesKey(keyName)] = value
-                is String -> it[stringPreferencesKey(keyName)] = value
-                else -> throw IllegalArgumentException("Unsupported preference type")
-
+    override suspend fun getTargetWordCount(): Flow<Int> {
+        return dataSource.data.catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
             }
+        }.map { preferences ->
+            preferences[PreferenceDataStoreConstants.TODAY_TARGET_WORD_COUNT] ?: 0
         }
     }
 
-    override suspend fun <T> deletePreference(keyName: String) {
-        dataSource.edit {
-            it.remove(booleanPreferencesKey(keyName))
-            it.remove(intPreferencesKey(keyName))
-            it.remove(stringPreferencesKey(keyName))
+    override suspend fun saveTargetWordCount() {
+        dataSource.edit { preferences ->
+            preferences[PreferenceDataStoreConstants.TODAY_TARGET_WORD_COUNT] ?: 0
         }
     }
 
-    /*firestore 단어다운로드
-    **/
-    override val documentId: Flow<String> = readPreference(PreferenceDataStoreConstants.DOCUMENT_ID_KEY, "")
+    override suspend fun getTotalWordCount(): Flow<Int> {
+        return dataSource.data.catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
 
-    suspend fun saveDocumentId(id: String) {
-        writePreference(PreferenceDataStoreConstants.DOCUMENT_ID_KEY, id)
+        }.map { preferences ->
+            preferences[PreferenceDataStoreConstants.TOTAL_WORD_COUNT] ?: 0
+        }
     }
 
-    override val targetCode: Flow<Int> = readPreference(PreferenceDataStoreConstants.TARGET_CODE_KEY, 0)
-
-    private suspend fun saveTargetCode(code: Int) {
-        writePreference(PreferenceDataStoreConstants.TARGET_CODE_KEY, code)
+    override suspend fun incrementTotalWordCount() {
+        dataSource.edit { preferences ->
+            val totalWord = preferences[PreferenceDataStoreConstants.TOTAL_WORD_COUNT] ?: 0
+            preferences[PreferenceDataStoreConstants.TOTAL_WORD_COUNT] = totalWord + 1
+        }
     }
 
+    override suspend fun getTotalPoint(): Flow<Int> {
+        return dataSource.data.catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
 
-    /*
-    * 오늘의 학습 관련
-    * */
-    override val targetWordCount: Flow<Int> = readPreference(PreferenceDataStoreConstants.TARGET_WORD_COUNT_KEY, 10)
-
-    private suspend fun saveTargetWordCount(count: Int) {
-        writePreference(PreferenceDataStoreConstants.TARGET_WORD_COUNT_KEY, count)
+        }.map { preferences ->
+            preferences[PreferenceDataStoreConstants.TOTAL_POINT_COUNT] ?: 0
+        }
     }
 
-    override val currentWordCount: Flow<Int> = readPreference(PreferenceDataStoreConstants.CURRENT_WORD_COUNT_KEY, 1)
-
-    private suspend fun saveCurrentWordCount(count: Int) {
-        writePreference(PreferenceDataStoreConstants.CURRENT_WORD_COUNT_KEY, count)
+    override suspend fun addTotalPoint() {
+        dataSource.edit{ preferences->
+            val totalPoint = preferences[PreferenceDataStoreConstants.TOTAL_POINT_COUNT] ?: 0
+            preferences[PreferenceDataStoreConstants.TOTAL_POINT_COUNT] = totalPoint + 5
+        }
     }
+
 
 }
