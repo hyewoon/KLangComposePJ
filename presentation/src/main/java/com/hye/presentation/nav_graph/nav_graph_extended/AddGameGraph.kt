@@ -13,7 +13,6 @@ import com.hye.presentation.ui.screen.game.SpeechToTextScreen
 import com.hye.presentation.ui.screen.game.TextToSpeechScreen
 import com.hye.presentation.ui.screen.game.VocabularyScreen
 import com.hye.presentation.ui.model.SharedViewModel
-import com.hye.presentation.ui.model.TTSViewModel
 import com.hye.presentation.ui.screen.game.DetailVocabularyScreen
 
 fun NavGraphBuilder.addGameGraph(
