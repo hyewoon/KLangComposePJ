@@ -52,13 +52,13 @@ sealed interface ScreenRoutDef{
         @Serializable
         data object TodayStudyFlowGraph : TodayStudyFlow  // 추가 필요
         @Serializable
-        data object ListenScreen : TodayStudyFlow
+        data class ListenScreen(val korean: String, val english: String) : TodayStudyFlow
         @Serializable
         data object DictionaryScreen : TodayStudyFlow
         @Serializable
-        data object SpeechScreen : TodayStudyFlow
+        data class SpeechScreen(val korean: String, val english: String) : TodayStudyFlow
         @Serializable
-        data object WriteScreen : TodayStudyFlow
+        data class WriteScreen(val korean: String, val english: String) : TodayStudyFlow
     }
 
 

@@ -5,6 +5,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import androidx.navigation.toRoute
 import com.hye.presentation.nav_graph.ScreenRoutDef
 import com.hye.presentation.ui.screen.home.DictionaryScreen
 import com.hye.presentation.ui.screen.home.ListenScreen
@@ -13,17 +14,19 @@ import com.hye.presentation.ui.screen.home.TodayStudyScreen
 import com.hye.presentation.ui.screen.home.WriteScreen
 import com.hye.presentation.ui.model.HomeViewModel
 import com.hye.presentation.ui.model.SharedViewModel
+import com.hye.presentation.ui.model.TTSViewModel
 
 
 @SuppressLint("RememberReturnType")
 fun NavGraphBuilder.addHomeGraph(
     homeViewModel: HomeViewModel,
     sharedViewModel: SharedViewModel,
+    ttsViewModel: TTSViewModel,
     onNavigateToTodayStudyScreen: () -> Unit,
-    onNavigateToListenScreen: () -> Unit,
+    onNavigateToListenScreen: (String, String) -> Unit,
     onNavigateToDictionaryScreen: () -> Unit,
-    onNavigateToSpeechScreen: () -> Unit,
-    onNavigateToWriteScreen: () -> Unit,
+    onNavigateToSpeechScreen: (String, String) -> Unit,
+    onNavigateToWriteScreen: (String,String) -> Unit,
     snackBarHostState: SnackbarHostState,
 ) {
     navigation<ScreenRoutDef.HomeFlow.HomeFlowGraph>(
@@ -37,7 +40,8 @@ fun NavGraphBuilder.addHomeGraph(
                 onNavigateToListenScreen = onNavigateToListenScreen,
                 onNavigateToDictionaryScreen = onNavigateToDictionaryScreen,
                 onNavigateToSpeechScreen = onNavigateToSpeechScreen,
-                onNavigateToWriteScreen = onNavigateToWriteScreen,
+                onNavigateToWriteScreen = onNavigateToWriteScreen
+                ,
                 homeViewModel = homeViewModel,
                 sharedViewModel = sharedViewModel,
                 snackBarHostState = snackBarHostState
@@ -45,11 +49,15 @@ fun NavGraphBuilder.addHomeGraph(
         }
 
         composable<ScreenRoutDef.TodayStudyFlow.ListenScreen> {
+
+            val args = it.toRoute<ScreenRoutDef.TodayStudyFlow.ListenScreen>()
             ListenScreen(
+                korean = args.korean,
+                english= args.english,
                 onNavigateToListenScreen = onNavigateToListenScreen,
-                homeViewModel = homeViewModel,
                 sharedViewModel = sharedViewModel,
-                snackBarHostState = snackBarHostState
+                snackBarHostState = snackBarHostState,
+                ttsViewModel = ttsViewModel
             )
 
         }
@@ -64,9 +72,11 @@ fun NavGraphBuilder.addHomeGraph(
 
         }
         composable<ScreenRoutDef.TodayStudyFlow.SpeechScreen> {
+            val args= it.toRoute<ScreenRoutDef.TodayStudyFlow.SpeechScreen>()
             SpeechScreen(
+                korean = args.korean,
+                english = args.english,
                 onNavigateToSpeechScreen = onNavigateToSpeechScreen,
-                homeViewModel = homeViewModel,
                 sharedViewModel = sharedViewModel,
                 snackBarHostState = snackBarHostState
             )
@@ -74,9 +84,12 @@ fun NavGraphBuilder.addHomeGraph(
 
         }
         composable<ScreenRoutDef.TodayStudyFlow.WriteScreen> {
+            val args = it.toRoute<ScreenRoutDef.TodayStudyFlow.WriteScreen>()
+
             WriteScreen(
+                korean = args.korean,
+                english = args.english,
                 onNavigateToWriteScreen = onNavigateToWriteScreen,
-                homeViewModel = homeViewModel,
                 sharedViewModel = sharedViewModel,
                 snackBarHostState = snackBarHostState
             )

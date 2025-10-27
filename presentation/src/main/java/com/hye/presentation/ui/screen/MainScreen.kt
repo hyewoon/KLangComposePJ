@@ -50,12 +50,16 @@ import com.hye.presentation.nav_graph.nav_graph_extended.addHomeGraph
 import com.hye.presentation.ui.model.BookmarkViewModel
 import com.hye.presentation.ui.model.HomeViewModel
 import com.hye.presentation.ui.model.SharedViewModel
+import com.hye.presentation.ui.model.TTSViewModel
 import com.hye.presentation.ui.screen.tab.GameTabScreen
 import com.hye.presentation.ui.screen.tab.HomeTabScreen
 import com.hye.presentation.ui.screen.tab.MyPageTabScreen
 
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedGetBackStackEntry")
+@SuppressLint(
+    "UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedGetBackStackEntry",
+    "WrongNavigateRouteType"
+)
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
@@ -68,6 +72,7 @@ fun MainScreen() {
     val sharedViewModel: SharedViewModel = hiltViewModel()
     val homeViewModel: HomeViewModel = hiltViewModel()
     val bookmarkViewModel: BookmarkViewModel = hiltViewModel()
+    val ttsViewModel: TTSViewModel = hiltViewModel()
     //snackbar 설정
     val snackBarHostState = remember { SnackbarHostState() }
 
@@ -87,9 +92,9 @@ fun MainScreen() {
                 BottomNavigationItem().renderBottomNavigationItems()
 
                     .forEachIndexed { _, navigationItem ->
-                       val isSelected = currentDestination?.hierarchy?.any {
-                           it.route == navigationItem.route::class.qualifiedName
-                       } ?:false
+                        val isSelected = currentDestination?.hierarchy?.any {
+                            it.route == navigationItem.route::class.qualifiedName
+                        } ?: false
 
                         NavigationBarItem(
                             selected = isSelected,
@@ -103,7 +108,7 @@ fun MainScreen() {
                             icon = {
                                 Icon(
                                     painter = painterResource(
-                                       id =  if (isSelected) navigationItem.selectedIcon
+                                        id = if (isSelected) navigationItem.selectedIcon
                                         else navigationItem.unSelectedIcon
                                     ),
                                     contentDescription = navigationItem.tabName,
@@ -141,7 +146,7 @@ fun MainScreen() {
 
                 composable<ScreenRoutDef.TopLevel.HomeTab> {
                     HomeTabScreen(
-                        sharedViewModel= sharedViewModel,
+                        sharedViewModel = sharedViewModel,
                         homeViewModel = homeViewModel,
                         onNavigateToTodayStudy = { navController.navigate(ScreenRoutDef.HomeFlow.TodayStudyScreen) },
                         snackBarHostState = snackBarHostState
@@ -172,19 +177,35 @@ fun MainScreen() {
                 addHomeGraph(
                     sharedViewModel = sharedViewModel,
                     homeViewModel = homeViewModel,
+                    ttsViewModel = ttsViewModel,
                     snackBarHostState = snackBarHostState,
                     onNavigateToTodayStudyScreen = { navController.navigate(ScreenRoutDef.HomeFlow.TodayStudyScreen) },
-                    onNavigateToListenScreen = { navController.navigate(ScreenRoutDef.TodayStudyFlow.ListenScreen) },
+                    onNavigateToListenScreen = { korean, english ->
+                        navController.navigate(ScreenRoutDef.TodayStudyFlow.ListenScreen(
+                            korean, english
+                        )) },
                     onNavigateToDictionaryScreen = { navController.navigate(ScreenRoutDef.TodayStudyFlow.DictionaryScreen) },
-                    onNavigateToSpeechScreen = { navController.navigate(ScreenRoutDef.TodayStudyFlow.SpeechScreen) },
-                    onNavigateToWriteScreen = { navController.navigate(ScreenRoutDef.TodayStudyFlow.WriteScreen) }
+                    onNavigateToSpeechScreen = { korean, english ->
+                        navController.navigate(
+                            ScreenRoutDef.TodayStudyFlow.SpeechScreen(
+                                korean, english
+                            )
+                        )
+                    },
+                    onNavigateToWriteScreen = { korean, english ->
+                        navController.navigate(
+                            ScreenRoutDef.TodayStudyFlow.WriteScreen(
+                                korean, english
+                            )
+                        )
+                    },
                 )
 
                 addGameGraph(
                     sharedViewModel = sharedViewModel,
                     onNavigateToDrawScreen = { navController.navigate(ScreenRoutDef.GameFlow.DrawScreen) },
                     onNavigateToSearchScreen = { navController.navigate(ScreenRoutDef.GameFlow.SearchScreen) },
-                   // onNavigateToVocabularyScreen = { navController.navigate(ScreenRoutDef.GameFlow.VocabularyScreen) },
+                    // onNavigateToVocabularyScreen = { navController.navigate(ScreenRoutDef.GameFlow.VocabularyScreen) },
                     onNavigateToTextToSpeechScreen = { navController.navigate(ScreenRoutDef.GameFlow.TextToSpeechScreen) },
                     onNavigateToSpeechToTextScreen = { navController.navigate(ScreenRoutDef.GameFlow.SpeechToTextScreen) },
                     onNavigateToDetailScreen = { documentId ->
@@ -226,13 +247,13 @@ fun MainTopAppBar(currentDestination: NavDestination?, onBackClick: () -> Unit) 
 
 @Composable
 fun ShowBackButton(currentRoute: NavDestination?): Boolean {
-   val topLevelRoutes = listOf(
-       ScreenRoutDef.TopLevel.HomeTab::class.qualifiedName,
-       ScreenRoutDef.TopLevel.GameTab::class.qualifiedName,
-       ScreenRoutDef.TopLevel.MyPageTab::class.qualifiedName
-   )
+    val topLevelRoutes = listOf(
+        ScreenRoutDef.TopLevel.HomeTab::class.qualifiedName,
+        ScreenRoutDef.TopLevel.GameTab::class.qualifiedName,
+        ScreenRoutDef.TopLevel.MyPageTab::class.qualifiedName
+    )
     return currentRoute?.route in topLevelRoutes
-    }
+}
 
 @Composable
 fun AppBarItems(modifier: Modifier = Modifier) {
