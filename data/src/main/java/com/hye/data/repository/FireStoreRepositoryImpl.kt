@@ -17,27 +17,28 @@ import javax.inject.Inject
 
 
 class FireStoreRepositoryImpl @Inject constructor(
-    private val preference: PreferencesDataStoreManager,
+    private val preferences: PreferencesDataStoreManager,
     private val fireStore: FirebaseFirestore,
     private val dtoToDomainMapper: DtoToDomainMapper,
 ) : FireStoreRepository {
     override suspend fun getStudyWordFromFireStore(count: Long): List<TargetWordWithAllInfoEntity> =
         runCatching {
 
-            preference.saveDocumentId("")
+            // preference.saveDocumentId("")
 
-            val lastDocId : String = preference.documentId.first()
+            val lastDocId: String = preferences.getDocumentId().first()
 
             val snapshot = getFireStoreData(lastDocId, count)
 
             if (snapshot.documents.isNotEmpty()) {
                 val lastDocumentId = snapshot.documents.last().id
-                preference.saveDocumentId(lastDocumentId)
+                preferences.saveDocumentId(lastDocumentId)
             }
 
-            val dtoList = snapshot.documents.map { mapToTargetWordDto(it) } //snapShot을 FirestoreDto로 변환
+            val dtoList =
+                snapshot.documents.map { mapToTargetWordDto(it) } //snapShot을 FirestoreDto로 변환
 
-           dtoList.map { dtoToDomainMapper.mapToDomain(it) }// FirestoreDto를 DomainEntity로 변환
+            dtoList.map { dtoToDomainMapper.mapToDomain(it) }// FirestoreDto를 DomainEntity로 변환
 
         }.getOrElse { exception ->
             exception.printStackTrace()
