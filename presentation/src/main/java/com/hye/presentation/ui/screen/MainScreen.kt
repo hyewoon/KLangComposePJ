@@ -35,6 +35,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -69,20 +70,22 @@ fun MainScreen() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    val sharedViewModel: SharedViewModel = hiltViewModel()
+    val sharedViewModel: SharedViewModel= hiltViewModel()
     val homeViewModel: HomeViewModel = hiltViewModel()
     val bookmarkViewModel: BookmarkViewModel = hiltViewModel()
     val ttsViewModel: TTSViewModel = hiltViewModel()
     //snackbar 설정
     val snackBarHostState = remember { SnackbarHostState() }
 
+    val totalWordCount by sharedViewModel.totalWordCount.collectAsStateWithLifecycle()
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackBarHostState)
         },
         topBar = {
             MainTopAppBar(currentDestination = currentDestination,
-                onBackClick = { navController.popBackStack() })
+                onBackClick = { navController.popBackStack() },
+                totalWordCount = totalWordCount)
 
         },
         bottomBar = {
@@ -216,6 +219,9 @@ fun MainScreen() {
                         )
                     },
                     bookmarkViewModel = bookmarkViewModel,
+                    onNavigateToSearchDetailScreen = {targetCode ->
+                        navController.navigate(ScreenRoutDef.GameFlow.SearchDetailScreen(targetCode))
+                         },
                 )
             }
 
@@ -226,14 +232,14 @@ fun MainScreen() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainTopAppBar(currentDestination: NavDestination?, onBackClick: () -> Unit) {
+fun MainTopAppBar(currentDestination: NavDestination?, onBackClick: () -> Unit, totalWordCount: Int) {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.background,
             titleContentColor = MaterialTheme.colorScheme.onBackground,
         ),
         title = {
-            AppBarItems()
+            AppBarItems(totalWordCount )
         },
         navigationIcon = {
             if (!(ShowBackButton(currentDestination))) {
@@ -256,7 +262,8 @@ fun ShowBackButton(currentRoute: NavDestination?): Boolean {
 }
 
 @Composable
-fun AppBarItems(modifier: Modifier = Modifier) {
+fun AppBarItems(
+    totalWordCount: Int,modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -264,7 +271,7 @@ fun AppBarItems(modifier: Modifier = Modifier) {
         horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        PointItem(R.drawable.paw, 100)
+        PointItem(R.drawable.paw, totalWordCount)
         Spacer(modifier = Modifier.width(20.dp))
         PointItem(R.drawable.point, 200)
     }

@@ -1,5 +1,7 @@
 package com.hye.data.di.module.mapper
 
+import com.hye.data.datasource.api.mapper.BasicResponseToDomainMapper
+import com.hye.data.datasource.api.mapper.DetailResponseToDomainMapper
 import com.hye.data.datasource.firestore.mapper.DomainToRoomMapper
 import com.hye.data.datasource.firestore.mapper.DtoToDomainMapper
 import com.hye.data.datasource.firestore.mapper.RoomToDomainMapper
@@ -25,4 +27,13 @@ object MapperModule {
     @Provides
     @Singleton
     fun provideRoomToDomainMapper() = RoomToDomainMapper()
+
+    @Provides
+    @Singleton
+    fun provideBasicResponseToDomainMapper() = BasicResponseToDomainMapper()
+
+    @Provides
+    @Singleton
+    fun provideDetailResponseToDomainMapper() = DetailResponseToDomainMapper()
+
 }

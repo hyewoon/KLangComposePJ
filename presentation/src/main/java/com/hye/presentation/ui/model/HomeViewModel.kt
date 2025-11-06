@@ -2,15 +2,18 @@ package com.hye.presentation.ui.model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hye.domain.repository.datastore.PreferencesDataStoreRepository
 import com.hye.domain.repository.roomdb.StudyRepository
 import com.hye.domain.result.AppResult
 import com.hye.domain.usecase.LoadStudyWordUseCase
 import com.hye.presentation.model.TodayWordUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -40,10 +43,18 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val loadStudyWordUseCase: LoadStudyWordUseCase,
     private val roomRepository: StudyRepository,
+    private val preferences: PreferencesDataStoreRepository,
 ) : ViewModel() {
 
     private val _todayWordUiState = MutableStateFlow(TodayWordUiState())
     val todayWordUiState: StateFlow<TodayWordUiState> = _todayWordUiState.asStateFlow()
+
+    val totalWordCount = preferences.getTotalWordCount()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = 0
+        )
 
     //로딩 여부
     private var isDataLoaded = false
@@ -53,9 +64,10 @@ class HomeViewModel @Inject constructor(
     }
 
 
-    fun loadStudyWord(count: Int) {
+    private fun loadStudyWord(count: Int) {
         //캐싱 처리: viewModel 생명주기 동안 여러번 호출될 수 있음
         if (_todayWordUiState.value.wordList.isNotEmpty()) return
+
         viewModelScope.launch {
             loadStudyWordUseCase(count).collectLatest { roomResult ->
                 when (roomResult) {
@@ -66,7 +78,7 @@ class HomeViewModel @Inject constructor(
                         _todayWordUiState.update {
                             it.copy(
                                 wordList = roomResult.data, //실제 데이터 넣기
-                                snackBarMessage = ""
+                                snackBarMessage = "",
                             )
                         }
                     }
@@ -93,8 +105,18 @@ class HomeViewModel @Inject constructor(
     fun moveToNext() {
         val currentState = _todayWordUiState.value
         if (currentState.hasNext) {
+            val wordId = currentState.currentWordId
             _todayWordUiState.update {
-                it.copy(currentIndex = it.currentIndex + 1)
+                it.copy(
+                    studiedWords = it.studiedWords + it.currentWordId,
+                    currentIndex = it.currentIndex + 1)
+            }
+            viewModelScope.launch {
+                preferences.incrementTotalWordCount(
+                    wordId = wordId,
+                    studiedWords = currentState.studiedWords,
+                    maxSize = currentState.wordList.size
+                )
             }
         } else {
             _todayWordUiState.update {

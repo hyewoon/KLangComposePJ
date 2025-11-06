@@ -2,6 +2,7 @@ package com.hye.presentation.ui.component.list
 
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,37 +21,49 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.hye.domain.model.api.WordEntity
 import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 import com.hye.presentation.R
 
+/*
 @Preview(apiLevel = 33, showBackground = true)
 @Composable
 fun BoomMarkLisPreview() {
-    WordListItem(
+    BookmarkedWordListItem(
         word = TargetWordWithAllInfoEntity(),
         onBookmarkClick = {},
+        modifier = Modifier
+    )
+}*/
+
+@Preview(apiLevel = 33, showBackground = true)
+@Composable
+fun SearchWordListItemPreview() {
+    SearchWordListItem(
+        word = WordEntity(),
+        onItemClick = {},
         modifier = Modifier
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WordListItem(
+fun BookmarkedWordListItem(
     word: TargetWordWithAllInfoEntity,
     onBookmarkClick: () -> Unit = {},
     onItemClick: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
-    println("Rendering: ${word.documentId}, korean: ${word.korean}, isBookmarked: ${word.isBookmarked}")
 
     Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(top = 16.dp, bottom = 16.dp, start = 8.dp, end = 8.dp)
             .clickable { onItemClick() },
-        shape = RoundedCornerShape(28.dp),
+        shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface,
             contentColor = MaterialTheme.colorScheme.onSurface
@@ -60,7 +73,7 @@ fun WordListItem(
             pressedElevation = 8.dp
         ),
 
-    ) {
+        ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -95,3 +108,91 @@ fun WordListItem(
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchWordListItem(
+    word: WordEntity,
+    onItemClick: () -> Unit = {},
+    modifier: Modifier,
+) {
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clickable {
+                onItemClick()
+            },
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 4.dp,
+            pressedElevation = 8.dp
+        ),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 10.dp, top = 16.dp)
+        ) {
+            Text(
+                text = word.word,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.alignByBaseline(),
+
+                fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            val translations =
+                word.sense.map { it.transWord }.toString().removeSurrounding("[", "]") ?: ""
+            Text(
+                text = translations,
+                modifier = Modifier.alignByBaseline(),
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+            )
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 10.dp)
+        ) {
+            Text(
+                text = word.pos,
+                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = word.wordGrade ?: "등급 없음",
+                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+            )
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 10.dp)
+        )
+        {
+            val definition = word.sense.firstOrNull()?.definition?.removeSurrounding("[", "]") ?: ""
+            if (definition.isNotEmpty()) {
+                val meaning = definition.split(",").map { it.trim() }
+
+                meaning.forEachIndexed { index, meaning ->
+                    if (meaning.isNotEmpty()) {
+                        Text(
+                            text = "${index + 1}. $meaning",
+                            fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                        )
+
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+

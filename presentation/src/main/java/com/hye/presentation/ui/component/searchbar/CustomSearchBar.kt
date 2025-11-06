@@ -28,8 +28,8 @@ import com.hye.presentation.R
 
 @Preview(apiLevel = 33, showBackground = true)
 @Composable
-fun CustomTTSInputBarPreview(){
-    CustomTTSInputBar()
+fun CustomTTSInputBarPreview() {
+    CustomSearchBar()
 }
 
 @Composable
@@ -50,29 +50,37 @@ fun CustomSearchBar(
                 color = MaterialTheme.colorScheme.surfaceTint
             )
         },
-        leadingIcon = {
-            Icon(
-                painter = painterResource(id = R.drawable.search_icon),
-                contentDescription = "search_icon",
-                tint = Color.Unspecified,
-                modifier = Modifier
-                    .size(24.dp)
-                    .clickable {
-                        onIconClick()
-                    }
-            )
-        },
         trailingIcon = {
-            Icon(
-                painter = painterResource(id = R.drawable.cancel),
-                contentDescription = "cancel",
-                tint = Color.Unspecified,
-                modifier = Modifier
-                    .size(24.dp)
-                    .clickable {
-                        onQueryChange("")
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(end = 4.dp)
+            ) {
+                if (query.isNotEmpty()) {
+                    IconButton(
+                        onClick = { onQueryChange("") }
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.cancel),
+                            contentDescription = "cancel",
+                            tint = Color.Unspecified,
+                            modifier = Modifier
+                                .size(24.dp)
+                        )
                     }
-            )
+
+                }
+                Icon(
+                    painter = painterResource(id = R.drawable.search_icon),
+                    contentDescription = "search_icon",
+                    tint = Color.Unspecified,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable {
+                            onIconClick()
+                        }
+                )
+            }
         },
         shape = RoundedCornerShape(28.dp),
         colors = OutlinedTextFieldDefaults.colors(
@@ -134,7 +142,7 @@ fun CustomTTSInputBar(
                     }
                 }
                 IconButton(
-                    onClick = {onIconClick()}
+                    onClick = { onIconClick() }
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.mic),

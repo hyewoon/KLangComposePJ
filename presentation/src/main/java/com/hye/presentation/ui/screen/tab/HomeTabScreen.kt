@@ -9,9 +9,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hye.presentation.ui.component.home.DailyQuestCard
 import com.hye.presentation.ui.component.home.TodayStudyCard
 import com.hye.presentation.ui.model.HomeViewModel
@@ -25,6 +27,8 @@ fun HomeTabScreen(onNavigateToTodayStudy: () -> Unit,
                   sharedViewModel: SharedViewModel,
                   snackBarHostState: SnackbarHostState,
                   ) {
+
+    val totalWordCount by homeViewModel.totalWordCount.collectAsStateWithLifecycle()
     KLangComposePJTheme {
         Surface(
             modifier = Modifier
@@ -36,7 +40,9 @@ fun HomeTabScreen(onNavigateToTodayStudy: () -> Unit,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                TodayStudyCard(onNavigateToTodayStudy, homeViewModel)
+                TodayStudyCard(
+                    onNavigateToTodayStudy, homeViewModel,totalWordCount
+                )
                 DailyQuestCard()
 
             }

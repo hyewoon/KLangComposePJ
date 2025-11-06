@@ -14,12 +14,14 @@ import com.hye.presentation.ui.screen.game.TextToSpeechScreen
 import com.hye.presentation.ui.screen.game.VocabularyScreen
 import com.hye.presentation.ui.model.SharedViewModel
 import com.hye.presentation.ui.screen.game.DetailVocabularyScreen
+import com.hye.presentation.ui.screen.game.SearchDetailScreen
 
 fun NavGraphBuilder.addGameGraph(
     bookmarkViewModel: BookmarkViewModel,
     sharedViewModel: SharedViewModel,
     onNavigateToDrawScreen: () -> Unit,
     onNavigateToSearchScreen: () -> Unit,
+    onNavigateToSearchDetailScreen: (String)-> Unit,
     onNavigateToTextToSpeechScreen: () -> Unit,
     onNavigateToSpeechToTextScreen: () -> Unit,
     onNavigateToDetailScreen: (String) -> Unit,
@@ -36,8 +38,15 @@ fun NavGraphBuilder.addGameGraph(
         composable<ScreenRoutDef.GameFlow.SearchScreen> {
             SearchScreen(
                 onNavigateToSearchScreen = onNavigateToSearchScreen,
-                sharedViewModel = sharedViewModel
+                sharedViewModel = sharedViewModel,
+                onNavigateToSearchDetailScreen = onNavigateToSearchDetailScreen
             )
+        }
+        composable<ScreenRoutDef.GameFlow.SearchDetailScreen> {
+            val args = it.toRoute<ScreenRoutDef.GameFlow.SearchDetailScreen>()
+           SearchDetailScreen(
+               targetCode = args.targetCode)
+
         }
         composable<ScreenRoutDef.GameFlow.TextToSpeechScreen> {
             TextToSpeechScreen(
