@@ -10,21 +10,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Icon
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -37,24 +29,17 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.hye.presentation.R
-import com.hye.presentation.nav_graph.BottomNavigationItem
+import com.hye.presentation.nav_graph.MainNavHost
 import com.hye.presentation.nav_graph.ScreenRoutDef
-import com.hye.presentation.nav_graph.nav_graph_extended.addGameGraph
-import com.hye.presentation.nav_graph.nav_graph_extended.addHomeGraph
+import com.hye.presentation.ui.component.bottom_navigationbar.MainBottomNavigationBar
+import com.hye.presentation.ui.component.top_app_bar.MainTopAppBar
 import com.hye.presentation.ui.model.BookmarkViewModel
 import com.hye.presentation.ui.model.HomeViewModel
 import com.hye.presentation.ui.model.SharedViewModel
 import com.hye.presentation.ui.model.TTSViewModel
-import com.hye.presentation.ui.screen.tab.GameTabScreen
-import com.hye.presentation.ui.screen.tab.HomeTabScreen
-import com.hye.presentation.ui.screen.tab.MyPageTabScreen
 
 
 @SuppressLint(
@@ -89,51 +74,11 @@ fun MainScreen() {
 
         },
         bottomBar = {
-            NavigationBar(
-                containerColor = MaterialTheme.colorScheme.surface,
-            ) {
-                BottomNavigationItem().renderBottomNavigationItems()
-
-                    .forEachIndexed { _, navigationItem ->
-                        val isSelected = currentDestination?.hierarchy?.any {
-                            it.route == navigationItem.route::class.qualifiedName
-                        } ?: false
-
-                        NavigationBarItem(
-                            selected = isSelected,
-                            label = {
-                                Text(
-                                    text = navigationItem.tabName,
-                                    color = if (isSelected) MaterialTheme.colorScheme.surfaceVariant
-                                    else MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            },
-                            icon = {
-                                Icon(
-                                    painter = painterResource(
-                                        id = if (isSelected) navigationItem.selectedIcon
-                                        else navigationItem.unSelectedIcon
-                                    ),
-                                    contentDescription = navigationItem.tabName,
-                                    tint = Color.Unspecified
-                                )
-                            },
-                            onClick = {
-                                navController.navigate(navigationItem.route) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            },
-                            colors = NavigationBarItemDefaults.colors(
-                                indicatorColor = Color.Transparent
-                            )
-
-                        )
-                    }
-            }
+            MainBottomNavigationBar(
+                navController = navController,
+                navBackStackEntry = navBackStackEntry,
+                currentDestination = currentDestination
+            )
         }
     ) {
         Column(
@@ -142,114 +87,17 @@ fun MainScreen() {
                 .padding(it)
                 .background(MaterialTheme.colorScheme.background)
         ) {
-            NavHost(
+            MainNavHost(
                 navController = navController,
-                startDestination = ScreenRoutDef.TopLevel.HomeTab
-            ) {
-
-                composable<ScreenRoutDef.TopLevel.HomeTab> {
-                    HomeTabScreen(
-                        sharedViewModel = sharedViewModel,
-                        homeViewModel = homeViewModel,
-                        onNavigateToTodayStudy = { navController.navigate(ScreenRoutDef.HomeFlow.TodayStudyScreen) },
-                        snackBarHostState = snackBarHostState
-                    )
-                }
-
-                composable<ScreenRoutDef.TopLevel.GameTab> {
-                    GameTabScreen(
-                        sharedViewModel = sharedViewModel,
-                        onNavigateToGameScreen = { navController.navigate(ScreenRoutDef.TopLevel.GameTab) },
-                        onNavigateToTextToSpeechScreen = { navController.navigate(ScreenRoutDef.GameFlow.TextToSpeechScreen) },
-                        onNavigateToSearchScreen = { navController.navigate(ScreenRoutDef.GameFlow.SearchScreen) },
-                        onNavigateToVocabularyScreen = { navController.navigate(ScreenRoutDef.GameFlow.VocabularyScreen) },
-                        onNavigateToSpeechToTextScreen = { navController.navigate(ScreenRoutDef.GameFlow.SpeechToTextScreen) },
-                        onNavigateToDrawScreen = { navController.navigate(ScreenRoutDef.GameFlow.DrawScreen) },
-                    )
-                }
-
-                composable<ScreenRoutDef.TopLevel.MyPageTab> {
-                    MyPageTabScreen(
-                        onNavigateToMyPageScreen = { navController.navigate(ScreenRoutDef.TopLevel.MyPageTab) },
-                        sharedViewModel = sharedViewModel
-
-                    )
-                }
-
-                /* nested-graph*/
-                addHomeGraph(
-                    sharedViewModel = sharedViewModel,
-                    homeViewModel = homeViewModel,
-                    ttsViewModel = ttsViewModel,
-                    snackBarHostState = snackBarHostState,
-                    onNavigateToTodayStudyScreen = { navController.navigate(ScreenRoutDef.HomeFlow.TodayStudyScreen) },
-                    onNavigateToListenScreen = { korean, english ->
-                        navController.navigate(ScreenRoutDef.TodayStudyFlow.ListenScreen(
-                            korean, english
-                        )) },
-                    onNavigateToDictionaryScreen = { navController.navigate(ScreenRoutDef.TodayStudyFlow.DictionaryScreen) },
-                    onNavigateToSpeechScreen = { korean, english ->
-                        navController.navigate(
-                            ScreenRoutDef.TodayStudyFlow.SpeechScreen(
-                                korean, english
-                            )
-                        )
-                    },
-                    onNavigateToWriteScreen = { korean, english ->
-                        navController.navigate(
-                            ScreenRoutDef.TodayStudyFlow.WriteScreen(
-                                korean, english
-                            )
-                        )
-                    },
-                )
-
-                addGameGraph(
-                    sharedViewModel = sharedViewModel,
-                    onNavigateToDrawScreen = { navController.navigate(ScreenRoutDef.GameFlow.DrawScreen) },
-                    onNavigateToSearchScreen = { navController.navigate(ScreenRoutDef.GameFlow.SearchScreen) },
-                    // onNavigateToVocabularyScreen = { navController.navigate(ScreenRoutDef.GameFlow.VocabularyScreen) },
-                    onNavigateToTextToSpeechScreen = { navController.navigate(ScreenRoutDef.GameFlow.TextToSpeechScreen) },
-                    onNavigateToSpeechToTextScreen = { navController.navigate(ScreenRoutDef.GameFlow.SpeechToTextScreen) },
-                    onNavigateToDetailScreen = { documentId ->
-                        navController.navigate(
-                            ScreenRoutDef.GameFlow.DetailVocabularyScreen(
-                                documentId
-                            )
-                        )
-                    },
-                    bookmarkViewModel = bookmarkViewModel,
-                    onNavigateToSearchDetailScreen = {targetCode ->
-                        navController.navigate(ScreenRoutDef.GameFlow.SearchDetailScreen(targetCode))
-                         },
-                )
-            }
-
+                sharedViewModel = sharedViewModel,
+                homeViewModel = homeViewModel,
+                bookmarkViewModel = bookmarkViewModel,
+                ttsViewModel = ttsViewModel,
+            )
         }
     }
 }
 
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MainTopAppBar(currentDestination: NavDestination?, onBackClick: () -> Unit, totalWordCount: Int) {
-    TopAppBar(
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.background,
-            titleContentColor = MaterialTheme.colorScheme.onBackground,
-        ),
-        title = {
-            AppBarItems(totalWordCount )
-        },
-        navigationIcon = {
-            if (!(ShowBackButton(currentDestination))) {
-                IconButton(onClick = onBackClick) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, "backIcon")
-                }
-            }
-        }
-    )
-}
 
 @Composable
 fun ShowBackButton(currentRoute: NavDestination?): Boolean {
