@@ -23,7 +23,7 @@ import com.hye.domain.result.AppResult
 import com.hye.presentation.R
 import com.hye.presentation.ui.component.dialog.CustomAlertDialog
 import com.hye.presentation.ui.component.indicator.CustomIndeterminateCircularIndicator
-import com.hye.presentation.ui.component.list.WordListItem
+import com.hye.presentation.ui.component.list.BookmarkedWordListItem
 import com.hye.presentation.ui.component.searchbar.CustomSearchBar
 import com.hye.presentation.ui.model.BookmarkViewModel
 import com.hye.presentation.ui.model.SharedViewModel
@@ -61,7 +61,6 @@ fun VocabularyScreen(
         )
         when (val result = bookmarkWords) {
             is AppResult.Loading -> {
-                Log.d("BookmarkViewModel", "⏳ Loading...")
                 Box(
                     modifier = Modifier.weight(1f),
                     contentAlignment = Alignment.Center
@@ -89,8 +88,7 @@ fun VocabularyScreen(
                             key = { it.documentId }
 
                         ) { words ->
-                            WordListItem(
-
+                            BookmarkedWordListItem(
                                 word = words,
                                 modifier = Modifier,
                                 onBookmarkClick = {

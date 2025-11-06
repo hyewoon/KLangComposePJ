@@ -76,6 +76,7 @@ fun CustomSearchBar(
                     tint = Color.Unspecified,
                     modifier = Modifier
                         .size(24.dp)
+                        .padding(end = 4.dp)
                         .clickable {
                             onIconClick()
                         }

@@ -33,6 +33,7 @@ data class TodayWordUiState(
     val wordList: List<TargetWordWithAllInfoEntity> = emptyList(),
     val currentIndex: Int = 0,
     val snackBarMessage: String = "",
+    val studiedWords: Set<String> = emptySet()
 
 ) {
     //계산 속성
@@ -48,5 +49,8 @@ data class TodayWordUiState(
         get() = currentIndex > 0
     val currentWordId: String
         get() = currentWord.documentId
+    val studiedWordCount: Int
+        get()= studiedWords.size
+
     }
 

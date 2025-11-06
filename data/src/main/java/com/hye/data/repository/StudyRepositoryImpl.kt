@@ -131,7 +131,6 @@ class StudyRepositoryImpl @Inject constructor(
     ): AppResult<Unit> {
         return withContext(Dispatchers.IO) {
             try {
-                Log.d("Repository", "   ⏳ Calling DAO...")
                 val updatedRows = dao.updateBookmarkAndNotify(
                     documentId = documentId,
                     isBookmarked = isBookmarked,

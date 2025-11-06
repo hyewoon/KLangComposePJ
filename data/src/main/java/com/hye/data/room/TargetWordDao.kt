@@ -72,7 +72,7 @@ interface TargetWordDao {
 
     /*
     * 과제 북마크 되지 않은 단어들은 삭제
-    * 오늘의 단어는 유지
+    * 오늘의 단어는 유지=> deleteOld&nonBookmarked
     * */
     @Transaction
     @Query("DELETE FROM target_word WHERE isBookmarked = 0 AND todayString < :date")

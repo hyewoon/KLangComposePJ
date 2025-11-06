@@ -11,30 +11,27 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SharedViewModel @Inject constructor(
-private val preferencesManager : PreferencesDataStoreRepository
-): ViewModel() {
+    private val preferences: PreferencesDataStoreRepository,
+) : ViewModel() {
+    val totalWordCount = preferences.getTotalWordCount()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = 0
+        )
 
-    private val _targetWordCount = preferencesManager.targetWordCount
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(3000), 0)
 
-    val targetWordCount = _targetWordCount
-
-    private val _currentWordCount = preferencesManager.currentWordCount
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(3000), 0)
-
-    val currentWordCount = _currentWordCount
-
-    suspend fun saveTargetWordCount(count: Int) {
-        viewModelScope.launch {
-            preferencesManager.writePreference("target_word_count", count)
-        }
-    }
-    suspend fun saveCurrentWordCount(count: Int) {
-        viewModelScope.launch {
-            preferencesManager.writePreference("current_word_count", count)
+    fun checkLastStudyDate(){
+        viewModelScope.launch{
+            preferences.getLastStudyDate()
         }
     }
 
+    fun saveLastStudyDate(date: String){
+        viewModelScope.launch {
+            preferences.saveLastStudyDate(date)
+        }
+    }
 
 }
 

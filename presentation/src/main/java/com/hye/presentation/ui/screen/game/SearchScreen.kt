@@ -10,6 +10,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
@@ -31,7 +34,10 @@ fun SearchScreen(
     sharedViewModel: SharedViewModel,
     searchViewModel: SearchViewModel = hiltViewModel(),
 ) {
-    val searchQuery by searchViewModel.searchQuery.collectAsStateWithLifecycle()
+    //val searchQuery by searchViewModel.searchQuery.collectAsStateWithLifecycle()
+
+    var searchQuery by remember { mutableStateOf("")}
+
     val wordList by searchViewModel.wordList.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
     Column(
@@ -42,7 +48,7 @@ fun SearchScreen(
         Spacer(modifier = Modifier.padding(16.dp))
         CustomSearchBar(
             query = searchQuery,
-            onQueryChange = searchViewModel::onSearchQueryChange,
+            onQueryChange = { searchQuery = it },
             onIconClick = {
                 if(searchQuery.isNotEmpty()) {
                     focusManager.clearFocus()

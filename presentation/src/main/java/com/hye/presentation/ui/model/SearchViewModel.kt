@@ -20,9 +20,6 @@ class SearchViewModel @Inject constructor(
     private val detailWordRepository: DetailWordRepository,
 ) : ViewModel() {
 
-    //단어 검색
-    private val _searchQuery=MutableStateFlow<String>("")
-    val searchQuery: StateFlow<String> =_searchQuery.asStateFlow()
 
     //단어 결과값
     private val _wordList = MutableStateFlow<AppResult<List<WordEntity>>>(AppResult.NoConstructor)
@@ -32,11 +29,6 @@ class SearchViewModel @Inject constructor(
     private val _detailWordInfo =
         MutableStateFlow<AppResult<List<DetailWordEntity>>>(AppResult.NoConstructor)
     val detailWordInfo = _detailWordInfo.asStateFlow()
-
-
-    fun onSearchQueryChange(query: String) {
-        _searchQuery.value = query
-    }
 
     fun searchWord(word: String) {
         viewModelScope.launch {
@@ -49,12 +41,12 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun formatWordInfo(wordEntity: WordEntity): String {
+ /*   fun formatWordInfo(wordEntity: WordEntity): String {
         return wordEntity.sense.take(3).joinToString("\n\n") {
             "${it.senseOrder}. ${it.transWord}\n ${it.definition}"
 
         }
-    }
+    }*/
 
     fun getDetailWordInfo(targetCode: String) {
         viewModelScope.launch {

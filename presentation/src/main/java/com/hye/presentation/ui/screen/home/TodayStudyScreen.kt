@@ -55,6 +55,7 @@ fun TodayStudyScreen(
     snackBarHostState: SnackbarHostState,
 ) {
     val todayWordUiState by homeViewModel.todayWordUiState.collectAsStateWithLifecycle()
+    val totalWordCount by sharedViewModel.totalWordCount.collectAsStateWithLifecycle()
 
     val currentWord = todayWordUiState.currentWord
     val currentIndex = todayWordUiState.currentIndex
@@ -63,6 +64,7 @@ fun TodayStudyScreen(
     val hasPrevious = todayWordUiState.hasPrevious
     val currentWordExample = todayWordUiState.currentWordExample
     val snackBarMessage = todayWordUiState.snackBarMessage
+    val studiedWordCount : Int = todayWordUiState.studiedWordCount
 
     val onBookmarkToggle = remember<(String, Boolean) -> Unit> {
         { documentId, isBookmarked ->
@@ -70,7 +72,9 @@ fun TodayStudyScreen(
         }
     }
     val onNextClick = remember {
-        { homeViewModel.moveToNext() }
+        { homeViewModel.moveToNext()
+
+        }
     }
 
     val onPreviousClick = remember {
@@ -98,7 +102,9 @@ fun TodayStudyScreen(
                 currentWordExample = currentWordExample,
                 onNextClick = onNextClick,
                 onPreviousClick = onPreviousClick,
-                onBookmarkToggle = onBookmarkToggle
+                onBookmarkToggle = onBookmarkToggle,
+                studiedWordCount = studiedWordCount
+
             )
         }
 
@@ -118,6 +124,7 @@ fun TodayStudyContent(
     onPreviousClick: () -> Unit = {},
     onNextClick: () -> Unit = {},
     onBookmarkToggle: (String, Boolean)->Unit,
+    studiedWordCount: Int 
     ) {
 
     Column(
@@ -127,7 +134,7 @@ fun TodayStudyContent(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LinearProgressIndicatorBox(currentIndex + 1, totalWords)
+        LinearProgressIndicatorBox(studiedWordCount, totalWords)
         Box(modifier = Modifier.weight(1f)) {
             key(
                 currentWord.documentId,
@@ -145,7 +152,8 @@ fun TodayStudyContent(
                     totalWords = totalWords,
                     onPreviousClick = onPreviousClick,
                     onNextClick = onNextClick,
-                    onBookmarkToggle = onBookmarkToggle,
+                    onBookmarkToggle = onBookmarkToggle
+
                 )
             }
         }

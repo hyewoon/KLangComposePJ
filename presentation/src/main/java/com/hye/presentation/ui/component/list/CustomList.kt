@@ -173,26 +173,36 @@ fun SearchWordListItem(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, end = 10.dp)
+                .padding(start = 16.dp, end = 16.dp)
         )
         {
-            val definition = word.sense.firstOrNull()?.definition?.removeSurrounding("[", "]") ?: ""
-            if (definition.isNotEmpty()) {
-                val meaning = definition.split(",").map { it.trim() }
+            /*  val definition = word.sense.firstOrNull()?.definition?.removeSurrounding("[", "]") ?: ""
+              if (definition.isNotEmpty()) {
+                  val meaning = definition.split(",").map { it.trim() }
 
-                meaning.forEachIndexed { index, meaning ->
-                    if (meaning.isNotEmpty()) {
-                        Text(
-                            text = "${index + 1}. $meaning",
-                            fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                        )
+                  meaning.forEachIndexed { index, meaning ->
+                      if (meaning.isNotEmpty()) {
+                          Text(
+                              text = "${index + 1}. $meaning",
+                              fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                          )
 
-                    }
-                }
+                      }
+                  }
+              }*/
+
+            val definition = word.sense.take(3).joinToString("\n") {
+                "${it.senseOrder}. ${it.definition}"
             }
+            Text(
+                text = definition,
+                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                modifier = Modifier.padding(bottom=8.dp)
+            )
         }
     }
-
 }
+
+
 
 

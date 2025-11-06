@@ -17,6 +17,7 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -24,8 +25,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hye.presentation.R
 import com.hye.presentation.ui.model.HomeViewModel
+import com.hye.presentation.ui.model.SharedViewModel
 
 
 @Preview(showBackground = true)
@@ -39,7 +42,9 @@ fun TodayStudyCardPreview() {
 fun TodayStudyCard(
     onNavigateToTodayStudy: () -> Unit,
     homeViewModel: HomeViewModel,
+    totalWordCount: Int
 ) {
+
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 10.dp
@@ -72,17 +77,15 @@ fun TodayStudyCard(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    CircularProgressIndicatorBox(4, 10)
+                    CircularProgressIndicatorBox(totalWordCount, 10)
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(
                         text = "어휘 학습",
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold
                     )
-                    Text(
-                        text = "하루 목표 10개",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+                    TargetWordSection(10)
+
                 }
                 Column(
                     modifier = Modifier
@@ -118,12 +121,18 @@ fun TodayStudyCard(
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
-
-
         }
     }
+}
 
-
+@Composable
+fun TargetWordSection(totalWord: Int){
+    Column(){
+        Text(
+            text = "하루 목표 ${totalWord}개",
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
 }
 
 
@@ -162,5 +171,6 @@ fun CircularProgressIndicatorBox(progress: Int, max: Int) {
     }
 
 }
+
 
 
