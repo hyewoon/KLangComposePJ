@@ -39,10 +39,6 @@
  ### 시스템 아키텍쳐
  <img width="1031" height="593" alt="image" src="https://github.com/user-attachments/assets/d5bd66da-6198-41f1-8cb4-8e466501c6d7" />
 
- ### Clean Architechure 레이어구조
-<img width="449" height="659" alt="image" src="https://github.com/user-attachments/assets/7ce3cd5a-0e40-40a5-bc44-8b37d9f4bc47" />
-
-
 
 ## 5️⃣ 기술 스택
 
