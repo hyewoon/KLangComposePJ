@@ -27,7 +27,7 @@ import com.hye.presentation.ui.theme.KLangComposePJTheme
 @Composable
 fun CustomDialogPreview() {
     KLangComposePJTheme {
-        CustomAlertDialog()
+        CustomConfirmationDialog()
     }
 }
 

@@ -1,5 +1,6 @@
 package com.hye.presentation.ui.model
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hye.domain.model.api.DetailWordEntity
@@ -7,9 +8,9 @@ import com.hye.domain.model.api.WordEntity
 import com.hye.domain.repository.api.DetailWordRepository
 import com.hye.domain.repository.api.WordRepository
 import com.hye.domain.result.AppResult
+import com.hye.presentation.ui.component.dialog.CustomConfirmationDialog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,11 +34,9 @@ class SearchViewModel @Inject constructor(
     fun searchWord(word: String) {
         viewModelScope.launch {
             _wordList.value = AppResult.Loading
-            val response = wordRepository.getWordInfo(word)
-            response.let {
-                _wordList.value = it
 
-            }
+           _wordList.value = wordRepository.getWordInfo(word)
+
         }
     }
 
