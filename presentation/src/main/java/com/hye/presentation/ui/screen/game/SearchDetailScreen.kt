@@ -1,9 +1,11 @@
 package com.hye.presentation.ui.screen.game
 
-import com.hye.presentation.ui.model.SharedViewModel
+import androidx.compose.runtime.Composable
 
-class SearchDetailScreen(
-    val targetCode: String,
-)
-{
+
+@Composable
+fun SearchDetailScreen(
+    targetCode : String
+){
+
 }

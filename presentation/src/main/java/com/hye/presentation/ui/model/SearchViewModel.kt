@@ -1,6 +1,5 @@
 package com.hye.presentation.ui.model
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hye.domain.model.api.DetailWordEntity
@@ -8,7 +7,6 @@ import com.hye.domain.model.api.WordEntity
 import com.hye.domain.repository.api.DetailWordRepository
 import com.hye.domain.repository.api.WordRepository
 import com.hye.domain.result.AppResult
-import com.hye.presentation.ui.component.dialog.CustomConfirmationDialog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
