@@ -10,14 +10,14 @@ class BasicResponseToDomainMapper {
         return WordEntity(
             targetCode = word.targetCode,
             word = word.word,
-            wordGrade = word.wordGrade,
+            wordGrade = word.wordGrade?:"등급 없음",
             pos = word.pos,
             sense = word.sense.map {
                 SenseInfo(
                    senseOrder = it.senseOrder,
                     definition = it.definition,
-                    transWord = it.translation.transWord,
-                    transDfn = it.translation.transDfn
+                    transWord = it.translation?.transWord ?:"",
+                    transDfn = it.translation?.transDfn ?:""
                 )
             }
 

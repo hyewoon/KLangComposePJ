@@ -7,7 +7,7 @@ import com.tickaroo.tikxml.annotation.Xml
 @Xml(name = "basicChannel")
 data class BasicChannelResponse(
     @Element(name="item")
-    val item: List<WordInfo> = emptyList()
+    val item: List<WordInfo>? = null
 )
 @Xml(name = "item")
 data class WordInfo(
@@ -16,7 +16,7 @@ data class WordInfo(
     @PropertyElement(name="word")
     val word: String = "",
     @PropertyElement(name="word_grade")
-    val wordGrade: String ="",
+    val wordGrade: String? =null,
     @PropertyElement(name="pos")
     val pos: String="",
     @Element(name="sense")
@@ -30,13 +30,13 @@ data class Sense(
     @PropertyElement(name="definition")
     val definition: String ="",
     @Element(name="translation")
-    val translation: Translation = Translation(),
+   val translation: Translation?=null,
 )
 @Xml(name="translation")
 data class Translation(
     @PropertyElement(name="trans_word")
-    val transWord : String ="",
+    val transWord : String? =null,
     @PropertyElement(name="trans_dfn")
-    val transDfn: String =""
+    val transDfn: String? =null
 )
 
