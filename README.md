@@ -91,3 +91,11 @@
 * 손글씨 정확성 높이기 위한 리팩토링 진행중 🚩
 
 ![Screen_recording_20251015_135629](https://github.com/user-attachments/assets/844113af-b594-46f0-a4cb-b72194e018d0)
+
+✅ **단어와 놀기 : 검색 기능**
+
+* 궁금한 한국어를 검색하면 한국어기초사전 API 통해 상세 예문을 확인
+
+
+![search](https://github.com/user-attachments/assets/aed37869-f626-4b9f-b1e1-30cbd4341eba)
+
