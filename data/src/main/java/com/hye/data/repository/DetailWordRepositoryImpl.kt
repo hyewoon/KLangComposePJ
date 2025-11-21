@@ -13,18 +13,13 @@ class DetailWordRepositoryImpl @Inject constructor(
     private val retrofitRESTService: RetrofitRESTService,
     private val mapper: DetailResponseToDomainMapper
 ): DetailWordRepository {
-    override suspend fun getDetailWordInfo(targetCode: String): AppResult<List<DetailWordEntity>> = runCatching{
+    override suspend fun getDetailWordInfo(targetCode: String): AppResult<DetailWordEntity> = runCatching{
 
         val response = retrofitRESTService.getDetailWordInfo(apiKey, targetCode)
-        response.items?.let{item->
-            AppResult.Success(item.map {
-                mapper.mapToDomain(it)
-            })
-
-        }?: AppResult.Success(emptyList())
+    AppResult.Success(mapper.mapToDomain(response.items[0]))
 
     }.getOrElse {
-        AppResult.Failure(it.message ?: "Unknown Error")
+        AppResult.Failure(it)
 
     }
 }
