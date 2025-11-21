@@ -121,6 +121,7 @@ fun VocabularyScreen(
 
             is AppResult.Failure -> {}
             is AppResult.NoConstructor -> {}
+
         }
     }
 
