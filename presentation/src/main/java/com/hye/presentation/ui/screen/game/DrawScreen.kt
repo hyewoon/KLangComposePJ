@@ -20,11 +20,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.hye.domain.model.mlkit.ConfidenceLevel
 import com.hye.domain.result.AppResult
+import com.hye.presentation.R
 import com.hye.presentation.ui.component.button.CustomButtonSmall
 import com.hye.presentation.ui.component.card.CustomResultCardSmall
 import com.hye.presentation.ui.component.common.DrawingCustomView
@@ -36,10 +38,10 @@ import com.hye.presentation.ui.model.SharedViewModel
 @Composable
 fun DrawScreen(
     onNavigateToDrawScreen: () -> Unit,
-    gameViewModel: GameViewModel= hiltViewModel(),
+    gameViewModel: GameViewModel = hiltViewModel(),
     sharedViewModel: SharedViewModel,
 ) {
-   //val recognizedText by gameViewModel.recognizedText.collectAsState()
+    //val recognizedText by gameViewModel.recognizedText.collectAsState()
     val isRecognizing by gameViewModel.isRecognizing.collectAsState()
     val recognitionResult by gameViewModel.recognitionResult.collectAsState()
 
@@ -67,7 +69,7 @@ fun DrawScreen(
             Box(
                 modifier = Modifier
                     .animateContentSize()
-                    .height(if(fold) 250.dp else 400.dp)
+                    .height(if (fold) 250.dp else 400.dp)
                     .fillMaxWidth()
             ) {
                 AndroidView(
@@ -77,7 +79,7 @@ fun DrawScreen(
                             context,
                             attrs = null,
                         ).apply {
-                           // setWatermarkText(recognizedText)
+                            // setWatermarkText(recognizedText)
 
                             customView = this
 
@@ -97,16 +99,16 @@ fun DrawScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     CustomButtonSmall(
-                        label = if(fold) "초기화" else "입력",
+                        label = if (fold) stringResource(R.string.reset) else stringResource(R.string.input),
                         onClick = {
-                            if(!fold) {
+                            if (!fold) {
                                 val strokes = customView?.getCurrentStrokes()
                                 if (!strokes.isNullOrEmpty()) {
                                     gameViewModel.clearRecognitionResult()
                                     gameViewModel.sendStrokes(strokes)
                                     fold = true
                                 }
-                            }else {
+                            } else {
                                 fold = false
                                 customView?.clearCanvas()
                             }
@@ -114,9 +116,9 @@ fun DrawScreen(
                     )
 
                     CustomButtonSmall(
-                        label = "지우기",
+                        label = stringResource(R.string.clear),
                         onClick = {
-                            if(!fold) {
+                            if (!fold) {
                                 customView?.clearCanvas()
                             }
                         }
@@ -127,38 +129,43 @@ fun DrawScreen(
             }
 
         }
-        if(fold){
-            when(recognitionResult){
+        if (fold) {
+            when (recognitionResult) {
                 is AppResult.Loading -> {
                     CustomIndeterminateCircularIndicator()
                 }
+
                 is AppResult.Success -> {
                     val data = (recognitionResult as AppResult.Success).data
-                    val dataLevel: ConfidenceLevel = (recognitionResult as AppResult.Success).data.level
-                    when(dataLevel){
-                         ConfidenceLevel.HIGH, ConfidenceLevel.MEDIUM -> {
-                             CustomResultCardSmall(data.recognizedText)
-                         }
-                         ConfidenceLevel.LOW -> {
-                             CustomConfirmationDialog(
-                                 dialogTitle = "문자를 인식 할 수 없어요.",
-                                 dialogText = "다시 시도해 보세요.",
-                                 onConfirmation = {
-                                     fold = false
-                                     customView?.clearCanvas()
-                                 }
-                             )
-                         }
+                    val dataLevel: ConfidenceLevel =
+                        (recognitionResult as AppResult.Success).data.level
+                    when (dataLevel) {
+                        ConfidenceLevel.HIGH, ConfidenceLevel.MEDIUM -> {
+                            CustomResultCardSmall(data.recognizedText)
+                        }
+
+                        ConfidenceLevel.LOW -> {
+                            CustomConfirmationDialog(
+                                dialogTitle = stringResource(R.string.error_message_network),
+                                dialogText = stringResource(R.string.dialog_message_try_again),
+                                onConfirmation = {
+                                    fold = false
+                                    customView?.clearCanvas()
+                                }
+                            )
+                        }
                     }
                 }
+
                 is AppResult.Failure -> {
                     val error = (recognitionResult as AppResult.Failure).exception
                     CustomResultCardSmall(error.toString())
                 }
+
                 AppResult.NoConstructor -> {}
 
-                }
             }
+        }
     }
 }
 

@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -47,13 +48,14 @@ fun SpeechToTextScreen(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ){
             Text(
-                text = recognizedText.ifEmpty { "음석 인식을 하려면 마이크 버튼을 누르세요." },
+                text = recognizedText.ifEmpty { stringResource(R.string.stt_message) },
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
                 style = if(recognizedText.isNotEmpty()) MaterialTheme.typography.bodyLarge else MaterialTheme.typography.bodyMedium,

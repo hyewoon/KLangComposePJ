@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">KLangComposePJ</string>
+    <string name="study_word">word learning</string>
+    <string name="today_words">Today\'s learning</string>
+    <string name="daily_goal">daily goal %1$swords</string>
+    <string name="example_reference">Source: standard Korean Language dictionary</string>
+    <string name="reset">reset</string>
+    <string name="input">input</string>
+    <string name="clear">clear</string>
+    <string name="dialog_message_try_again">try again</string>
+    <string name="dialog_message_cannot_recognize">The characters are not recognized.</string>
+    <string name="stt_message">Press the microphone button to enable voice recognition.</string>
+    <string name="searchbar_message">Please enter your search term</string>
+    <string name="tts_searchbar_message">Please enter the word you want</string>
+    <string name="tts_message">Enter your text and press the microphone button.</string>
+    <string name="search_response_message">No search results.</string>
+    <string name="error_message_network">Unable to connect to the network.</string>
+    <string name="error_message_server">Can not connect to Server</string>
+    <string name="network_connection_required">Please connect to the network.</string>
+    <string name="retry_again">Please try again later.</string>
+    <string name="game">game</string>
+    <string name="quest">quest</string>
+    <string name="connection_timed_out">Connection timed out.</string>
+    <string name="error_occurred">An error occurred.</string>
 </resources>

@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,7 +46,7 @@ fun CustomSearchBar(
             .fillMaxWidth(),
         placeholder = {
             Text(
-                "검색어를 입력하세요",
+                stringResource(R.string.searchbar_message),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.surfaceTint
             )
@@ -118,7 +119,7 @@ fun CustomTTSInputBar(
             .fillMaxWidth(),
         placeholder = {
             Text(
-                "원하는 단어를 입력하세요",
+                stringResource(R.string.tts_searchbar_message),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.surfaceTint
             )

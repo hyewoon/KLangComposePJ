@@ -14,10 +14,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.hye.presentation.R
 import com.hye.presentation.ui.component.searchbar.CustomTTSInputBar
 import com.hye.presentation.ui.model.SharedViewModel
 import com.hye.presentation.ui.model.TTSViewModel
@@ -32,13 +34,14 @@ fun TextToSpeechScreen(
     val isTTSReady by ttsViewModel.isTTSReady.collectAsStateWithLifecycle()
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ){
         Text(
-            text = "텍스트를 입력하고, 마이크 버튼을 누르세요.",
+            text = stringResource(R.string.tts_message),
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth(),
             style = MaterialTheme.typography.bodyMedium,

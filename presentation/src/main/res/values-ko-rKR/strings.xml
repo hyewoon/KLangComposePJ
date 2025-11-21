@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">KLangComposePJ</string>
+    <string name="study_word">어휘 학습</string>
+    <string name="today_words">오늘의 학습</string>
+    <string name="daily_goal">하루 목표 %1$s개</string>
+    <string name="example_reference">예문 출처: 표준한국어대사전</string>
+    <string name="reset">초기화</string>
+    <string name="input">입력</string>
+    <string name="clear">지우기</string>
+    <string name="dialog_message_try_again">다시 시도해 보세요.</string>
+    <string name="dialog_message_cannot_recognize">문자를 인식 할 수 없어요.</string>
+    <string name="stt_message">음석 인식을 하려면 마이크 버튼을 누르세요.</string>
+    <string name="searchbar_message">검색어를 입력하세요</string>
+    <string name="tts_searchbar_message">원하는 단어를 입력하세요</string>
+    <string name="tts_message">텍스트를 입력하고, 마이크 버튼을 누르세요.</string>
+    <string name="search_response_message">검색 결과가 없습니다.</string>
+    <string name="error_message_network">네트워크에 연결할 수 없습니다.</string>
+    <string name="error_message_server">서버에 연결할 수 없습니다.</string>
+    <string name="network_connection_required">네트워크를 연결해 주세요.</string>
+    <string name="retry_again">잠시 후 다시 시도해 주세요.</string>
+    <string name="game">게임하기</string>
+    <string name="quest">일일 퀘스트</string>
+    <string name="connection_timed_out">연결 시간이 초과되었습니다.</string>
+    <string name="error_occurred">오류가 발생했습니다.</string>
+</resources>

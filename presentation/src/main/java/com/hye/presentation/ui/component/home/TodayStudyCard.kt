@@ -17,18 +17,17 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hye.presentation.R
 import com.hye.presentation.ui.model.HomeViewModel
-import com.hye.presentation.ui.model.SharedViewModel
+
 
 
 @Preview(showBackground = true)
@@ -42,7 +41,8 @@ fun TodayStudyCardPreview() {
 fun TodayStudyCard(
     onNavigateToTodayStudy: () -> Unit,
     homeViewModel: HomeViewModel,
-    totalWordCount: Int
+    todayTotalWords: Int,
+    todayStudiedWordCount: Int
 ) {
 
     ElevatedCard(
@@ -77,14 +77,15 @@ fun TodayStudyCard(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    CircularProgressIndicatorBox(totalWordCount, 10)
+                    CircularProgressIndicatorBox(todayStudiedWordCount, todayTotalWords)
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(
-                        text = "어휘 학습",
+                        text = stringResource(R.string.study_word),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold
                     )
-                    TargetWordSection(10)
+
+                    TargetWordSection(todayTotalWords)
 
                 }
                 Column(
@@ -117,7 +118,7 @@ fun TodayStudyCard(
             )
             {
                 Text(
-                    text = "오늘의 학습",
+                    text = stringResource(R.string.today_words),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -129,7 +130,7 @@ fun TodayStudyCard(
 fun TargetWordSection(totalWord: Int){
     Column(){
         Text(
-            text = "하루 목표 ${totalWord}개",
+            text = stringResource(R.string.daily_goal, totalWord),
             style = MaterialTheme.typography.bodyMedium
         )
     }
@@ -143,7 +144,8 @@ fun CircularProgressIndicatorBox(progress: Int, max: Int) {
     ) {
         CircularProgressIndicator(
             modifier = Modifier.size(95.dp),
-            progress = { progress / max.toFloat() },
+            progress = {
+                if(max == 0) 0f else progress / max.toFloat() },
             strokeWidth = 10.dp,
             color = MaterialTheme.colorScheme.primary,
             trackColor = MaterialTheme.colorScheme.secondary,

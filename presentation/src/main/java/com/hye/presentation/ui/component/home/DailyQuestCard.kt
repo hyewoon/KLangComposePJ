@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,7 +38,7 @@ fun DailyQuestCard() {
     Column(
     ) {
         Text(
-            text = "일일 퀘스트",
+            text = stringResource(R.string.quest),
             fontSize = MaterialTheme.typography.bodyMedium.fontSize,
             fontWeight = FontWeight.Bold
         )
@@ -70,7 +71,7 @@ fun DailyQuestCard() {
                             modifier = Modifier.size(width = 60.dp, height = 60.dp)
                         )
                         Text(
-                            text = "오늘의 학습",
+                            text = stringResource(R.string.today_words),
                             fontSize = MaterialTheme.typography.bodyMedium.fontSize
                         )
                     }
@@ -88,7 +89,7 @@ fun DailyQuestCard() {
                         )
 
                         Text(
-                            text = "게임하기",
+                            text = stringResource(R.string.game),
                             fontSize = MaterialTheme.typography.bodyMedium.fontSize
                         )
                     }
