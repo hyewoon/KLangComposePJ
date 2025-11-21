@@ -1,6 +1,6 @@
 package com.hye.data.repository
 
-import android.util.Log
+
 import com.hye.data.datasource.firestore.mapper.DomainToRoomMapper
 import com.hye.data.datasource.firestore.mapper.RoomToDomainMapper
 import com.hye.data.room.TargetWordDao
@@ -31,7 +31,7 @@ class StudyRepositoryImpl @Inject constructor(
                 insertRoomDB(words)
                 AppResult.Success(Unit)
             } catch (e: Exception) {
-                AppResult.Failure(e.toString())
+                AppResult.Failure(e)
             }
         }
     }
@@ -51,7 +51,7 @@ class StudyRepositoryImpl @Inject constructor(
                         emit(AppResult.Success(domainList))
                     }
             } catch (exception: Exception) {
-                emit(AppResult.Failure(exception.toString()))
+                emit(AppResult.Failure(exception))
             }
         }
 
@@ -68,7 +68,7 @@ class StudyRepositoryImpl @Inject constructor(
                     emit(AppResult.Success(domainList))
                 }
         } catch (e: Exception) {
-            emit(AppResult.Failure(e.toString()))
+            emit(AppResult.Failure(e))
         }
     }
 
@@ -82,7 +82,7 @@ class StudyRepositoryImpl @Inject constructor(
                 AppResult.Success(result)
 
             } catch (e: Exception) {
-                AppResult.Failure(e.toString())
+                AppResult.Failure(e)
             }
         }
     }
@@ -97,7 +97,8 @@ class StudyRepositoryImpl @Inject constructor(
                 AppResult.Success(result)
 
             } catch (e: Exception) {
-                AppResult.Failure(e.toString())
+                AppResult.Failure(e)
+
             }
         }
     }
@@ -118,7 +119,7 @@ class StudyRepositoryImpl @Inject constructor(
                 dao.deleteOldAndNonBookmarkedWords(date)
                 AppResult.Success(Unit)
             } catch (e: Exception) {
-                AppResult.Failure(e.toString())
+                AppResult.Failure(e)
             }
         }
     }
@@ -149,7 +150,7 @@ class StudyRepositoryImpl @Inject constructor(
 
                 AppResult.Success(Unit)
             } catch (e: Exception) {
-                AppResult.Failure(e.toString())
+                AppResult.Failure(e)
             }
         }
     }
@@ -166,7 +167,7 @@ class StudyRepositoryImpl @Inject constructor(
                         emit(AppResult.Success(it))
                     }
             } catch (e: Exception) {
-                emit(AppResult.Failure(e.toString()))
+                emit(AppResult.Failure(e))
             }
         }
 

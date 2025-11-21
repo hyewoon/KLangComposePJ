@@ -27,19 +27,19 @@ class WordRepositoryImpl @Inject constructor(
             AppResult.Success(response.item?.map { mapper.mapToDomain(it) } ?:emptyList())
         }catch(e: IOException) {
             Log.e("Repository", "네트워크 에러", e)
-            AppResult.Failure("네트워크 에러: ${e.message ?: "연결할 수 없습니다."}")
+            AppResult.Failure(e)
         }catch(e: HttpException) {
             Log.e("Repository", "서버 에러", e)
-            AppResult.Failure("서버 에러: ${e.message ?: "서버 에러"}")
+            AppResult.Failure(e)
         }catch(e: XmlDataException){
             Log.e("Repository","파싱에러",e)
             Log.e("Repository,","실패한 필드 : ${e.message}", e)
             e.printStackTrace()
-            AppResult.Failure("파싱 에러 :${e.message ?: "파싱 에러"}")
+            AppResult.Failure(e)
         }catch(e:Exception){
             Log.e("WordRepositoryImpl", "에러발생",e )
             e.printStackTrace()
-            AppResult.Failure("알 수 없는 오류: ${e.message ?:"unknown error"}")
+            AppResult.Failure(e)
 
         }
 
