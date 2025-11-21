@@ -66,7 +66,6 @@ class BookmarkViewModel @Inject constructor(
             is AppResult.Loading -> wordsResult
             is AppResult.Failure -> wordsResult
             is AppResult.NoConstructor -> wordsResult
-
         }
     }.stateIn(
         scope = viewModelScope,
