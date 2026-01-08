@@ -104,7 +104,7 @@ interface TargetWordDao {
      fun getBookmarkedWords( isBookmarked : Boolean): Flow<List<TargetWordWithAllInfo>>
 
 
-    // 🔥 추가: Once 버전 (Flow 트리거용)
+/*    // 🔥 추가: Once 버전 (Flow 트리거용)
     @Transaction
     @Query("SELECT * FROM target_word WHERE isBookmarked = :isBookmarked ORDER BY bookmarkedTimeStamp DESC")
     suspend fun getBookmarkedWordsOnce(isBookmarked: Boolean): List<TargetWordWithAllInfo>
@@ -126,6 +126,6 @@ interface TargetWordDao {
         }
 
         return result
-    }
+    }*/
 
 }

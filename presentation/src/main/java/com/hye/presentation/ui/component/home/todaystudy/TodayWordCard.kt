@@ -49,20 +49,20 @@ fun TodayWordCard(
     onNavigateToSpeechScreen: (String, String) -> Unit,
     onNavigateToWriteScreen: (String,String) -> Unit,
     documentId: String,
-    isBookmarked: Boolean,
     korean: String,
     english: String,
     currentIndex: Int,
     totalWords: Int,
+    isBookmarked : Boolean,
     onNextClick: () -> Unit = {},
     onPreviousClick: () -> Unit = {},
-    onBookmarkToggle : (String, Boolean)-> Unit,
+    onBookmarkToggle : (String)-> Unit,
 ) {
 
     //documentId와 isBookmarked가 같으면 같은 람다 재사용
-    val handleBookmarkToggle = remember(documentId,isBookmarked) {
+    val handleBookmarkToggle = remember(documentId) {
         {
-            onBookmarkToggle(documentId, isBookmarked)
+            onBookmarkToggle(documentId)
         }
     }
 
@@ -173,7 +173,6 @@ fun SelectButtons(
     onNavigateToSpeechScreen: (String,String) -> Unit,
     onNavigateToWriteScreen: (String, String) -> Unit,
 ) {
-    val isMarked = false
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -238,7 +237,7 @@ fun SelectButtons(
 
 @Composable
 fun BookmarkSection(
-    isBookmarked : Boolean,
+    isBookmarked: Boolean,
     onBookmarkToggle : ()-> Unit,
 ){
     Row(

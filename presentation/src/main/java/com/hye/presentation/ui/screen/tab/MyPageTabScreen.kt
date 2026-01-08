@@ -31,7 +31,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,7 +41,6 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hye.presentation.R
 import com.hye.domain.model.AppLanguage
@@ -50,8 +48,6 @@ import com.hye.presentation.model.nameResId
 import com.hye.presentation.ui.model.SettingViewModel
 import com.hye.presentation.ui.model.SharedViewModel
 import com.hye.presentation.ui.theme.KLangComposePJTheme
-import com.hye.presentation.util.changeAppLanguage
-import kotlinx.coroutines.launch
 
 @Composable
 fun MyPageTabScreen(

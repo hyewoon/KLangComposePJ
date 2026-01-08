@@ -10,7 +10,6 @@ import com.hye.domain.result.AppResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -95,30 +94,22 @@ class StudyRepositoryImpl @Inject constructor(
         isBookmarked: Boolean,
         bookmarkedTimeStamp: Long,
     ): AppResult<Unit> {
-        return withContext(Dispatchers.IO) {
-            try {
-                val updatedRows = dao.updateBookmarkAndNotify(
+        return try {
+                val updatedRows = dao.updateBookmarkStatus(
                     documentId = documentId,
                     isBookmarked = isBookmarked,
                     bookmarkedTimeStamp = bookmarkedTimeStamp
                 )
 
-                if (updatedRows == 0) {
-                }
-
-                // 검증
-                delay(50)
-                val verified = dao.getWordById(documentId)
-                if (verified != null) {
+                if (updatedRows > 0) {
+                    AppResult.Success(Unit)
                 } else {
+                    AppResult.Failure(Exception("Failed to update bookmark status"))
                 }
-
-                AppResult.Success(Unit)
             } catch (e: Exception) {
                 AppResult.Failure(e)
             }
         }
-    }
 
     override fun getBookmarkedWords(isBookmarked: Boolean): Flow<AppResult<List<TargetWordWithAllInfoEntity>>> =
         flow {

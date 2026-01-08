@@ -36,7 +36,9 @@ data class TodayWordUiState(
     //오늘 학습한 단어를 저장 하는 용도
     val todayStudiedWords: Set<String> = emptySet(),
     //누적 학습 단어 count
-    val totalStudiedWords: Int = 0
+    val totalStudiedWords: Int = 0,
+    //북마크 단어
+    val isBookmarked: Boolean = false,
 
 ) {
     //계산 속성

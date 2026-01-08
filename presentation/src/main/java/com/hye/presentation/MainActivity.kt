@@ -8,11 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.lifecycle.lifecycleScope
-import com.hye.domain.model.AppLanguage
 import com.hye.domain.repository.datastore.PreferencesDataStoreRepository
 import com.hye.presentation.ui.model.SettingViewModel
 import com.hye.presentation.ui.screen.MainScreen

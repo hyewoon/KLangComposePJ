@@ -9,11 +9,9 @@ import com.hye.domain.usecase.LoadStudyWordUseCase
 import com.hye.presentation.model.TodayWordUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -48,6 +46,8 @@ class HomeViewModel @Inject constructor(
 
     private val _todayWordUiState = MutableStateFlow(TodayWordUiState())
     val todayWordUiState: StateFlow<TodayWordUiState> = _todayWordUiState.asStateFlow()
+    //로딩 여부
+    private var isDataLoaded = false
 
     init{
         //앱 시작하면 날짜 체크
@@ -56,20 +56,14 @@ class HomeViewModel @Inject constructor(
 
             preferences.getTodayStudiedWord().collectLatest{ todayWord->
                 _todayWordUiState.update{
-                    it.copy(todayStudiedWords = todayWord)
+                    it.copy(
+                        todayStudiedWords = todayWord)
                 }
 
             }
+            loadStudyWord(10)
         }
     }
-
-    //로딩 여부
-    private var isDataLoaded = false
-
-    init{
-        loadStudyWord(10)
-    }
-
 
     private fun loadStudyWord(count: Int) {
         //캐싱 처리: viewModel 생명주기 동안 여러번 호출될 수 있음
@@ -84,6 +78,7 @@ class HomeViewModel @Inject constructor(
                             it.copy(
                                 wordList = roomResult.data, //실제 데이터 넣기
                                 snackBarMessage = "",
+                                isBookmarked = roomResult.data.firstOrNull()?.isBookmarked ?: false
                             )
                         }
                     }
@@ -112,7 +107,9 @@ class HomeViewModel @Inject constructor(
 
                 _todayWordUiState.update {
                     it.copy(
-                        currentIndex = it.currentIndex + 1
+                        currentIndex = it.currentIndex + 1,
+                        isBookmarked = currentState.wordList[it.currentIndex].isBookmarked
+
                     )
                 }
             } else {
@@ -127,7 +124,10 @@ class HomeViewModel @Inject constructor(
         val currentState = _todayWordUiState.value
         if (currentState.hasPrevious) {
             _todayWordUiState.update {
-                it.copy(currentIndex = it.currentIndex - 1)
+                it.copy(
+                    currentIndex = it.currentIndex - 1,
+                    isBookmarked = currentState.wordList[it.currentIndex].isBookmarked
+                )
             }
         } else {
             _todayWordUiState.update {
@@ -149,10 +149,17 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun toggleBookmark(id: String, currentBookmarkState: Boolean) {
+    fun toggleBookmark(id: String) {
         viewModelScope.launch {
+            val currentBookmarkState = _todayWordUiState.value.isBookmarked
             val newBookmarkState = !currentBookmarkState
             val timeStamp = if (newBookmarkState) System.currentTimeMillis() else 0L
+
+            _todayWordUiState.update {
+                it.copy(
+                    isBookmarked = newBookmarkState,
+                    )
+            }
 
             roomRepository.updateBookmarkStatus(
                 documentId= id,

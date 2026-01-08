@@ -66,10 +66,11 @@ fun TodayStudyScreen(
     val currentWordExample = todayWordUiState.currentWordExample
     val snackBarMessage = todayWordUiState.snackBarMessage
     val todayStudiedWordCount : Int = todayWordUiState.todayStudiedWordCount
+    val isBookmarked = todayWordUiState.isBookmarked
 
-    val onBookmarkToggle = remember<(String, Boolean) -> Unit> {
-        { documentId, isBookmarked ->
-            homeViewModel.toggleBookmark(documentId, isBookmarked)
+    val onBookmarkToggle = remember<(String) -> Unit> {
+        { documentId : String->
+            homeViewModel.toggleBookmark(documentId)
         }
     }
     val onNextClick = remember {
@@ -107,6 +108,7 @@ fun TodayStudyScreen(
                 currentWordExample = currentWordExample,
                 onNextClick = onNextClick,
                 onPreviousClick = onPreviousClick,
+                isBookmarked = isBookmarked,
                 onBookmarkToggle = onBookmarkToggle,
                 todayStudiedWordCount = todayStudiedWordCount,
             )
@@ -124,10 +126,11 @@ fun TodayStudyContent(
     totalWords: Int,
     hasNext: Boolean,
     hasPrevious: Boolean,
+    isBookmarked: Boolean,
     currentWordExample: WordExampleInfoEntity,
     onPreviousClick: () -> Unit = {},
     onNextClick: () -> Unit = {},
-    onBookmarkToggle: (String, Boolean)->Unit,
+    onBookmarkToggle: (String)->Unit,
     todayStudiedWordCount: Int
     ) {
 
@@ -149,7 +152,7 @@ fun TodayStudyContent(
                     onNavigateToSpeechScreen = onNavigateToSpeechScreen,
                     onNavigateToWriteScreen = onNavigateToWriteScreen,
                     documentId = currentWord.documentId,
-                    isBookmarked = currentWord.isBookmarked,
+                    isBookmarked = isBookmarked,
                     korean = currentWord.korean,
                     english = currentWord.english,
                     currentIndex = currentIndex,
