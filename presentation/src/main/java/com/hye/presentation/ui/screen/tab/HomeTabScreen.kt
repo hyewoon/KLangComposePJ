@@ -27,8 +27,10 @@ fun HomeTabScreen(onNavigateToTodayStudy: () -> Unit,
                   sharedViewModel: SharedViewModel,
                   snackBarHostState: SnackbarHostState,
                   ) {
-
-    val totalWordCount by homeViewModel.totalWordCount.collectAsStateWithLifecycle()
+    val todayWordUiState by homeViewModel.todayWordUiState.collectAsStateWithLifecycle()
+    val todayStudiedWordCount:Int = todayWordUiState.todayStudiedWordCount
+    val todayTotalWords : Int = todayWordUiState.wordList.size
+    //val totalWordCount by homeViewModel.totalWordCount.collectAsStateWithLifecycle()
     KLangComposePJTheme {
         Surface(
             modifier = Modifier
@@ -41,8 +43,9 @@ fun HomeTabScreen(onNavigateToTodayStudy: () -> Unit,
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 TodayStudyCard(
-                    onNavigateToTodayStudy, homeViewModel,totalWordCount
+                    onNavigateToTodayStudy, homeViewModel,todayTotalWords,todayStudiedWordCount
                 )
+
                 DailyQuestCard()
 
             }

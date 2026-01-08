@@ -1,5 +1,10 @@
 package com.hye.presentation.ui.screen.game
 
+import android.content.Context
+import android.net.http.HttpException
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresExtension
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,42 +17,50 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hye.domain.result.AppResult
+import com.hye.presentation.R
 import com.hye.presentation.ui.component.dialog.CustomConfirmationDialog
 import com.hye.presentation.ui.component.indicator.CustomIndeterminateCircularIndicator
 import com.hye.presentation.ui.component.list.SearchWordListItem
 import com.hye.presentation.ui.component.searchbar.CustomSearchBar
 import com.hye.presentation.ui.model.SearchViewModel
 import com.hye.presentation.ui.model.SharedViewModel
+import java.net.ConnectException
+import java.net.SocketException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @Composable
 fun SearchScreen(
     onNavigateToSearchScreen: () -> Unit,
     onNavigateToSearchDetailScreen: (String) -> Unit,
     sharedViewModel: SharedViewModel,
-    searchViewModel: SearchViewModel = hiltViewModel(),
+    searchViewModel: SearchViewModel,
+    onDetailNavigate: (String) -> Unit,
 ) {
     //val searchQuery by searchViewModel.searchQuery.collectAsStateWithLifecycle()
-
     var searchQuery by remember { mutableStateOf("") }
 
     val wordList by searchViewModel.wordList.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
 
     var showDialog by remember { mutableStateOf(false) }
-    var dialogTitle by remember { mutableStateOf("") }
-    var dialogText by remember { mutableStateOf("")}
+    var dialogTitle: Int by remember { mutableIntStateOf(0) }
+    var dialogText: Int by remember { mutableIntStateOf(0) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -81,7 +94,8 @@ fun SearchScreen(
                         modifier = Modifier.weight(1f),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("검색 결과가 없습니다.",
+                        Text(
+                            stringResource(R.string.search_response_message),
                             textAlign = TextAlign.Center,
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -103,6 +117,7 @@ fun SearchScreen(
                                  * */
                                 onItemClick = {
                                     onNavigateToSearchDetailScreen(word.targetCode)
+                                    Log.d("SearchScreen", "targetCode: ${word.targetCode}")
                                 }
 
                             )
@@ -113,41 +128,43 @@ fun SearchScreen(
             }
 
             is AppResult.Failure -> {
-                LaunchedEffect(response.exception){
+                val exception = response.exception
+                LaunchedEffect(response.exception) {
 
-                when {
-                    response.exception.contains("네트워크") -> {
-                        showDialog = true
-                        dialogTitle = "네트워크에 연결할 수 없습니다."
-                        dialogText = "네트워크를 연결해 주세요."
+                    when {
+                        exception is UnknownHostException ||
+                                exception is ConnectException ||
+                                exception is SocketException -> {
+                            showDialog = true
+                            dialogTitle = R.string.error_message_network
+                            dialogText = R.string.network_connection_required
 
 
+                        }
+
+                        response.exception is HttpException -> {
+                            showDialog = true
+                            dialogTitle = R.string.error_message_server
+                            dialogText = R.string.retry_again
+                        }
+
+                        response.exception is SocketTimeoutException -> {
+                            showDialog = true
+                            dialogTitle = R.string.connection_timed_out
+                            dialogText = R.string.retry_again
+                        }
+                        else -> {
+                            showDialog = true
+                            dialogTitle = R.string.error_occurred
+
+                        }
                     }
-
-                    response.exception.contains("서버") -> {
-                        showDialog = true
-                        dialogTitle = "서버에 연결할 수 없습니다."
-                        dialogText = "잠시 후 다시 시도해 주세요."
-                    }
-
-                    else -> {}
-                }
 
                 }
 
             }
 
             is AppResult.NoConstructor -> {
-                Box(
-                    modifier = Modifier.weight(1f),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "검색어를 입력해주세요.",
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
             }
 
         }
@@ -156,8 +173,8 @@ fun SearchScreen(
         CustomConfirmationDialog(
             onDismissRequest = { showDialog = false },
             onConfirmation = { showDialog = false },
-            dialogTitle = dialogTitle,
-            dialogText = dialogText
+            dialogTitle = stringResource(dialogTitle),
+            dialogText = stringResource(dialogText)
         )
 
     }

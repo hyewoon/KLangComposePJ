@@ -49,12 +49,19 @@ class HomeViewModel @Inject constructor(
     private val _todayWordUiState = MutableStateFlow(TodayWordUiState())
     val todayWordUiState: StateFlow<TodayWordUiState> = _todayWordUiState.asStateFlow()
 
-    val totalWordCount = preferences.getTotalWordCount()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = 0
-        )
+    init{
+        //앱 시작하면 날짜 체크
+        viewModelScope.launch{
+            preferences.checkDate()
+
+            preferences.getTodayStudiedWord().collectLatest{ todayWord->
+                _todayWordUiState.update{
+                    it.copy(todayStudiedWords = todayWord)
+                }
+
+            }
+        }
+    }
 
     //로딩 여부
     private var isDataLoaded = false
@@ -69,11 +76,9 @@ class HomeViewModel @Inject constructor(
         if (_todayWordUiState.value.wordList.isNotEmpty()) return
 
         viewModelScope.launch {
-            loadStudyWordUseCase(count).collectLatest { roomResult ->
-                when (roomResult) {
+                when (val roomResult = loadStudyWordUseCase(count)) {
                     is AppResult.Loading -> {
                         }
-
                     is AppResult.Success -> {
                         _todayWordUiState.update {
                             it.copy(
@@ -82,7 +87,6 @@ class HomeViewModel @Inject constructor(
                             )
                         }
                     }
-
                     is AppResult.Failure -> {
                         _todayWordUiState.update {
                             it.copy(
@@ -92,35 +96,29 @@ class HomeViewModel @Inject constructor(
                         }
                     }
 
-
                     is AppResult.NoConstructor -> {}
                 }
             }
         }
 
-
-    }
-
-
     fun moveToNext() {
-        val currentState = _todayWordUiState.value
-        if (currentState.hasNext) {
-            val wordId = currentState.currentWordId
-            _todayWordUiState.update {
-                it.copy(
-                    studiedWords = it.studiedWords + it.currentWordId,
-                    currentIndex = it.currentIndex + 1)
-            }
-            viewModelScope.launch {
-                preferences.incrementTotalWordCount(
-                    wordId = wordId,
-                    studiedWords = currentState.studiedWords,
-                    maxSize = currentState.wordList.size
-                )
-            }
-        } else {
-            _todayWordUiState.update {
-                it.copy(snackBarMessage = "마지막 단어입니다.")
+        viewModelScope.launch {
+            val currentState = _todayWordUiState.value
+            if (currentState.hasNext) {
+                val wordId = currentState.currentWordId
+
+                //LaunchedEffect처리
+                //preferences.saveStudiedWord(wordId)
+
+                _todayWordUiState.update {
+                    it.copy(
+                        currentIndex = it.currentIndex + 1
+                    )
+                }
+            } else {
+                _todayWordUiState.update {
+                    it.copy(snackBarMessage = "마지막 단어입니다.")
+                }
             }
         }
     }
@@ -135,6 +133,12 @@ class HomeViewModel @Inject constructor(
             _todayWordUiState.update {
                 it.copy(snackBarMessage = "첫번째 단어입니다.")
             }
+        }
+    }
+
+    fun saveStudiedWord(wordId: String){
+        viewModelScope.launch {
+            preferences.saveStudiedWord(wordId)
         }
     }
 

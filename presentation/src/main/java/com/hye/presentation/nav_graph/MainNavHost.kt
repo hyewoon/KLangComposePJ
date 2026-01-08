@@ -1,5 +1,6 @@
 package com.hye.presentation.nav_graph
 
+import android.annotation.SuppressLint
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -11,6 +12,8 @@ import com.hye.presentation.nav_graph.nav_graph_extended.addGameGraph
 import com.hye.presentation.nav_graph.nav_graph_extended.addHomeGraph
 import com.hye.presentation.ui.model.BookmarkViewModel
 import com.hye.presentation.ui.model.HomeViewModel
+import com.hye.presentation.ui.model.SearchViewModel
+import com.hye.presentation.ui.model.SettingViewModel
 import com.hye.presentation.ui.model.SharedViewModel
 import com.hye.presentation.ui.model.TTSViewModel
 import com.hye.presentation.ui.screen.tab.GameTabScreen
@@ -18,15 +21,18 @@ import com.hye.presentation.ui.screen.tab.HomeTabScreen
 import com.hye.presentation.ui.screen.tab.MyPageTabScreen
 
 
+@SuppressLint("NewApi")
 @Composable
 fun MainNavHost(
     navController: NavHostController,
     sharedViewModel: SharedViewModel,
     homeViewModel: HomeViewModel,
+    searchViewModel: SearchViewModel,
     bookmarkViewModel: BookmarkViewModel,
     ttsViewModel: TTSViewModel,
+    settingViewModel: SettingViewModel
 
-){
+    ){
     //snackbar 설정
     val snackBarHostState: SnackbarHostState = remember { SnackbarHostState() }
     NavHost(
@@ -58,8 +64,8 @@ fun MainNavHost(
         composable<ScreenRoutDef.TopLevel.MyPageTab> {
             MyPageTabScreen(
                 onNavigateToMyPageScreen = { navController.navigate(ScreenRoutDef.TopLevel.MyPageTab) },
-                sharedViewModel = sharedViewModel
-
+                sharedViewModel = sharedViewModel,
+                settingViewModel = settingViewModel
             )
         }
 
@@ -106,9 +112,10 @@ fun MainNavHost(
                 )
             },
             bookmarkViewModel = bookmarkViewModel,
-            onNavigateToSearchDetailScreen = {targetCode ->
+            onNavigateToSearchDetailScreen = { targetCode ->
                 navController.navigate(ScreenRoutDef.GameFlow.SearchDetailScreen(targetCode))
             },
+            searchViewModel = searchViewModel,
         )
     }
 

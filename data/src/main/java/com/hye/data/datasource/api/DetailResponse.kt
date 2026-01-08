@@ -27,25 +27,25 @@ data class TargetWordInfo(
     @PropertyElement(name = "pos")
     val pos: String = "",
     @Element(name = "sense_info")
-    val senseInformation: List<SenseInformation> = listOf(),
+    val senseInformation: List<SenseInformation>?= null,
 )
 
-@Xml(name = "sense_information")
+@Xml(name = "sense_info")
 data class SenseInformation(
     @PropertyElement(name = "sense_order")
     val senseOrder: Int = 0,
    @PropertyElement(name = "definition")
     val definition: String = "",
-    @Element(name = "example_Info")
-    val exampleInfo: List<ExampleInfo> = listOf()
+    @Element(name = "example_info")
+    val exampleInfo: List<ExampleInfo>? = null
 )
 
 @Xml(name = "example_info")
 data class ExampleInfo(
     @PropertyElement(name = "type")
-    val type: String = "",
+    val type: String= "",
     @PropertyElement(name = "example")
-    val example: String = ""
+    val example: String =""
 )
 
 

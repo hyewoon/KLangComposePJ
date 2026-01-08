@@ -1,12 +1,15 @@
 package com.hye.presentation.nav_graph.nav_graph_extended
 
 
+import android.os.Build
+import androidx.annotation.RequiresExtension
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.toRoute
 import com.hye.presentation.nav_graph.ScreenRoutDef
 import com.hye.presentation.ui.model.BookmarkViewModel
+import com.hye.presentation.ui.model.SearchViewModel
 import com.hye.presentation.ui.screen.game.DrawScreen
 import com.hye.presentation.ui.screen.game.SearchScreen
 import com.hye.presentation.ui.screen.game.SpeechToTextScreen
@@ -16,9 +19,11 @@ import com.hye.presentation.ui.model.SharedViewModel
 import com.hye.presentation.ui.screen.game.DetailVocabularyScreen
 import com.hye.presentation.ui.screen.game.SearchDetailScreen
 
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 fun NavGraphBuilder.addGameGraph(
     bookmarkViewModel: BookmarkViewModel,
     sharedViewModel: SharedViewModel,
+    searchViewModel: SearchViewModel,
     onNavigateToDrawScreen: () -> Unit,
     onNavigateToSearchScreen: () -> Unit,
     onNavigateToSearchDetailScreen: (String)-> Unit,
@@ -35,19 +40,7 @@ fun NavGraphBuilder.addGameGraph(
                 sharedViewModel = sharedViewModel,
             )
         }
-        composable<ScreenRoutDef.GameFlow.SearchScreen> {
-            SearchScreen(
-                onNavigateToSearchScreen = onNavigateToSearchScreen,
-                sharedViewModel = sharedViewModel,
-                onNavigateToSearchDetailScreen = onNavigateToSearchDetailScreen
-            )
-        }
-        composable<ScreenRoutDef.GameFlow.SearchDetailScreen> {
-            val args = it.toRoute<ScreenRoutDef.GameFlow.SearchDetailScreen>()
-           SearchDetailScreen(
-               targetCode = args.targetCode)
 
-        }
         composable<ScreenRoutDef.GameFlow.TextToSpeechScreen> {
             TextToSpeechScreen(
                 onNavigateToTextToSpeechScreen = onNavigateToTextToSpeechScreen,
@@ -61,6 +54,28 @@ fun NavGraphBuilder.addGameGraph(
             )
 
         }
+        navigation<ScreenRoutDef.GameFlow.SearchScreenGraph>(
+            startDestination = ScreenRoutDef.GameFlow.SearchScreen
+        ){
+            composable<ScreenRoutDef.GameFlow.SearchScreen> {
+                SearchScreen(
+                    onNavigateToSearchScreen = onNavigateToSearchScreen,
+                    sharedViewModel = sharedViewModel,
+                    onNavigateToSearchDetailScreen = onNavigateToSearchDetailScreen,
+                    searchViewModel = searchViewModel,
+                    onDetailNavigate = onNavigateToDetailScreen,
+                )
+            }
+            composable<ScreenRoutDef.GameFlow.SearchDetailScreen> {backStackEntry->
+                val args = backStackEntry.toRoute<ScreenRoutDef.GameFlow.SearchDetailScreen>()
+                SearchDetailScreen(
+                    targetCode = args.targetCode,
+                    searchViewModel = searchViewModel,
+                    sharedViewModel = sharedViewModel
+                    )
+            }
+        }
+
         navigation<ScreenRoutDef.GameFlow.VocabularyScreenGraph>(
             startDestination = ScreenRoutDef.GameFlow.VocabularyScreen
         ){

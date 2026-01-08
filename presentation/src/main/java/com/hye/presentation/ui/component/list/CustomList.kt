@@ -147,7 +147,7 @@ fun SearchWordListItem(
             )
             Spacer(modifier = Modifier.width(8.dp))
             val translations =
-                word.sense.map { it.transWord }.toString().removeSurrounding("[", "]") ?: ""
+                word.sense.take(5).joinToString { it.transWord }
             Text(
                 text = translations,
                 modifier = Modifier.alignByBaseline(),

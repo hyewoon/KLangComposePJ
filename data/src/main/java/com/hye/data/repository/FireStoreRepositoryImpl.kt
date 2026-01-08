@@ -24,7 +24,7 @@ class FireStoreRepositoryImpl @Inject constructor(
     override suspend fun getStudyWordFromFireStore(count: Long): List<TargetWordWithAllInfoEntity> =
         runCatching {
 
-            // preference.saveDocumentId("")
+             //preferences.saveDocumentId("")
 
             val lastDocId: String = preferences.getDocumentId().first()
 

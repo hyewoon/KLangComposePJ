@@ -12,6 +12,7 @@ import com.hye.presentation.R
 val PretendardFontFamily = FontFamily(
     Font(R.font.pretendard_variable, FontWeight.Normal)
 )
+
 // Set of Material typography styles to start with
 val Typography = Typography(
 
@@ -62,6 +63,4 @@ val Typography = Typography(
         lineHeight = 10.sp,
         letterSpacing = 0.5.sp
     )
-
-
 )

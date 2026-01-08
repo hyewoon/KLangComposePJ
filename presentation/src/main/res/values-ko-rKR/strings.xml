@@ -22,4 +22,15 @@
     <string name="quest">일일 퀘스트</string>
     <string name="connection_timed_out">연결 시간이 초과되었습니다.</string>
     <string name="error_occurred">오류가 발생했습니다.</string>
+    <string name="language_setting">언어 설정</string>
+    <string name="alarm_setting">알람 설정</string>
+
+    //Language-setting
+    <string name="language_english">영어</string>
+    <string name="language_korean">한국어</string>
+    <string name="save">저장</string>
+    <string name="setting">설정</string>
+    <string name="vocabulary_learned">누적 학습 단어</string>
+
+
 </resources>

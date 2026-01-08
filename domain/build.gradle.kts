@@ -17,5 +17,6 @@ kotlin {
 dependencies{
 
     implementation(libs.bundles.utils)
+    implementation(libs.androidx.annotation.jvm)
 
 }

@@ -85,6 +85,8 @@ dependencies {
     implementation(libs.mockk)
     implementation(libs.kotlinx.coroutines.test)
     implementation(libs.androidx.foundation.layout)
+    implementation(libs.androidx.foundation.layout)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
     ksp(libs.hilt.android.compiler)
 
     //Utilities

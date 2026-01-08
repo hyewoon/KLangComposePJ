@@ -22,4 +22,13 @@
     <string name="quest">quest</string>
     <string name="connection_timed_out">Connection timed out.</string>
     <string name="error_occurred">An error occurred.</string>
+    <string name="language_setting">Language Setting</string>
+    <string name="alarm_setting">Alarm Setting</string>
+
+    //Language setting
+    <string name="language_english">English</string>
+    <string name="language_korean">Korean</string>
+    <string name="save">save</string>
+    <string name="setting">setting</string>
+    <string name="vocabulary_learned">vocabulary learned</string>
 </resources>

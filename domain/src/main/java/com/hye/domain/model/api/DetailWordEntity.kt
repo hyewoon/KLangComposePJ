@@ -7,10 +7,10 @@ data class DetailWordEntity(
     val word: String = "",
     val pos: String = "",
     val wordGrade: String = "",
-    val senses: List<Any> = mutableListOf(),
+    val senses: List<SenseInformation> = mutableListOf(),
 
     )
-data class SensInformation(
+data class SenseInformation(
     val senseOrder: Int = 0,
     val definition: String = "",
     val exampleInfo: List<ExampleInfo> = mutableListOf()
