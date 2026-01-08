@@ -80,19 +80,12 @@ interface TargetWordDao {
 
     @Transaction
     @Query("SELECT* FROM target_word WHERE todayString = :todayString")
-    fun searchTargetWordByDate(todayString: String): Flow<List<TargetWordWithAllInfo>>
+    suspend fun searchTargetWordByDate(todayString: String): List<TargetWordWithAllInfo>
 
-    @Transaction
-    @Query("SELECT* FROM target_word WHERE todayString = :todayString")
-    suspend fun searchTargetWordByDateOnce(todayString: String): List<TargetWordWithAllInfo>
 
     @Transaction
     @Query("SELECT * FROM target_word")
-    fun getAllTargetWords(): Flow<List<TargetWordWithAllInfo>>
-
-    @Transaction
-    @Query("SELECT * FROM target_word")
-    suspend fun getAllTargetWordsOnce(): List<TargetWordWithAllInfo>
+    suspend fun getAllTargetWords(): List<TargetWordWithAllInfo>
 
     /*
     * 북마크 상태 업데이트
@@ -128,7 +121,6 @@ interface TargetWordDao {
         // 🔥 여러 쿼리 실행으로 모든 Flow 트리거
         if (result > 0) {
             getWordById(documentId)
-            getAllTargetWordsOnce()
             getBookmarkedWordsOnce(true)
             getBookmarkedWordsOnce(false)
         }

@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,7 +56,7 @@ fun TodayStudyScreen(
     snackBarHostState: SnackbarHostState,
 ) {
     val todayWordUiState by homeViewModel.todayWordUiState.collectAsStateWithLifecycle()
-    val totalWordCount by sharedViewModel.totalWordCount.collectAsStateWithLifecycle()
+    //val totalWordCount by sharedViewModel.totalWordCount.collectAsStateWithLifecycle()
 
     val currentWord = todayWordUiState.currentWord
     val currentIndex = todayWordUiState.currentIndex
@@ -64,7 +65,7 @@ fun TodayStudyScreen(
     val hasPrevious = todayWordUiState.hasPrevious
     val currentWordExample = todayWordUiState.currentWordExample
     val snackBarMessage = todayWordUiState.snackBarMessage
-    val studiedWordCount : Int = todayWordUiState.studiedWordCount
+    val todayStudiedWordCount : Int = todayWordUiState.todayStudiedWordCount
 
     val onBookmarkToggle = remember<(String, Boolean) -> Unit> {
         { documentId, isBookmarked ->
@@ -80,6 +81,10 @@ fun TodayStudyScreen(
     val onPreviousClick = remember {
         { homeViewModel.moveToPrevious() }
     }
+
+           LaunchedEffect(currentIndex){
+               homeViewModel.saveStudiedWord(currentWord.documentId)
+           }
 
             // 스낵바 처리
             LaunchedEffect(todayWordUiState.snackBarMessage) {
@@ -103,8 +108,7 @@ fun TodayStudyScreen(
                 onNextClick = onNextClick,
                 onPreviousClick = onPreviousClick,
                 onBookmarkToggle = onBookmarkToggle,
-                studiedWordCount = studiedWordCount
-
+                todayStudiedWordCount = todayStudiedWordCount,
             )
         }
 
@@ -124,7 +128,7 @@ fun TodayStudyContent(
     onPreviousClick: () -> Unit = {},
     onNextClick: () -> Unit = {},
     onBookmarkToggle: (String, Boolean)->Unit,
-    studiedWordCount: Int 
+    todayStudiedWordCount: Int
     ) {
 
     Column(
@@ -134,7 +138,7 @@ fun TodayStudyContent(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LinearProgressIndicatorBox(studiedWordCount, totalWords)
+        LinearProgressIndicatorBox(todayStudiedWordCount, totalWords)
         Box(modifier = Modifier.weight(1f)) {
             key(
                 currentWord.documentId,
@@ -179,7 +183,7 @@ fun LinearProgressIndicatorBox(current: Int, max: Int) {
             trackColor = MaterialTheme.colorScheme.secondary,
             strokeCap = StrokeCap.Round,
             modifier = Modifier
-                .wrapContentWidth()
+                .weight(1f)
                 .height(20.dp)
                 .clip(RoundedCornerShape(10.dp))
         )
@@ -237,7 +241,7 @@ fun ExampleCard(
                 )
             }
             Text(
-                text = "예문 출처: 표준한국어대사전",
+                text = stringResource(R.string.example_reference),
                 fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.surfaceTint,
                 textAlign = TextAlign.End,

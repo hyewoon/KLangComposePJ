@@ -57,47 +57,46 @@ class LoadStudyWordUseCase(
 
     private var lastInsertDate: String? = null
 
-    operator fun invoke(count: Int): Flow<AppResult<List<TargetWordWithAllInfoEntity>>> = flow {
+    suspend operator fun invoke(count: Int): AppResult<List<TargetWordWithAllInfoEntity>> {
         val today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREA))
         val countLong = count.toLong()
 
-        emit(AppResult.Loading)
-
-        try {
-            //오늘 이미 로드했으면 바로 Flow 구독
+        return try {
+            //1. 캐시 확인
             if (lastInsertDate == today) {
-                emitAll(studyRepository.getStudyWords(today))
-                return@flow
+                return studyRepository.getStudyWords(today)
             }
 
+            //2. Room에서 전체 데이터 확인
+            val roomResult = studyRepository.getAllStudyWords()
+            if(roomResult is AppResult.Failure) {
+                return AppResult.Failure(roomResult.exception)
+            }
 
-            when (val roomResult = studyRepository.getAllStudyWordsOnce()) {
-                is AppResult.Success -> {
-                    val todayData = roomResult.data.filter { it.todayString == today }
+            val todayData = (roomResult as AppResult.Success).data.filter{it.todayString ==today}
 
+                    //오늘 날짜 해당하는 데이터 존재-> 그 값 가져오기
                     if (todayData.isNotEmpty()) {
                         lastInsertDate = today
-                        emitAll(studyRepository.getStudyWords(today))
-                        return@flow
+                        return studyRepository.getStudyWords(today)
                     }
 
-                    if (roomResult.data.isNotEmpty()) {
-                     studyRepository.deleteOldAndNonBookmarkedWords(today)
-
-                    }
+                    studyRepository.deleteOldAndNonBookmarkedWords(today)
                     val firestoreResult =
                         firestoreRepository.getStudyWordFromFireStore(countLong)
-                    studyRepository.insertStudyWords(firestoreResult)
-                    lastInsertDate = today
-
-                    emitAll(studyRepository.getStudyWords(today))
-                }
-                else -> {
-                    emit(roomResult)
-                }
+           //저장
+            val insertResult = studyRepository.insertStudyWords(firestoreResult)
+            if (insertResult is AppResult.Failure) {
+                return AppResult.Failure(insertResult.exception)
             }
+            //저장 성공 → 데이터 반환
+            lastInsertDate = today
+            studyRepository.getStudyWords(today)
+
         } catch (e: Exception) {
-            emit(AppResult.Failure(e.toString()))
+            AppResult.Failure(e)
         }
     }
 }
+
+
