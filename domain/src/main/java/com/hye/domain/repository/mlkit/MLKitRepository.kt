@@ -7,5 +7,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface MLKitRepository {
     suspend fun initialize()
-    suspend fun recognize(strokes: List<HandWritingStroke>): Flow<AppResult<HandWritingAnalysis>>
+    suspend fun recognize(strokes: List<HandWritingStroke>): AppResult<String>
 }

@@ -31,7 +31,7 @@ import javax.inject.Inject
 *
 * */
 class MLKitRepositoryImpl @Inject constructor(
-    private val handwriteValid: HandWritingValidator
+   // private val handwriteValid: HandWritingValidator
 ) : MLKitRepository {
     private var cleanupJob: Job? = null
 
@@ -56,39 +56,21 @@ class MLKitRepositoryImpl @Inject constructor(
     }
 
 
-    override suspend fun recognize(strokes: List<HandWritingStroke>) = flow<AppResult<HandWritingAnalysis>> {
-        val ink = convertToInk(strokes).getOrThrow()
-        val currentRecognizer = recognizer ?: throw Exception("Recognizer not initialized")
-        val result = currentRecognizer.recognize(ink).await()
-        lastUsedTime = System.currentTimeMillis()
-        //결과값 리스트로 반환
-        val candidateTexts = result.candidates.map{it.text}
-
-        val bestResult = result.candidates.firstOrNull()?.text ?: "인식 실패"
-        val firstCandidate = result.candidates.firstOrNull()
-
-        result.candidates.forEachIndexed { index, candidate ->
-            println("Candidate $index: ${candidate.text} with score: ${candidate.score}")
+    override suspend fun recognize(strokes: List<HandWritingStroke>): AppResult<String> {
+        return try {
+            val ink = convertToInk(strokes).getOrThrow()
+            val currentRecognizer = recognizer ?: throw Exception("Recognizer not initialized")
+            val result = currentRecognizer.recognize(ink).await()
+            //val first = result.candidates[0].text
+            val first = result.candidates.firstOrNull()?.text
+                ?: return AppResult.Failure(
+                Exception(
+                    "No result"
+                ))
+            AppResult.Success(first)
+        }catch(e:Exception){
+            AppResult.Failure(e)
         }
-
-        // 유효성 검사
-        val analysis = handwriteValid.validateHandWriting(candidateTexts)
-
-        val candidate = try {
-            firstCandidate?.javaClass?.getDeclaredMethod("getScore")
-                ?.invoke(firstCandidate) as? Number
-        } catch (e: NoSuchMethodException) {
-            println("score 필드 없음")
-            null
-
-        }
-
-        emit(AppResult.Success(analysis))
-        scheduleCleanUp()
-
-
-    }.catch {
-        emit(AppResult.Failure(Throwable("Unknown error")))
     }
 
     private fun scheduleCleanUp() {
