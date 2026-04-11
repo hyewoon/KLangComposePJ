@@ -1,6 +1,5 @@
 package com.hye.presentation.ui.screen.game
 
-import android.content.Context
 import android.net.http.HttpException
 import android.os.Build
 import android.util.Log
@@ -27,7 +26,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hye.domain.result.AppResult
 import com.hye.presentation.R

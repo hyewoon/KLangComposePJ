@@ -8,7 +8,6 @@ import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 import com.hye.domain.repository.roomdb.StudyRepository
 import com.hye.domain.result.AppResult
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map

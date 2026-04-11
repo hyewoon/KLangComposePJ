@@ -1,6 +1,5 @@
 package com.hye.domain.model
 
-import androidx.annotation.StringRes
 
 
 enum class AppLanguage(val code: String){
