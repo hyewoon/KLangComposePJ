@@ -61,7 +61,7 @@ class FireStoreRepositoryImpl @Inject constructor(
             fireStore.collection("words1")
                 .orderBy("frequency", Query.Direction.DESCENDING)
                 .orderBy("korean", Query.Direction.ASCENDING)
-                .startAfter(lastDoc) // 마지막 문서 다음부터 시작
+                .startAfter(lastDoc) // 마지막 문서 다음 부터 시작
                 .limit(count)
 
         }
