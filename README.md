@@ -11,28 +11,6 @@
 * 신뢰할 수 있는 단어데이터베이스인 **'한국어기초사전'API**에서 제공하는 단어 정보와 예문을 학습 할 수 있습니다.
 
 
-## ✨compose  회고
-
- **💡왜 컴포넌트를 쪼갤까?** </br>
- 처음에는 '재사용성'정도를 생각했는데, **불필요한 recompostion을 방지** 하기 위해서 였습니다. </br>
- **상황**:   Card 내부에 있는 북마크 버튼을 클릭하면 카드 전체가 다시 그려짐(Layout Inspector로 확인)</br> 
- **개선** : 북마크 버튼 별도 컴포넌트로 분리/ UiState 전체를 넘기는 것이 아니라 필요한 속성만 넘기기</br>
-
- **💡Best Practice는?**</br>
- **파라미터는 필요한 것만 primitive 타입으로 넘기기**</br>
- 객체 전체를 넘기면 필요한 속성이 아닌, 관련없는 다른 속성이 변경되어도 recompositon이 발생합니다.</br>
-
- **💡깨달은점**</br>
- 화면을 단순히 xml에서 Compose로 바꾸는 것이 목표가 아니라. **Compose의 동작 원리를 이해하고 그에 맞게 설계**해야함을 깨달았습니다. </br>
- 
-
- |기술 |적용사항 |
-|------------------------|------|
-| **Animation in Compose** |xml기반 프로젝트에서 MotionLayout을 이용해 애니메이션 효과를 준 것을 Compose Animation( setContentSize()) 통해 더 간결한 코드로 구현|
-| **androidView</br>(Using Views in Compose)** |안드로이드 View를 상속받은 CustomView를 Compose에 적용하기 위해 AndroidView()활용 |
-</br>
-
-
 
  ## 2️⃣ 개발인원
 |역할  |이름 |
@@ -98,4 +76,28 @@
 
 
 ![search](https://github.com/user-attachments/assets/aed37869-f626-4b9f-b1e1-30cbd4341eba)
+
+
+## ✨compose  회고
+
+ **💡왜 컴포넌트를 쪼갤까?** </br>
+ 처음에는 '재사용성'정도를 생각했는데, **불필요한 recompostion을 방지** 하기 위해서 였습니다. </br>
+ **상황**:   Card 내부에 있는 북마크 버튼을 클릭하면 카드 전체가 다시 그려짐(Layout Inspector로 확인)</br> 
+ **개선** : 북마크 버튼 별도 컴포넌트로 분리/ UiState 전체를 넘기는 것이 아니라 필요한 속성만 넘기기</br>
+
+ **💡Best Practice는?**</br>
+ **파라미터는 필요한 것만 primitive 타입으로 넘기기**</br>
+ 객체 전체를 넘기면 필요한 속성이 아닌, 관련없는 다른 속성이 변경되어도 recompositon이 발생합니다.</br>
+
+ **💡깨달은점**</br>
+ 화면을 단순히 xml에서 Compose로 바꾸는 것이 목표가 아니라. **Compose의 동작 원리를 이해하고 그에 맞게 설계**해야함을 깨달았습니다. </br>
+ 
+
+ |기술 |적용사항 |
+|------------------------|------|
+| **Animation in Compose** |xml기반 프로젝트에서 MotionLayout을 이용해 애니메이션 효과를 준 것을 Compose Animation( setContentSize()) 통해 더 간결한 코드로 구현|
+| **androidView</br>(Using Views in Compose)** |안드로이드 View를 상속받은 CustomView를 Compose에 적용하기 위해 AndroidView()활용 |
+</br>
+
+
 
