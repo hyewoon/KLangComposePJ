@@ -2,7 +2,7 @@
 
 # 🪅KLang- 외국인을 위한 한국어 단어 학습 앱 </br>      (with COMPOSE)
 ### v1 :xml기반 프로젝트 v2:**Compose** 기반 프로젝트를 진행하고 있습니다.  
- (기존 프로젝트 확인은 <a href="https://github.com/hyewoon/KLangComposePJ">여기에서</a>)
+ (기존 프로젝트 확인은 <a href="https://github.com/hyewoon/KLangPJ">여기에서</a>)
 
 
 ## ✨compose  회고
