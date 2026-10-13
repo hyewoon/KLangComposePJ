@@ -62,7 +62,6 @@
 | **ViewModel & StateFlow** | 상태변수를 이용한 UI와 StateHolder 분리|
 | **RoomDB** | SSOT(Single Source Of Truth)와 Offline First 구현 |
 | **MLKit DigitalInk** | 손글씨 인식 기능을 onDevice로 구현 |
-| **TTS/STT** | 음성 및 텍스트 인식 |
 | **DataStore** | 설정 및 전역 변수 관리 |
 | **Hilt(DI)** | Hilt를 이용한 의존성 주입 |
 | **Serverless Firebase Firestore** | 데이터 저장 및 동기화 구현 |
