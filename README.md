@@ -37,57 +37,71 @@
 
  
 <br> </br>
- ## 4️⃣ 아키텍쳐
- ### 시스템 아키텍쳐
+## 3️⃣ 아키텍쳐
  <img width="752" height="344" alt="image" src="https://github.com/user-attachments/assets/a4ebfefc-b456-4619-9344-718c076cf609" />
 " />
 
 
-## 5️⃣ 기술 스택
+<br> </br>
+## 4️⃣ 기술적 고민
 
-| skills | 설명 |
-|------------------------|------|
-| **kotlin** |kotlin2.0 적용  |
-| **Compose UI/UX** |recomposition을 통한 UI자동 업데이트|
-| **MVVM 아키텍처 패턴** | 멀티모듈 적용 |
-| **ViewModel & StateFlow** | 상태변수를 이용한 UI와 StateHolder 분리|
-| **RoomDB** | SSOT(Single Source Of Truth)와 Offline First 구현 |
-| **MLKit DigitalInk** | 손글씨 인식 기능을 onDevice로 구현 |
-| **DataStore** | 설정 및 전역 변수 관리 |
-| **Hilt(DI)** | Hilt를 이용한 의존성 주입 |
-| **Serverless Firebase Firestore** | 데이터 저장 및 동기화 구현 |
-| **Navigation Graph** | 앱 화면 전환 |
+<details>
+<summary><b>1. ML Kit 자원 초기화 위치와 해제 시점</b></summary>
+
+**문제**
+- Fragment의 onViewCreated()에서 초기화하자, 첫 진입 시 인식에 실패하고 재진입 후에만 정상 동작
+
+**원인**
+- 첫 사용 시 인식 모델 다운로드와 Recognizer 준비에 시간이 걸리고, 준비 전에 입력이 들어옴
+- 화면이 재생성될 때마다 초기화가 반복됨
+
+**해결**
+- 초기화를 ViewModel로 옮겨 ViewModel 생존 기간 동안 한 번만 수행
+- Compose 전환 후 ViewModel이 백스택에 남으며 자원을 계속 점유하는 문제 → 5분 미사용 시, 백그라운드 진입 시 Recognizer 해제
+
+**결과**
+- 한 번 준비된 이후 재진입 시 바로 인식
+- Profiler 검증 결과 메모리 사용량 약 160MB에서 128MB로 감소
+
+**남은 과제**
+- 첫 진입 준비 시간은 그대로이므로, 초기화 상태(준비 중·완료·실패)를 UI에 표시하는 방식으로 보완 예정
+
+</details>
+
+<details>
+<summary><b>2. Room 데이터 조회: Flow 대신 suspend를 선택한 이유</b></summary>
+
+**문제** / **판단** / **결과** 순서로 작성
+
+</details>
+
+<details>
+<summary><b>3. 오프라인 학습을 위한 저장 전략</b></summary>
+
+**문제** / **해결** / **다음 단계(WorkManager)** 순서로 작성
+
+</details>
+ 
+<br> </br>
+
+## 5️⃣ 기술 스택
+| Skills | 설명 |
+|:---:|---|
+| **Kotlin** | Kotlin 2.0 적용 |
+| **Jetpack Compose** | 상태 기반 선언형 UI 구현, Layout Inspector로 불필요한 리컴포지션 확인 및 개선 |
+| **Architecture** | MVVM + UI-Domain-Data Layer 분리, 의존성 역전 원칙 적용 (XML·Compose 버전에서 Domain·Data Layer 재사용) |
+| **ViewModel & StateFlow** | UiState로 화면 상태를 통합 관리하고 UI와 State Holder 분리 |
+| **Coroutines & Flow** | 비동기 처리, 데이터 특성에 따라 Flow와 suspend 함수를 구분해 적용 |
+| **Hilt** | 의존성 주입 |
+| **Room · Firestore** | Firestore의 학습 데이터를 Room에 저장하는 Offline First 구조 (SSOT) |
+| **ML Kit Digital Ink** | 온디바이스 손글씨 인식, 생명주기에 맞춘 자원 초기화·해제 |
+
+
 
 
 </br>
 
-## 6️⃣ KLang 핵심기능
 
-
-![image](https://github.com/user-attachments/assets/f0b6d8eb-8934-4585-96b4-333258bce120)
-
-
-
- ✅ **오늘의 단어 학습** 
-  - 예문, 듣기, 말하기, 쓰기 기능을 통해 사용자가 직접 참여하는 학습
-  - 북마크 기능을 통해 나만의 단어장 만들기
-
-
-![Screen_recording_20251015_142642](https://github.com/user-attachments/assets/3a0322b5-3297-4cf0-93e6-bec056bb75bf)
-
-
-✅ **단어와 놀기 : MLKit 손글씨 인식기능**
-* 사용자가 손글씨를 입력하면 그에 해당하는 한글 단어를 비교해서 보여줌
-* 손글씨 정확성 높이기 위한 리팩토링 진행중 🚩
-
-![Screen_recording_20251015_135629](https://github.com/user-attachments/assets/844113af-b594-46f0-a4cb-b72194e018d0)
-
-✅ **단어와 놀기 : 검색 기능**
-
-* 궁금한 한국어를 검색하면 한국어기초사전 API 통해 상세 예문을 확인
-
-
-![search](https://github.com/user-attachments/assets/aed37869-f626-4b9f-b1e1-30cbd4341eba)
 
 
 ## ✨compose  회고
