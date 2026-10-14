@@ -9,10 +9,36 @@
 * **KLang** 은 외국인을 위한 한국어 단어 학습앱입니다.
 * 학습 길잡이인 캐릭터 'K(케이)'😸와 함께 언어(Lang:랑)을 학습한다는 의미를 담은 **KLang(케이랑)** 을 앱의 이름으로 선정하였습니다.
 * 신뢰할 수 있는 단어데이터베이스인 **'한국어기초사전'API**에서 제공하는 단어 정보와 예문을 학습 할 수 있습니다.
+ 
+## 6️⃣ KLang 핵심기능
+
+
+  ✅ **단어와 놀기 : MLKit 손글씨 인식기능**
+* 사용자가 손글씨를 입력하면 그에 해당하는 한글 단어를 비교해서 보여줌
+  
+![Screen_recording_20251015_135629](https://github.com/user-attachments/assets/844113af-b594-46f0-a4cb-b72194e018d0)
+
+ ✅ **오늘의 단어 학습** 
+  - 예문, 듣기, 말하기, 쓰기 기능을 통해 사용자가 직접 참여하는 학습
+  - 북마크 기능을 통해 나만의 단어장 만들기
+
+ ![Screen_recording_20251015_142642](https://github.com/user-attachments/assets/3a0322b5-3297-4cf0-93e6-bec056bb75bf)
+
+
+✅ **단어와 놀기 : 검색 기능**
+
+* 궁금한 한국어를 검색하면 한국어기초사전 API 통해 상세 예문을 확인
+
+![search](https://github.com/user-attachments/assets/aed37869-f626-4b9f-b1e1-30cbd4341eba)
+
+
+
+  
 
  ## 4️⃣ 아키텍쳐
  ### 시스템 아키텍쳐
- <img width="1031" height="593" alt="image" src="https://github.com/user-attachments/assets/d5bd66da-6198-41f1-8cb4-8e466501c6d7" />
+ <img width="752" height="344" alt="image" src="https://github.com/user-attachments/assets/a4ebfefc-b456-4619-9344-718c076cf609" />
+" />
 
 
 ## 5️⃣ 기술 스택
