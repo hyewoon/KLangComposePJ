@@ -38,8 +38,7 @@
  
 <br> </br>
 ## 3️⃣ 아키텍쳐
- <img width="752" height="344" alt="image" src="https://github.com/user-attachments/assets/a4ebfefc-b456-4619-9344-718c076cf609" />
-" />
+ <img width="800" height="400" alt="image" src="https://github.com/user-attachments/assets/fcd13862-6fe2-4458-bbe6-6ac359f8cb9e" />
 
 
 <br> </br>
