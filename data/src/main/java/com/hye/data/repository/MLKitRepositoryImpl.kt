@@ -27,7 +27,7 @@ import javax.inject.Inject
 *
 * */
 class MLKitRepositoryImpl @Inject constructor(
-   // private val handwriteValid: HandWritingValidator
+    // private val handwriteValid: HandWritingValidator
 ) : MLKitRepository {
     private var cleanupJob: Job? = null
 
@@ -35,49 +35,50 @@ class MLKitRepositoryImpl @Inject constructor(
     private var recognizer: DigitalInkRecognizer? = null
     private var model: DigitalInkRecognitionModel? = null
     private var isInitialized = false
-    private var lastUsedTime = 0L
-   // private val CLEANUP_DELAY = 5 * 60 * 1000L // 5분
+    private val CLEANUP_DELAY = 5 * 60 * 1000L // 5분
 
     // 개발/테스트 단계
-    private val CLEANUP_DELAY = 30 * 1000L // 30초
-   // private val AUTO_RELEASE_DELAY = 60 * 1000L // 1분
-   // private val AUTO_RELEASE_DELAY = 120 * 1000L // 2분
-
+   // private val CLEANUP_DELAY = 30 * 1000L // 30초
+    // private val AUTO_RELEASE_DELAY = 60 * 1000L // 1분
+    // private val AUTO_RELEASE_DELAY = 120 * 1000L // 2분
 
 
     /**
      * Ink 객체 build & 결과 값 받기
-     */ override suspend fun initialize() {
+     */
+    override suspend fun initialize() {
         setUpRecognizer()
     }
-
 
     override suspend fun recognize(strokes: List<HandWritingStroke>): AppResult<String> {
         return try {
             val ink = convertToInk(strokes).getOrThrow()
+            if (recognizer == null) setUpRecognizer()
             val currentRecognizer = recognizer ?: throw Exception("Recognizer not initialized")
             val result = currentRecognizer.recognize(ink).await()
-            //val first = result.candidates[0].text
+            scheduleCleanUp()
+
             val first = result.candidates.firstOrNull()?.text
                 ?: return AppResult.Failure(
-                Exception(
-                    "No result"
-                ))
+                    Exception(
+                        "No result"
+                    )
+                )
             AppResult.Success(first)
-        }catch(e:Exception){
+
+        } catch (e: Exception) {
             AppResult.Failure(e)
         }
+
     }
 
     private fun scheduleCleanUp() {
-        cleanupJob?.cancel()
-        GlobalScope.launch {
+        cleanupJob?.cancel()            // 이전 타이머 취소
+        cleanupJob = GlobalScope.launch { // 새 타이머 저장
             delay(CLEANUP_DELAY)
-            if (System.currentTimeMillis() - lastUsedTime >= CLEANUP_DELAY) {
-                recognizer?.close()
-                recognizer = null
-                isInitialized = false
-            }
+            recognizer?.close()
+            recognizer = null
+            isInitialized = false
 
         }
     }
@@ -106,9 +107,9 @@ class MLKitRepositoryImpl @Inject constructor(
     /**
      * recognizer -> viewModel에서 인식
      */
-   private suspend fun setUpRecognizer() {
-       //이미 초기화 되었는지 확인
-       if (isInitialized && recognizer != null) return
+    private suspend fun setUpRecognizer() {
+        //이미 초기화 되었는지 확인
+        if (isInitialized && recognizer != null) return
 
         val modelIdentifier = DigitalInkRecognitionModelIdentifier.fromLanguageTag("ko")
             ?: throw Exception("지원되지 않는 언어입니다.")
@@ -120,29 +121,31 @@ class MLKitRepositoryImpl @Inject constructor(
     /**
      * 모델객체 얻기
      */
-    private suspend fun downloadModelAndSetUpRecognizer(model: DigitalInkRecognitionModel) = runCatching {
+    private suspend fun downloadModelAndSetUpRecognizer(model: DigitalInkRecognitionModel) =
+        runCatching {
 
-        val currentModel = model ?: throw Exception("Model initialization failed")
+            val currentModel = model ?: throw Exception("Model initialization failed")
 
-        val isDownloaded = remoteModelManager.isModelDownloaded(currentModel).await()
+            val isDownloaded = remoteModelManager.isModelDownloaded(currentModel).await()
 
-        if(!isDownloaded) {
-            remoteModelManager.download(currentModel, DownloadConditions.Builder().build()).await()
+            if (!isDownloaded) {
+                remoteModelManager.download(currentModel, DownloadConditions.Builder().build())
+                    .await()
+            }
+
+            if (recognizer == null) {
+                recognizer = DigitalInkRecognition.getClient(
+                    DigitalInkRecognizerOptions.builder(currentModel).build()
+                )
+            }
+            isInitialized = true
+
+        }.onFailure {
+            it.printStackTrace()
+            isInitialized = false
+            recognizer?.close() //실패시에만 해제
+            recognizer = null
+
         }
-
-        if(recognizer == null) {
-            recognizer = DigitalInkRecognition.getClient(
-                DigitalInkRecognizerOptions.builder(currentModel).build()
-            )
-        }
-        isInitialized = true
-
-    }.onFailure {
-        it.printStackTrace()
-        isInitialized = false
-        recognizer?.close() //실패시에만 해제
-        recognizer = null
-
-    }
 }
 
