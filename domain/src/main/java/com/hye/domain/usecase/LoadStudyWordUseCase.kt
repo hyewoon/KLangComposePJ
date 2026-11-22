@@ -7,6 +7,7 @@ import com.hye.domain.result.AppResult
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import kotlin.coroutines.cancellation.CancellationException
 
 
 /*
@@ -65,32 +66,41 @@ class LoadStudyWordUseCase(
                 return studyRepository.getStudyWords(today)
             }
 
-            //2. Room에서 전체 데이터 확인
+            //2. Room에 오늘 데이터가 있는지 확인
             val roomResult = studyRepository.getAllStudyWords()
             if(roomResult is AppResult.Failure) {
                 return AppResult.Failure(roomResult.exception)
             }
+            val todayData =
+                (roomResult as AppResult.Success).data.filter { it.todayString == today }
 
-            val todayData = (roomResult as AppResult.Success).data.filter{it.todayString ==today}
+            //오늘 날짜 해당하는 데이터 존재-> 그 값 가져오기
+            if (todayData.isNotEmpty()) {
+                lastInsertDate = today
+                return studyRepository.getStudyWords(today)
+            }
+            //3. Firestore 조회를 먼저(실패하면 기존 데이터는 그대로 남음)
+            val words = firestoreRepository.getStudyWordFromFireStore(countLong)//단어받아오기
+            if (words.isEmpty()) {
+                return AppResult.Success(emptyList())
+            }
 
-                    //오늘 날짜 해당하는 데이터 존재-> 그 값 가져오기
-                    if (todayData.isNotEmpty()) {
-                        lastInsertDate = today
-                        return studyRepository.getStudyWords(today)
-                    }
-
-                    studyRepository.deleteOldAndNonBookmarkedWords(today)
-                    val firestoreResult =
-                        firestoreRepository.getStudyWordFromFireStore(countLong)
-           //저장
-            val insertResult = studyRepository.insertStudyWords(firestoreResult)
+            //4. 조회가 성공한 뒤에 삭제 + 저장
+            val deleteResult = studyRepository.deleteOldAndNonBookmarkedWords(today)
+            if (deleteResult is AppResult.Failure) {
+                return AppResult.Failure(deleteResult.exception)
+            }
+            val insertResult = studyRepository.insertStudyWords(words)
             if (insertResult is AppResult.Failure) {
                 return AppResult.Failure(insertResult.exception)
             }
-            //저장 성공 → 데이터 반환
+            //5.저장 성공 → 커서 보장(
+            firestoreRepository.saveDocumentId(words.last().documentId)
+
             lastInsertDate = today
             studyRepository.getStudyWords(today)
-
+        } catch (e: CancellationException) {
+            throw e                       // 취소는 삼키지 않고 다시 던짐
         } catch (e: Exception) {
             AppResult.Failure(e)
         }

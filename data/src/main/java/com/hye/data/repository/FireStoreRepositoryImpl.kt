@@ -21,30 +21,22 @@ class FireStoreRepositoryImpl @Inject constructor(
     private val fireStore: FirebaseFirestore,
     private val dtoToDomainMapper: DtoToDomainMapper,
 ) : FireStoreRepository {
-    override suspend fun getStudyWordFromFireStore(count: Long): List<TargetWordWithAllInfoEntity> =
-        runCatching {
 
-             //preferences.saveDocumentId("")
+    override suspend fun getStudyWordFromFireStore(count: Long): List<TargetWordWithAllInfoEntity> {
+        //preferences.saveDocumentId("")
+        val lastDocId: String = preferences.getDocumentId().first()
+        val snapshot = getFireStoreData(lastDocId, count)
 
-            val lastDocId: String = preferences.getDocumentId().first()
+        val words = snapshot.documents
+            .map { mapToTargetWordDto(it) }//snapShot을 FirestoreDto로 변환
+            .map { dtoToDomainMapper.mapToDomain(it) }// FirestoreDto를 DomainEntity로 변환
 
-            val snapshot = getFireStoreData(lastDocId, count)
+        return words
+    }
 
-            if (snapshot.documents.isNotEmpty()) {
-                val lastDocumentId = snapshot.documents.last().id
-                preferences.saveDocumentId(lastDocumentId)
-            }
-
-            val dtoList =
-                snapshot.documents.map { mapToTargetWordDto(it) } //snapShot을 FirestoreDto로 변환
-
-            dtoList.map { dtoToDomainMapper.mapToDomain(it) }// FirestoreDto를 DomainEntity로 변환
-
-        }.getOrElse { exception ->
-            exception.printStackTrace()
-            emptyList()
-
-        }
+    override suspend fun saveDocumentId(id: String) {
+        preferences.saveDocumentId(id)
+    }
 
     private suspend fun getFireStoreData(lastDocId: String, count: Long): QuerySnapshot {
         val snapshot = if (lastDocId.isEmpty()) {
@@ -52,25 +44,22 @@ class FireStoreRepositoryImpl @Inject constructor(
                 .orderBy("frequency", Query.Direction.DESCENDING)
                 .orderBy("korean", Query.Direction.ASCENDING)
                 .limit(count)
-
         } else {
             val lastDocRef = fireStore.collection("words1").document(lastDocId)
             val lastDoc = lastDocRef.get().await()
-            println("Found last document: ${lastDoc.exists()}, ID: ${lastDoc.id}")
-
+            if (!lastDoc.exists()) {
+                throw IllegalStateException("기준 문서가 존재하지 않음: $lastDocId")
+            }
             fireStore.collection("words1")
                 .orderBy("frequency", Query.Direction.DESCENDING)
                 .orderBy("korean", Query.Direction.ASCENDING)
                 .startAfter(lastDoc) // 마지막 문서 다음 부터 시작
                 .limit(count)
-
         }
             .get()
             .await()
         return snapshot
     }
-
-
 }
 
 private fun mapToTargetWordDto(doc: DocumentSnapshot) = FireStoreDto(
@@ -84,11 +73,7 @@ private fun mapToTargetWordDto(doc: DocumentSnapshot) = FireStoreDto(
 
     exampleInfo = parseExampleInfo(doc),
     pronunciationInfo = parsePronunciationInfo(doc)
-).also {
-    println("documentId: ${it.documentId}")
-    println("exampleInfo: ${it.exampleInfo}")
-    println("pronunciationInfo: ${it.pronunciationInfo}")
-}
+)
 
 @Suppress("UNCHECKED_CAST")
 private fun parseExampleInfo(doc: DocumentSnapshot) = runCatching {
