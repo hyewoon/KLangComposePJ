@@ -24,8 +24,8 @@ class FireStoreRepositoryImpl @Inject constructor(
 
     override suspend fun getStudyWordFromFireStore(count: Long): List<TargetWordWithAllInfoEntity> {
         //preferences.saveDocumentId("")
-        val lastDocId: String = preferences.getDocumentId().first()
-        val snapshot = getFireStoreData(lastDocId, count)
+        val lastTargetCode = preferences.getLastTargetCode().first()
+        val snapshot = getFireStoreData(lastTargetCode, count)
 
         val words = snapshot.documents
             .map { mapToTargetWordDto(it) }//snapShot을 FirestoreDto로 변환
@@ -34,75 +34,77 @@ class FireStoreRepositoryImpl @Inject constructor(
         return words
     }
 
-    override suspend fun saveDocumentId(id: String) {
-        preferences.saveDocumentId(id)
+    override suspend fun saveLastTargetCode(targetCode: Long) {
+        preferences.saveLastTargetCode(targetCode)
     }
 
-    private suspend fun getFireStoreData(lastDocId: String, count: Long): QuerySnapshot {
-        val snapshot = if (lastDocId.isEmpty()) {
-            fireStore.collection("words1")
-                .orderBy("frequency", Query.Direction.DESCENDING)
-                .orderBy("korean", Query.Direction.ASCENDING)
-                .limit(count)
+    private suspend fun getFireStoreData(lastTargetCode: Long?, count: Long): QuerySnapshot {
+        val baseQuery = fireStore.collection("words1")
+            .orderBy("frequency", Query.Direction.DESCENDING)
+            .orderBy("korean", Query.Direction.ASCENDING)
+
+        val query = if (lastTargetCode == null) {
+            baseQuery
         } else {
-            val lastDocRef = fireStore.collection("words1").document(lastDocId)
-            val lastDoc = lastDocRef.get().await()
-            if (!lastDoc.exists()) {
-                throw IllegalStateException("기준 문서가 존재하지 않음: $lastDocId")
-            }
-            fireStore.collection("words1")
-                .orderBy("frequency", Query.Direction.DESCENDING)
-                .orderBy("korean", Query.Direction.ASCENDING)
-                .startAfter(lastDoc) // 마지막 문서 다음 부터 시작
-                .limit(count)
+            val lastDoc = fireStore.collection("words1")
+                .whereEqualTo("targetCode", lastTargetCode)   // 0번에서 확인한 필드 이름으로
+                .limit(1)
+                .get()
+                .await()
+                .documents
+                .firstOrNull()
+                ?: throw IllegalStateException("기준 단어가 존재하지 않음: $lastTargetCode")
+
+            baseQuery.startAfter(lastDoc)
         }
-            .get()
-            .await()
-        return snapshot
+
+        return query.limit(count).get().await()
+
     }
+
+    private fun mapToTargetWordDto(doc: DocumentSnapshot) = FireStoreDto(
+        documentId = doc.id,
+        targetCode = doc.getLong("targetCode") ?: 0L,
+        frequency = doc.getLong("frequency") ?: 0L,
+        korean = doc.getString("korean") ?: "",
+        english = doc.getString("english") ?: "",
+        wordGrade = doc.getString("wordGrade") ?: "",
+        pos = doc.getString("pos") ?: "",
+
+        exampleInfo = parseExampleInfo(doc),
+        pronunciationInfo = parsePronunciationInfo(doc)
+    )
+
+    @Suppress("UNCHECKED_CAST")
+    private fun parseExampleInfo(doc: DocumentSnapshot) = runCatching {
+        val exampleInfo =
+            doc.get("example_info") as? List<Map<String, Any>> ?: emptyList<Map<String, Any>>()
+        exampleInfo.map { example ->
+            FireStoreExampleInfoDto(
+                type = example["type"] as? String ?: "",
+                example = example["example"] as? String ?: ""
+            )
+        }
+    }.onFailure {
+        println("Error parsing example_info: ${it.message}")
+
+    }.getOrDefault(emptyList())
+
+    @Suppress("UNCHECKED_CAST")
+    private fun parsePronunciationInfo(doc: DocumentSnapshot) = runCatching {
+        val pronunciationInfo =
+            doc.get("pronunciation_info") as? List<Map<String, Any>>
+                ?: emptyList<Map<String, Any>>()
+        pronunciationInfo.map { pronunciation ->
+            FireStorePronunciationInfoDto(
+                pronunciation = pronunciation["pronunciation_info.pronunciation"] as? String
+                    ?: "",
+                audioUrl = pronunciation["pronunciation_info.link"] as? String ?: ""
+            )
+        }
+    }.onFailure {
+        println("Error parsing pronunciation_info: ${it.message}")
+
+    }.getOrDefault(emptyList())
+
 }
-
-private fun mapToTargetWordDto(doc: DocumentSnapshot) = FireStoreDto(
-    documentId = doc.id,
-    targetCode = doc.getLong("targetCode") ?: 0L,
-    frequency = doc.getLong("frequency") ?: 0L,
-    korean = doc.getString("korean") ?: "",
-    english = doc.getString("english") ?: "",
-    wordGrade = doc.getString("wordGrade") ?: "",
-    pos = doc.getString("pos") ?: "",
-
-    exampleInfo = parseExampleInfo(doc),
-    pronunciationInfo = parsePronunciationInfo(doc)
-)
-
-@Suppress("UNCHECKED_CAST")
-private fun parseExampleInfo(doc: DocumentSnapshot) = runCatching {
-    val exampleInfo =
-        doc.get("example_info") as? List<Map<String, Any>> ?: emptyList<Map<String, Any>>()
-    exampleInfo.map { example ->
-        FireStoreExampleInfoDto(
-            type = example["type"] as? String ?: "",
-            example = example["example"] as? String ?: ""
-        )
-    }
-}.onFailure {
-    println("Error parsing example_info: ${it.message}")
-
-}.getOrDefault(emptyList())
-
-@Suppress("UNCHECKED_CAST")
-private fun parsePronunciationInfo(doc: DocumentSnapshot) = runCatching {
-    val pronunciationInfo =
-        doc.get("pronunciation_info") as? List<Map<String, Any>>
-            ?: emptyList<Map<String, Any>>()
-    pronunciationInfo.map { pronunciation ->
-        FireStorePronunciationInfoDto(
-            pronunciation = pronunciation["pronunciation_info.pronunciation"] as? String
-                ?: "",
-            audioUrl = pronunciation["pronunciation_info.link"] as? String ?: ""
-        )
-    }
-}.onFailure {
-    println("Error parsing pronunciation_info: ${it.message}")
-
-}.getOrDefault(emptyList())

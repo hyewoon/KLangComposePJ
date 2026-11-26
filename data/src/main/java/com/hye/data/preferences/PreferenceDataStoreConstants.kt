@@ -1,13 +1,17 @@
 package com.hye.data.preferences
 
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 
 object PreferenceDataStoreConstants {
+/*
+* 단어다운로드관련
+* */
+     val LAST_TARGET_CODE = longPreferencesKey("last_target_code")
 
-    //단어 다운 로드 관련(firestore)
-    val DOCUMENT_ID = stringPreferencesKey("document_id")
+
     /*
     * 단어 학습 관련
     * CURRENT_WORD_COUNT: 현재 학습 한 단어 ID set

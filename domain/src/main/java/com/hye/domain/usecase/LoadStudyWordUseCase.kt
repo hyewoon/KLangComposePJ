@@ -95,7 +95,7 @@ class LoadStudyWordUseCase(
                 return AppResult.Failure(insertResult.exception)
             }
             //5.저장 성공 → 커서 보장(
-            firestoreRepository.saveDocumentId(words.last().documentId)
+            firestoreRepository.saveLastTargetCode(words.last().targetCode)
 
             lastInsertDate = today
             studyRepository.getStudyWords(today)

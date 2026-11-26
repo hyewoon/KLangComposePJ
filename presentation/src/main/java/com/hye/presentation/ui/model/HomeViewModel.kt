@@ -12,9 +12,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
 /*init {
     viewModelScope.launch {
@@ -46,55 +48,62 @@ class HomeViewModel @Inject constructor(
 
     private val _todayWordUiState = MutableStateFlow(TodayWordUiState())
     val todayWordUiState: StateFlow<TodayWordUiState> = _todayWordUiState.asStateFlow()
+
     //로딩 여부
     private var isDataLoaded = false
 
-    init{
+    init {
         //앱 시작하면 날짜 체크
-        viewModelScope.launch{
+        viewModelScope.launch {
             preferences.checkDate()
-
-            preferences.getTodayStudiedWord().collectLatest{ todayWord->
-                _todayWordUiState.update{
-                    it.copy(
-                        todayStudiedWords = todayWord)
-                }
-
-            }
             loadStudyWord(10)
+
+            preferences.getTodayStudiedWord()
+                .distinctUntilChanged()
+                .collectLatest { todayWord ->
+                    _todayWordUiState.update {
+                        it.copy(
+                            todayStudiedWords = todayWord
+                        )
+                    }
+
+                }
         }
     }
+
 
     private fun loadStudyWord(count: Int) {
         //캐싱 처리: viewModel 생명주기 동안 여러번 호출될 수 있음
         if (_todayWordUiState.value.wordList.isNotEmpty()) return
 
         viewModelScope.launch {
-                when (val roomResult = loadStudyWordUseCase(count)) {
-                    is AppResult.Loading -> {
-                        }
-                    is AppResult.Success -> {
-                        _todayWordUiState.update {
-                            it.copy(
-                                wordList = roomResult.data, //실제 데이터 넣기
-                                snackBarMessage = "",
-                                isBookmarked = roomResult.data.firstOrNull()?.isBookmarked ?: false
-                            )
-                        }
-                    }
-                    is AppResult.Failure -> {
-                        _todayWordUiState.update {
-                            it.copy(
-                                snackBarMessage = roomResult.exception.toString()
-                                    ?: "Unknown error"
-                            )
-                        }
-                    }
-
-                    is AppResult.NoConstructor -> {}
+            when (val roomResult = loadStudyWordUseCase(count)) {
+                is AppResult.Loading -> {
                 }
+
+                is AppResult.Success -> {
+                    _todayWordUiState.update {
+                        it.copy(
+                            wordList = roomResult.data, //실제 데이터 넣기
+                            snackBarMessage = "",
+                            isBookmarked = roomResult.data.firstOrNull()?.isBookmarked ?: false
+                        )
+                    }
+                }
+
+                is AppResult.Failure -> {
+                    _todayWordUiState.update {
+                        it.copy(
+                            snackBarMessage = roomResult.exception.toString()
+                                ?: "Unknown error"
+                        )
+                    }
+                }
+
+                is AppResult.NoConstructor -> {}
             }
         }
+    }
 
     fun moveToNext() {
         viewModelScope.launch {
@@ -136,7 +145,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun saveStudiedWord(wordId: String){
+    fun saveStudiedWord(wordId: String) {
         viewModelScope.launch {
             preferences.saveStudiedWord(wordId)
         }
@@ -154,19 +163,22 @@ class HomeViewModel @Inject constructor(
             val currentBookmarkState = _todayWordUiState.value.isBookmarked
             val newBookmarkState = !currentBookmarkState
             val timeStamp = if (newBookmarkState) System.currentTimeMillis() else 0L
-
-            _todayWordUiState.update {
-                it.copy(
+            try {
+                roomRepository.updateBookmarkStatus(
+                    documentId = id,
                     isBookmarked = newBookmarkState,
+                    bookmarkedTimeStamp = timeStamp
+                )
+                _todayWordUiState.update {
+                    it.copy(
+                        isBookmarked = newBookmarkState,
                     )
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+
             }
-
-            roomRepository.updateBookmarkStatus(
-                documentId= id,
-                isBookmarked = newBookmarkState,
-                bookmarkedTimeStamp = timeStamp
-            )
         }
-
     }
 }

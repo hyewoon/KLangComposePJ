@@ -5,5 +5,5 @@ import com.hye.domain.model.roomdb.TargetWordWithAllInfoEntity
 
 interface FireStoreRepository {
  suspend fun getStudyWordFromFireStore(count: Long): List<TargetWordWithAllInfoEntity>
- suspend fun saveDocumentId(id: String)
+ suspend fun saveLastTargetCode(targetCode: Long)
 }

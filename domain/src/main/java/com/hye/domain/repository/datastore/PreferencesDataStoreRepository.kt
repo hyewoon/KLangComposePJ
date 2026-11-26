@@ -5,8 +5,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface PreferencesDataStoreRepository {
 
-    suspend fun getDocumentId(): Flow<String>
-    suspend fun saveDocumentId(id: String)
+    suspend fun saveLastTargetCode(targetCode: Long)
+    fun getLastTargetCode(): Flow<Long?>
     suspend fun checkDate()
     fun getTodayStudiedWord(): Flow<Set<String>>
     suspend fun saveStudiedWord(word: String)

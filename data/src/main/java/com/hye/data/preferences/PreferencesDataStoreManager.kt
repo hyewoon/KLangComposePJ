@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStore
+import com.hye.data.preferences.PreferenceDataStoreConstants.LAST_TARGET_CODE
 import com.hye.domain.model.AppLanguage
 import com.hye.domain.repository.datastore.PreferencesDataStoreRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -29,23 +30,14 @@ class PreferencesDataStoreManager @Inject constructor(
 
     private val dataSource = context.dataStore
 
-    override suspend fun getDocumentId(): Flow<String> {
-        return dataSource.data.catch { exception ->
-            if (exception is IOException) {
-                emit(emptyPreferences())
-            } else {
-                throw exception
-            }
-        }.map { preferences ->
-            preferences[PreferenceDataStoreConstants.DOCUMENT_ID] ?: ""
-        }
+    override suspend fun saveLastTargetCode(targetCode: Long) {
+        dataSource.edit { it[LAST_TARGET_CODE] = targetCode }
     }
 
-    override suspend fun saveDocumentId(id: String) {
-        dataSource.edit { preferences ->
-            preferences[PreferenceDataStoreConstants.DOCUMENT_ID] = id
-        }
-    }
+    override fun getLastTargetCode(): Flow<Long?> =
+        dataSource.data.map { it[LAST_TARGET_CODE] }
+
+
 
     private fun getTodayDate(): String {
         return SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
