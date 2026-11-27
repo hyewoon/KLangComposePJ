@@ -1,3 +1,4 @@
+
 plugins {
     id("java-library")
     alias(libs.plugins.jetbrains.kotlin.jvm)
@@ -18,5 +19,7 @@ dependencies{
 
     implementation(libs.bundles.utils)
     implementation(libs.androidx.annotation.jvm)
+    testImplementation(kotlin("test"))
+    testImplementation(libs.kotlinx.coroutines.test)
 
 }

@@ -52,12 +52,13 @@ return if (roomData) {
 class LoadStudyWordUseCase(
     private val studyRepository: StudyRepository,
     private val firestoreRepository: FireStoreRepository,
+    private val todayProvider: ()-> LocalDate = {LocalDate.now()}
 ) {
 
     private var lastInsertDate: String? = null
 
     suspend operator fun invoke(count: Int): AppResult<List<TargetWordWithAllInfoEntity>> {
-        val today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREA))
+        val today = todayProvider().format(DATE_FORMAT)
         val countLong = count.toLong()
 
         return try {
@@ -104,6 +105,10 @@ class LoadStudyWordUseCase(
         } catch (e: Exception) {
             AppResult.Failure(e)
         }
+    }
+
+    companion object {
+        private val DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREA)
     }
 }
 
